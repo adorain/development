@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name = "Rhb">RHB Bank</string>
+    <string name = "MayBank">Maybank</string>
+    <string name="Publicbank">Public Bank</string>
+    <string name="HongLeongBank">Hong Leong Bank</string>
+    <string name="CIMB">CIMB Bank</string>
+    <string name="Ambank">Ambank</string>
+</resources>

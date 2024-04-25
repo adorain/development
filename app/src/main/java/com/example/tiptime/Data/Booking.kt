@@ -13,11 +13,10 @@ data class Booking(
 
     val HotelId : String,
 
-    val BookedStartDate : Date,
+    val BookedStartDate : String,
 
-    val BookedEndDate : Date,
+    val BookedEndDate : String,
 
     val Status : String,
 
-    val PaymentMethod : String
 )

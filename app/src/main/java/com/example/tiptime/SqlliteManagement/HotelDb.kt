@@ -14,8 +14,8 @@ class HotelDb
     override fun onCreate(db: SQLiteDatabase?) {
         val query = ("CREATE TABLE" + TABLE_NAME + "("
                 + ID_COLUMN + "TEXT PRIMARY KEY" +
-                "FOREIGN KEY(" + STAFF_COLUMN + ") REFERENCES " + STAFF_TABLE_NAME + "(" + STAFF_ID_COLUMN + "), " +
-                "FOREIGN KEY(" + USER_COLUMN + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_ID_COLUMN + "))"+
+                "FOREIGN KEY(" + STAFF_COLUMN + ") REFERENCES " + STAFF_TABLE_NAME + "(" + STAFF_ID_COLUMN + ")" +"TEXT"+
+                "FOREIGN KEY(" + USER_COLUMN + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_ID_COLUMN + "))"+"TEXT"+
                 NAME_COL+ "TEXT" +
                 ADDRESS_COL +"TEXT" +
                 PAX_COL + "INTEGER"+
@@ -48,7 +48,6 @@ class HotelDb
     }
 
     fun addnewHotel(
-
         hotel: Hotel
     ){
         val db = this.writableDatabase

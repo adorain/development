@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -90,68 +90,75 @@ fun PaymentLayout(){
 }
 
 @Composable
-fun SectionHeader(text: String, isExpanded: Boolean, onHeaderClicked: () -> Unit) {
-    Row(modifier = Modifier
-        .clickable { onHeaderClicked() }
-        .background(Color.LightGray)
-        .padding(vertical = 8.dp, horizontal = 16.dp)) {
+fun SectionHeader(
+    text: String,
+    isExpanded: Boolean,
+    onHeaderClicked: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable { onHeaderClicked() }
+            .background(Color.LightGray)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    ) {
         Text(
             text = text,
             modifier = Modifier.weight(1.0f)
         )
-        if (isExpanded) {
-            R.drawable.up_icon_154668
+        // Show different icon based on whether the section is expanded or collapsed
+        val iconResource = if (isExpanded) {
+            painterResource(id = R.drawable.up_icon_154668) // Change this to your up icon resource
         } else {
-            R.drawable.arrow_down_icon_11549436707mosicxsqad
+            painterResource(id = R.drawable.arrow_down_icon_11549436707mosicxsqad) // Change this to your down icon resource
+        }
+        Image(
+            painter = iconResource,
+            contentDescription = null,
+            modifier = Modifier.size(24.dp) // Adjust the size of the icon as needed
+        )
+    }
+}
+
+@Composable
+fun ExpandList(sections: List<Pmethod>) {
+    val isExpandedMap = rememberSaveable {
+        mutableStateMapOf<Int, Boolean>().apply {
+            sections.forEachIndexed { index, _ ->
+                this[index] = false // Initially set all sections to collapsed
+            }
+        }
+    }
+
+    LazyColumn {
+        itemsIndexed(sections) { index, paymentMethod ->
+            Section(
+                sectionData = paymentMethod,
+                isExpanded = isExpandedMap[index] ?: false,
+                onHeaderClick = { isExpandedMap[index] = !(isExpandedMap[index] ?: false) }
+            )
         }
     }
 }
 
 @Composable
-fun ExpandList(sections: List<Pmethod>){
-    val isExpandedMap = rememberSaveable {
-        mutableStateMapOf<Int, Boolean>().apply {
-            sections.forEachIndexed { index, _ ->
-                this[index] = true
-            }
-        }
-    }
-
-    LazyColumn (
-        content = {
-            sections.onEachIndexed(){
-                index , Pmethod ->
-                Section(
-                    sectionData = Pmethod,
-                    isExpanded = isExpandedMap[index]?:true
-                ) {
-                    isExpandedMap[index] = !(isExpandedMap[index] ?: true)
-                }
-            }
-        }
-    )
-
-
-}
-
-fun LazyListScope.Section(
+fun Section(
     sectionData: Pmethod,
     isExpanded: Boolean,
     onHeaderClick: () -> Unit
 ) {
-
-    item {
+    Column {
         SectionHeader(
-            text = " Visa",
+            text = sectionData.stringResourcesId.toString(), // Displaying string resource ID for now, you can modify this as needed
             isExpanded = isExpanded,
             onHeaderClicked = onHeaderClick
         )
+        // You can add content specific to each section here, which will be displayed when expanded
+        if (isExpanded) {
+            // For example, you can add Text or other composables here
+            Text(text = "Some content for ${sectionData.stringResourcesId}")
+        }
     }
-
-
 }
-
-
 
 
 

@@ -18,5 +18,6 @@ data class Booking(
     val BookedEndDate : String,
 
     val Status : String,
+    val Price : Double
 
 )

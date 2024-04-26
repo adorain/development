@@ -13,5 +13,6 @@ data class Payment(
 
     val BookedId : String,
 
-    val PaymentDate : Date
+    val PaymentDate : Date,
+    val PaymentMethod : String
 )

@@ -25,14 +25,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tiptime.Data.Booking
+import com.example.tiptime.Data.Hotel
+import com.example.tiptime.Data.room
+import com.example.tiptime.ui.theme.TipTimeTheme
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-@Preview
+
 @Composable
 fun booking (
     onNextButtonClicked:() -> Unit = {},
     onCancelButtonClicked : () -> Unit = {},
-    modifier: Modifier = Modifier){
+    modifier: Modifier = Modifier,
+    hotel: Hotel,room: room
+){
     val text = " "
     Column {
         Row (
@@ -50,14 +56,14 @@ fun booking (
         Row (
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(text = " who" , color = Color.White, fontSize = 35.sp )
+            Text(text = hotel.HotelName , color = Color.White, fontSize = 35.sp )
 
         }
         Spacer(modifier = Modifier.height(10.dp))
         Row(
 
         ) {
-            Text(text = " WWWWWWWWWWWWWWW", fontSize = 15.sp , color = Color.White,)
+            Text(text = hotel.HotelAddress, fontSize = 15.sp , color = Color.White,)
         }
     }
 
@@ -70,11 +76,39 @@ fun booking (
 
         Box(modifier = Modifier){
             Divider(modifier = Modifier.padding(start = 2.dp ),thickness = 3.dp)
-            Text(text = "Single Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+            Row {
+                Column {
+                    Text(text = room.roomType, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                }
+                Column(
+
+                ) {
+                    Text(text = room.roomType, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                }
+            }
+
             Divider(modifier = Modifier.padding(start = 2.dp , top = 90.dp),thickness = 3.dp)
-            Text(text = "Single Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 130.dp))
+            Row {
+                Column {
+                    Text(text = room.roomType, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                }
+                Column(
+
+                ) {
+                    Text(text = room.roomType, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                }
+            }
             Divider(modifier = Modifier.padding(start = 2.dp , top = 190.dp),thickness = 3.dp)
-            Text(text = "Single Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 230.dp))
+            Row {
+                Column {
+                    Text(text = room.roomType, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                }
+                Column(
+
+                ) {
+                    Text(text = room.roomType, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                }
+            }
             Divider(modifier = Modifier.padding(start = 2.dp , top = 290.dp),thickness = 3.dp)
 
 
@@ -90,7 +124,9 @@ fun booking (
             .padding(start = 45.dp)
             .fillMaxWidth()) {
             OutlinedButton(
-                onClick =  onCancelButtonClicked,modifier = Modifier.padding(end = 100.dp).size(width = 100.dp, height = 50.dp)) {
+                onClick =  onCancelButtonClicked,modifier = Modifier
+                    .padding(end = 100.dp)
+                    .size(width = 100.dp, height = 50.dp)) {
                 Text(text = "Cancel")
             }
             OutlinedButton(onClick = onNextButtonClicked ,modifier = Modifier.size(width = 100.dp, height = 50.dp)) {
@@ -102,4 +138,28 @@ fun booking (
 
     }
 
+}
+@Preview
+@Composable
+fun Booking() {
+    val hotel = Hotel(
+        "12345",
+        "Hotel123",
+        "2024-04-25",
+        "2024-04-28",
+        "Confirmed",
+        2,
+        "da",
+        "Available"
+    )
+    
+    val room = room(
+        "ds",
+        "ds",
+        0.00,
+        "ds"
+    )
+    TipTimeTheme {
+        booking(hotel = hotel, room =  room)
+    }
 }

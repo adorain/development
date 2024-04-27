@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -35,12 +36,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.tiptime.Data.PaymentMethod
 import com.example.tiptime.Model.Pmethod
 
 @Preview
 @Composable
 fun PaymentLayout(){
+    var showDialog by remember{ mutableStateOf(false) }
     var isVisaExpanded by remember { mutableStateOf(false) }
     var iconResId by remember { mutableStateOf(R.drawable.down_icon) }
     Column(
@@ -63,7 +66,7 @@ fun PaymentLayout(){
                 )
             }
             Column(modifier = Modifier.padding(start = 100.dp, top = 35.dp)) {
-                Text(text = "Touch n Go", fontSize = 20.sp, color = Color.Black)
+                Text(text = "Touch n Go", fontSize = 20.sp, color = Color.Black, modifier = Modifier.clickable { showDialog =true  })
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -79,7 +82,7 @@ fun PaymentLayout(){
                 )
             }
             Column(modifier = Modifier.padding(start = 100.dp, top = 35.dp)) {
-                Text(text = "GrabPay", fontSize = 20.sp, color = Color.Black)
+                Text(text = "GrabPay", fontSize = 20.sp, color = Color.Black, modifier = Modifier.clickable { showDialog =true  })
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -95,7 +98,7 @@ fun PaymentLayout(){
                 )
             }
             Column(modifier = Modifier.padding(start = 100.dp, top = 35.dp)) {
-                Text(text = "Boost", fontSize = 20.sp, color = Color.Black)
+                Text(text = "Boost", fontSize = 20.sp, color = Color.Black, modifier = Modifier.clickable { showDialog =true  })
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -113,7 +116,7 @@ fun PaymentLayout(){
             Column(
                 modifier = Modifier.padding(start = 100.dp, top = 35.dp)
             ) {
-                Text(text = "Visa", fontSize = 20.sp, color = Color.Black)
+                Text(text = "Online Banking", fontSize = 20.sp, color = Color.Black)
             }
             Column(modifier = Modifier.padding(start = 30.dp,top=30.dp)) {
                 Image(
@@ -142,7 +145,12 @@ fun PaymentLayout(){
         }
 
 
+        if(showDialog){
+            paymentSuccessful{
 
+                showDialog=false
+            }
+        }
     }
 }
 
@@ -160,6 +168,7 @@ fun ExpandList(sections: List<Pmethod>) {
 
 @Composable
 fun ListItem(item: Pmethod) {
+    var showDialog by remember{ mutableStateOf(false) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -174,7 +183,36 @@ fun ListItem(item: Pmethod) {
         Text(
             text = stringResource(item.stringResourcesId),
             fontSize = 16.sp,
-            color = Color.Black
+            color = Color.Black,
+            modifier = Modifier.clickable { showDialog = true }
         )
+        if(showDialog){
+            paymentSuccessful{
+
+                showDialog=false
+            }
+        }
+
     }
+}
+@Composable
+fun paymentSuccessful(
+    onNavigation:()->Unit
+){
+    Dialog(onDismissRequest = {onNavigation}) {
+        Card {
+            Column {
+                Image(painterResource(R.drawable.tick),contentDescription = null)
+            }
+            Row {
+                Text(text = "Payment Successful")
+            }
+            Row {
+                Button(onClick = { onNavigation}) {
+
+                }
+            }
+        }
+    }
+
 }

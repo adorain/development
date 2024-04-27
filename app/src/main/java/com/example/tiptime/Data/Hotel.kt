@@ -8,20 +8,20 @@ import androidx.room.PrimaryKey
 
 data class Hotel(
 
-    val HotelId : String,
+    val HotelId : String = "",
 
-    val StaffId : String,
+    val StaffId : String="",
 
-    val UserId : String,
+    val UserId : String="",
 
-    val HotelName : String,
+    val HotelName : String="",
 
-    val HotelAddress : String,
+    val HotelAddress : String="",
 
-    val Pax : Int,
+    val Pax : Int=0,
 
-    val Type : String,
+    val Type : String="",
 
-    val Status: String
+    val Status: String=""
 
 )

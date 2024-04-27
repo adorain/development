@@ -5,17 +5,18 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.text.DateFormat
 import java.util.Date
 
 data class Booking(
 
-    val Booked_id : String,
+    val Booked_id : String = "",
 
-    val HotelId : String,
+    val HotelId : String = "",
+    val ROOMTYPE : String = "",
+    val BookedStartDate : Date = Date(),
 
-    val BookedStartDate : String,
-
-    val BookedEndDate : String,
+    val BookedEndDate : Date = Date(),
 
     val Status : String,
     val Price : Double

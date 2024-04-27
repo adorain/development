@@ -44,11 +44,14 @@ class BookingDb (context : Context?) :
 
         value.put(ID_COLUMN,booking.Booked_id)
         value.put(HID_COLUMN,booking.HotelId)
-        value.put(STARTDATE_COLUMN,booking.BookedStartDate)
-        value.put(END_DATE,booking.BookedEndDate)
+        value.put(STARTDATE_COLUMN,booking.BookedStartDate.toString())
+        value.put(END_DATE,booking.BookedEndDate.toString())
         value.put(PRICE_COLUMN ,booking.Price)
+        value.put(ROOM_COLUMN,booking.ROOMTYPE)
         value.put(STATUS_COLUMN,booking.Status)
-
+        db.insert(TABLE_NAME, null, value)
+        db.close()
     }
+
 
 }

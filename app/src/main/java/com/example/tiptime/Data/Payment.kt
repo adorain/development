@@ -9,10 +9,10 @@ import java.util.Date
 
 data class Payment(
 
-    val PaymentId : String,
+    val PaymentId : String="",
 
-    val BookedId : String,
+    val BookedId : String="",
 
-    val PaymentDate : Date,
-    val PaymentMethod : String
+    val PaymentDate : Date=Date(),
+    val PaymentMethod : String = ""
 )

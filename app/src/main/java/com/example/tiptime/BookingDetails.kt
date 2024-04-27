@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.ui.theme.TipTimeTheme
+import java.util.Date
 import javax.sql.DataSource
 
 
@@ -30,6 +31,7 @@ import javax.sql.DataSource
 fun bookingDetails(booking: Booking
                    ,onNextButtonClicked:() -> Unit = {},
                    onCancelButtonClicked : () -> Unit = {}
+
 ) {
     Column {
         Row(
@@ -75,7 +77,7 @@ fun bookingDetails(booking: Booking
                 Text(text = "Booking Start Date : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = booking.BookedStartDate, fontSize = 21.sp)
+                Text(text = booking.BookedStartDate.toString(), fontSize = 21.sp)
             }
 
         }
@@ -85,7 +87,7 @@ fun bookingDetails(booking: Booking
                 Text(text = "Booking End Date : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = booking.BookedEndDate, fontSize = 21.sp)
+                Text(text = booking.BookedEndDate.toString(), fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -138,8 +140,9 @@ fun BookingDetails() {
     val booking = Booking(
         "12345",
         "Hotel123",
-        "2024-04-25",
-        "2024-04-28",
+        "SINGLEROOM",
+        Date(),
+        Date(),
         "Confirmed",
         0.00
     )

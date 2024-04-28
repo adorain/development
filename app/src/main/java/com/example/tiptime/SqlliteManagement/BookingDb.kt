@@ -32,7 +32,7 @@ class BookingDb (context : Context?) :
         const val HOTEL_TABLE = HotelDb.TABLE_NAME
         const val HOTELID_COLUMN = HotelDb.ID_COLUMN
         const val ROOM_COLUMN = "room type"
-        const val ROOMTABLE = "ROomtype"
+        const val ROOMTABLE = "Roomtype"
         const val RTYPE = "roomtype"
     }
 

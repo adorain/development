@@ -67,10 +67,6 @@ fun TravelApp(
 
                     onNextButtonClicked = {navController.navigate(data.bookingd.name)},
                     onCancelButtonClicked = {navController.navigate(data.start.name)},
-                    "",
-                    "",
-                    "",
-                    0.00,
 
                 )
             }
@@ -82,7 +78,8 @@ fun TravelApp(
                 )
             }
             composable( route = data.payment.name){
-                PaymentLayout()
+                PaymentLayout(
+                )
             }
         }
 

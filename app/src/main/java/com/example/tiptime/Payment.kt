@@ -22,6 +22,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,13 +40,20 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.tiptime.Data.PaymentMethod
 import com.example.tiptime.Model.Pmethod
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tiptime.Data.Booking
 
-@Preview
+
 @Composable
-fun PaymentLayout(){
+fun PaymentLayout(
+    viewModel: BookingViewModel = viewModel(),
+    booking: Booking
+){
+    val uiState by viewModel.uiState.collectAsState()
     var showDialog by remember{ mutableStateOf(false) }
     var isVisaExpanded by remember { mutableStateOf(false) }
     var iconResId by remember { mutableStateOf(R.drawable.down_icon) }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
@@ -70,7 +78,7 @@ fun PaymentLayout(){
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        HorizontalDivider(modifier = Modifier.padding(end = 30.dp, start = 30.dp),color = Color.Black)
+        Divider(modifier = Modifier.padding(end = 30.dp, start = 30.dp),color = Color.Black)
         Spacer(modifier = Modifier.height(20.dp))
 
         Row {
@@ -86,7 +94,7 @@ fun PaymentLayout(){
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        HorizontalDivider(modifier = Modifier.padding(end = 30.dp, start = 30.dp),color = Color.Black)
+        Divider(modifier = Modifier.padding(end = 30.dp, start = 30.dp),color = Color.Black)
         Spacer(modifier = Modifier.height(20.dp))
 
         Row {
@@ -102,7 +110,7 @@ fun PaymentLayout(){
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        HorizontalDivider(modifier = Modifier.padding(end = 30.dp, start = 30.dp),color = Color.Black)
+        Divider(modifier = Modifier.padding(end = 30.dp, start = 30.dp),color = Color.Black)
         Spacer(modifier = Modifier.height(20.dp))
 
         Row {
@@ -147,8 +155,8 @@ fun PaymentLayout(){
 
         if(showDialog){
             paymentSuccessful{
-
                 showDialog=false
+                viewModel.insertNewBooking(booking.Booked_id ,booking.HotelId,booking.ROOMTYPE,booking.BookedStartDate,booking.BookedEndDate,booking.Status,booking.Price )
             }
         }
     }
@@ -160,7 +168,7 @@ fun ExpandList(sections: List<Pmethod>) {
         itemsIndexed(sections) { index, item ->
             ListItem(item = item)
             if (index < sections.size - 1) {
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 30.dp))
+                Divider(modifier = Modifier.padding(horizontal = 30.dp))
             }
         }
     }

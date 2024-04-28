@@ -41,10 +41,8 @@ import java.nio.file.WatchEvent
 fun booking (
     onNextButtonClicked:() -> Unit = {},
     onCancelButtonClicked : () -> Unit = {},
-    Address : String,
-    hotelName : String,
+    hotel: Hotel,
     roomtype : String,
-    price : Double
 ){
     val text = " "
     Column {
@@ -63,14 +61,14 @@ fun booking (
         Row (
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(text = hotelName , color = Color.White, fontSize = 35.sp )
+            Text(text = hotel.HotelName , color = Color.White, fontSize = 35.sp )
 
         }
         Spacer(modifier = Modifier.height(10.dp))
         Row(
 
         ) {
-            Text(text = Address, fontSize = 15.sp , color = Color.White,)
+            Text(text = hotel.HotelAddress, fontSize = 15.sp , color = Color.White,)
         }
     }
 
@@ -90,7 +88,7 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = price.toString(), color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    Text(text = checkAvailable(roomtype = roomtype), color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
                 }
             }
 

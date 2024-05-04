@@ -22,6 +22,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,14 +44,19 @@ import com.example.tiptime.Data.PaymentMethod
 import com.example.tiptime.Model.Pmethod
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
+import com.example.tiptime.SqlliteManagement.BookingDb
+import com.example.tiptime.SqlliteManagement.RoomDb
+import kotlinx.coroutines.delay
 
 
 @Composable
 fun PaymentLayout(
-    viewModel: BookingViewModel = viewModel(),
-    booking: Booking
+
+    booking: Booking,
+    onClickedButton :() -> Unit,
 ){
-    val uiState by viewModel.uiState.collectAsState()
+
+    val bookingDb = BookingDb(context = LocalContext.current)
     var showDialog by remember{ mutableStateOf(false) }
     var isVisaExpanded by remember { mutableStateOf(false) }
     var iconResId by remember { mutableStateOf(R.drawable.down_icon) }
@@ -154,10 +161,10 @@ fun PaymentLayout(
 
 
         if(showDialog){
-            paymentSuccessful{
-                showDialog=false
-                viewModel.insertNewBooking(booking.Booked_id ,booking.HotelId,booking.ROOMTYPE,booking.BookedStartDate,booking.BookedEndDate,booking.Status,booking.Price )
-            }
+            paymentSuccessful(onClickedButton)
+            showDialog=false
+            val booked= Booking(booking.Booked_id ,booking.HotelId,booking.ROOMTYPE,booking.BookedStartDate,booking.BookedEndDate,booking.Pax,booking.Status,booking.Price )
+            bookingDb.addNewBooking(booked )
         }
     }
 }
@@ -203,24 +210,23 @@ fun ListItem(item: Pmethod) {
 
     }
 }
+
 @Composable
 fun paymentSuccessful(
-    onNavigation:()->Unit
+    onNavigation : () -> Unit
 ){
-    Dialog(onDismissRequest = {onNavigation}) {
+
+    LaunchedEffect(Unit) {
+        delay(5000)
+    }
+    Dialog(onDismissRequest = onNavigation) {
         Card {
             Column {
                 Image(painterResource(R.drawable.tick),contentDescription = null)
             }
-            Row {
+            Column {
                 Text(text = "Payment Successful")
-            }
-            Row {
-                Button(onClick = { onNavigation}) {
-
-                }
             }
         }
     }
-
 }

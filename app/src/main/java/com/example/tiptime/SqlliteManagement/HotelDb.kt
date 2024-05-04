@@ -2,6 +2,7 @@ package com.example.tiptime.SqlliteManagement
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.tiptime.Data.Hotel
@@ -58,9 +59,29 @@ class HotelDb
         value.put(USER_COLUMN,hotel.UserId)
         value.put(NAME_COL,hotel.HotelName)
         value.put(ADDRESS_COL,hotel.HotelAddress)
-        value.put(PAX_COL,hotel.Pax)
         value.put(TYPE_COL,hotel.Type)
         value.put(STATUS_COL,hotel.Status)
         db.close()
+    }
+
+    fun getHotelId(hotelName : String) : String{
+        val db = this.readableDatabase
+        var hotelId: String = " "
+
+        val cursorRoom: Cursor = db.rawQuery(
+            "SELECT * FROM ${HotelDb.TABLE_NAME} WHERE ${HotelDb.NAME_COL} = ? LIMIT 1",
+            arrayOf(hotelName)
+        )
+        if (cursorRoom.moveToFirst()) {
+            val idColumnIndex = cursorRoom.getColumnIndex(RoomDb.ID_COLUMN)
+            if (idColumnIndex != -1) {
+                hotelId = cursorRoom.getString(idColumnIndex)
+            }
+        }
+
+        cursorRoom.close()
+        db.close()
+
+        return hotelId
     }
 }

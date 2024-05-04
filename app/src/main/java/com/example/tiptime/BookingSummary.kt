@@ -1,5 +1,6 @@
 package com.example.tiptime
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,10 +29,15 @@ import javax.sql.DataSource
 
 
 @Composable
-fun bookingDetails(booking: Booking
-                   ,onNextButtonClicked:() -> Unit = {},
-                   onCancelButtonClicked : () -> Unit = {}
-
+fun bookingSummary(
+    onNextButtonClicked:() -> Unit = {},
+    onCancelButtonClicked : () -> Unit = {},
+    HotelId : String = " ",
+    BookingStartDate : Date,
+    BookingEndDate :Date,
+    Price : Double,
+    pax:Int,
+    roomType:String
 ) {
     Column {
         Row(
@@ -52,23 +58,15 @@ fun bookingDetails(booking: Booking
 
 
 
-    ) {
-        Row(
         ) {
-            Column {
-                Text(text = "Booking Id : ", fontSize = 21.sp)
-            }
-            Column {
-                Text(text = booking.Booked_id, fontSize = 21.sp)
-            }
-        }
+
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {
                 Text(text = "Hotel Id : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = booking.HotelId, fontSize = 21.sp)
+                Text(text = HotelId, fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -77,7 +75,7 @@ fun bookingDetails(booking: Booking
                 Text(text = "Booking Start Date : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = booking.BookedStartDate.toString(), fontSize = 21.sp)
+                Text(text = BookingStartDate.toString(), fontSize = 21.sp)
             }
 
         }
@@ -87,16 +85,16 @@ fun bookingDetails(booking: Booking
                 Text(text = "Booking End Date : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = booking.BookedEndDate.toString(), fontSize = 21.sp)
+                Text(text = BookingEndDate.toString(), fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {
-                Text(text = "Status : ", fontSize = 21.sp)
+                Text(text = "Room Type: ", fontSize = 21.sp)
             }
             Column {
-                Text(text = booking.Status, fontSize = 21.sp)
+                Text(text = roomType,  fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -105,7 +103,7 @@ fun bookingDetails(booking: Booking
                 Text(text = "Total Price : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = booking.Price.toString(), fontSize = 21.sp)
+                Text(text =Price.toString(), fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -136,17 +134,28 @@ fun bookingDetails(booking: Booking
 
 @Preview
 @Composable
-fun BookingDetails() {
+fun BookingSummary() {
+    val roomType : String = ""
     val booking = Booking(
         "12345",
         "Hotel123",
         "SINGLEROOM",
         Date(),
-        Date(),
+        Date(),1,
         "Confirmed",
         0.00
     )
     TipTimeTheme {
-        bookingDetails(booking = booking, onCancelButtonClicked = {}, onNextButtonClicked = {})
+        bookingSummary( onCancelButtonClicked = {},
+            onNextButtonClicked = {},
+            BookingStartDate = Date(),
+            BookingEndDate = Date(),
+            Price = 0.00,
+            HotelId = "",
+            pax = 0,
+            roomType = ""
+
+
+        )
     }
 }

@@ -17,7 +17,7 @@ data class Hotel(
     val HotelName : String="",
 
     val HotelAddress : String="",
-
+    val Pax : Int  = 0,
     val Type : String="",
 
     val Status: String=""

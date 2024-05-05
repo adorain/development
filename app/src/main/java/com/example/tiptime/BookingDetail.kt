@@ -186,7 +186,7 @@ fun bookingDetails(
     }
 
     if(!showDialog2){
-        showDatePicker(context = LocalContext.current, onStartDateSelected = {BookingEndDate ->OnBookingStartDateChange(BookingEndDate.toString())})
+        showDatePicker(context = LocalContext.current, onStartDateSelected = {BookingEndDate ->OnBookingEndDateChange(BookingEndDate.toString())})
     }
     else{
         showDialog2 = false

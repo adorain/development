@@ -24,7 +24,7 @@ class BookingViewModel : ViewModel(){
 
     private val _uiState = MutableStateFlow(room())
     val uiState: StateFlow<room> = _uiState.asStateFlow()
-    var HotelId by mutableStateOf("")
+    var hotel_Id by mutableStateOf("")
     var Price by mutableStateOf(0.00)
     var BookedStartDate by mutableStateOf(Date())
     var BookedEndDate by mutableStateOf(Date())
@@ -71,78 +71,80 @@ class BookingViewModel : ViewModel(){
         return totalPrice
     }
 
-    fun setPrice(PRICE: String){
+    fun setPrice() : Double{
         _uiBookingState.update {
             currentState ->
             currentState.copy(
-                Price = PRICE.toDouble()
+                Price = Price.toDouble()
             )
         }
-        updatePrice()
+        return Price
+
 
     }
 
-    fun setBookingStartDate(STARTDATE: String){
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val date = dateFormat.parse(STARTDATE)
+    fun setBookingStartDate():Date{
+
         _uiBookingState.update {
             uiBookingState -> uiBookingState.copy(
-                BookedStartDate = date
+                BookedStartDate = BookedStartDate
             )
 
         }
-        updateBookingStartDate()
+        return BookedStartDate
     }
-    fun setBookingEndDate(ENDDATE: String){
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val date = dateFormat.parse(ENDDATE)
+    fun setBookingEndDate():Date{
+
         _uiBookingState.update {
                 uiBookingState ->
             uiBookingState.copy(
-                BookedEndDate = date
+                BookedEndDate = BookedEndDate
             )
 
         }
-        updateBookingEndDate()
+        return BookedEndDate
     }
 
-    fun setPax(Pax:String){
-        val paxString = Integer.parseInt(Pax)
+    fun setPax() : Int{
         _uiBookingState.update {
                 uiBookingState -> uiBookingState.copy(
-                    Pax = paxString
+                    Pax = Pax
                 )
         }
-        updatePax()
+        return Pax
     }
-    /*fun setHotelId(hotelId:String){
+    fun setHotelId(hotelId : String){
         _uiBookingState.update {
             uiBookingState ->
             uiBookingState.copy(
                 HotelId = hotelId
             )
         }
-    }*/
+    }
     /*fun ConfirmedBooking():String{
         val hotelId : String = ""
         val roomtype : String = setBooking(hotelId).toString()
         return roomtype.toString()
     }*/
 
-    private fun updateBookingStartDate() {
-        BookedStartDate = uiBookingState.value.BookedStartDate
+    fun updateBookingStartDate(bookedStartDate : String) {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val date = dateFormat.parse(bookedStartDate)
+        BookedStartDate = date
     }
 
-    private fun updateBookingEndDate() {
-        BookedEndDate = uiBookingState.value.BookedEndDate
+    fun updateBookingEndDate(bookedEndDate: String) {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val date = dateFormat.parse(bookedEndDate)
+        BookedEndDate = date
     }
 
-    private fun updatePax(){
-        Pax = uiBookingState.value.Pax
+    fun updatePax(pax : String){
+        Pax = pax.toInt()
     }
 
-    fun updatePrice(){
-        Price = uiBookingState.value.Price
+    fun updatePrice(price : String){
+        Price = price.toDouble()
     }
 
 

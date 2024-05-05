@@ -1,8 +1,12 @@
 package com.example.tiptime
 
+import android.content.Context
+import android.widget.DatePicker
+import android.widget.NumberPicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,32 +21,53 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.AbsoluteAlignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import java.nio.file.WatchEvent
+import androidx.compose.ui.window.Dialog
+import com.example.tiptime.Data.Hotel
+import com.example.tiptime.SqlliteManagement.HotelDb
+import java.util.Calendar
+import java.util.Date
 
-@Preview
+
+
 @Composable
-fun homeScreen(){
+fun HomeScreen(
+    onSelectedHotel:(String)->Unit,
+
+){
+    val hotelDb = HotelDb(context = LocalContext.current)
+    var chooseStartDate by remember {
+        mutableStateOf(Date())
+    }
+    var chooseEndDate by remember {
+        mutableStateOf(Date())
+    }
+    var searchQuery by remember { mutableStateOf("") }
+    val hotels = remember { mutableStateListOf<Hotel>() }
+    var pax by remember {
+        mutableStateOf(0)
+    }
+    var showDialog by remember { mutableStateOf(false) }
+    var showDialog2 by remember { mutableStateOf(false) }
+    var showNumberPicker by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,8 +86,8 @@ fun homeScreen(){
                 horizontalArrangement = Arrangement.Center
             ){
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it},
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f),
@@ -75,6 +100,17 @@ fun homeScreen(){
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .height(30.dp)
+                        .clickable {
+                            hotels.clear()
+                            hotels.addAll(
+                                hotelDb.getHotelDetails(
+                                    searchQuery,
+                                    chooseStartDate,
+                                    chooseEndDate,
+                                    pax
+                                )
+                            )
+                        }
                 )
 
             }
@@ -87,7 +123,7 @@ fun homeScreen(){
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Button(onClick = { /*TODO*/ } , modifier = Modifier
+                    Button(onClick = { showDialog =true } , modifier = Modifier
                         .width(200.dp)
                         .height(60.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
@@ -111,7 +147,7 @@ fun homeScreen(){
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Button(onClick = { /*TODO*/ } , modifier = Modifier
+                    Button(onClick = { showDialog2 } , modifier = Modifier
                         .width(200.dp)
                         .height(60.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
@@ -135,13 +171,13 @@ fun homeScreen(){
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Button(onClick = { /*TODO*/ }, modifier = Modifier
+                    Button(onClick = { showNumberPicker = true }, modifier = Modifier
                         .width(200.dp)
                         .height(50.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Pax : ")
+                        Text(text = "Pax : $pax")
                     }
                 }
 
@@ -155,56 +191,168 @@ fun homeScreen(){
                 .width(10.dp)
             )
         }
-
-        Row(
-            modifier = Modifier
-                .border(3.dp, Color.Black)
-                .width(350.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .width(160.dp)
-                    .height(100.dp)
-            ) {
-                Image(
-                    painterResource(R.drawable.nitro_wallpaper_02_3840x2400) ,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize()
+        LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
+            hotels.clear()
+            hotels.addAll(
+                hotelDb.getHotelDetails(
+                    searchQuery,
+                    chooseStartDate,
+                    chooseEndDate,
+                    pax
                 )
+            )
+        }
+                        // Display list of hotels
+        hotels.forEach { hotel ->
+            HotelItem(
+                hotel = hotel,
+                onItemClick = {onSelectedHotel(hotel.HotelId)}
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
+
+    }
+
+
+
+    if(!showDialog){
+        showDatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
+    }
+    else{
+        showDialog = false
+    }
+
+
+
+    if(!showDialog2){
+        showDatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
+    }
+    else{
+        showDialog2 = false
+    }
+
+
+
+    if(!showNumberPicker){
+        NumberPickerShow(
+            minValue = 0,
+            maxValue = 20,
+            initialValue = 0,
+            onValueChange = {pax},
+            OnClose = { showNumberPicker = false},
+        )
+    }
+    else{
+        showNumberPicker = false
+    }
+}
+
+@Composable
+fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .border(3.dp, Color.Black)
+            .width(350.dp)
+            .clickable(onClick = onItemClick)
+    ) {
+        Column(
+            modifier = Modifier
+                .width(160.dp)
+                .height(100.dp)
+        ) {
+            Image(
+                painterResource(R.drawable.nitro_wallpaper_02_3840x2400) ,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+
+        }
+
+        Column{
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Hotel Name :")
+            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Address")
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Description")
             }
 
-            Column{
-
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Hotel Name :")
+            Spacer(modifier = Modifier.height(30.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.weight(1f)){
+                    Text(text = "Rating:")
                 }
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "Address")
+                Column(modifier = Modifier.weight(1f)){
+                    Text(text = "Price")
                 }
-                Spacer(modifier = Modifier.height(30.dp))
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "Description")
-                }
-
-                Spacer(modifier = Modifier.height(30.dp))
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.weight(1f)){
-                        Text(text = "Rating:")
-                    }
-                    Column(modifier = Modifier.weight(1f)){
-                        Text(text = "Price")
-                    }
-                }
-
             }
 
+        }
 
+
+    }
+}
+
+
+@Composable
+fun showdatePicker(context: Context, onStartDateSelected: (Date) -> Unit){
+    val year:Int
+    val month: Int
+    val day:Int
+    val calendar = Calendar.getInstance()
+    year= calendar.get(Calendar.YEAR)
+    month=calendar.get(Calendar.MONTH)
+    day = calendar.get(Calendar.DAY_OF_MONTH)
+    calendar.time= Date()
+    val date = remember {
+        mutableStateOf("")
+    }
+    val datePickerDialog = android.app.DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            date.value = "$dayOfMonth/$month/$year"
+        },
+        year,
+        month,
+        day
+    )
+}
+
+@Composable
+fun NumberPickerShow(
+    minValue: Int,
+    maxValue: Int,
+    initialValue: Int,
+    onValueChange: (Int) -> Unit,
+    OnClose:()-> Unit,
+) {
+    var value by remember { mutableStateOf(initialValue) }
+    Dialog(onDismissRequest = OnClose) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            IconButton(onClick = { if (value > minValue) value-- }) {
+                Icon(painterResource( R.drawable.down_icon), contentDescription = "Increase")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = value.toString())
+            Spacer(modifier = Modifier.height(8.dp))
+            IconButton(onClick = { if (value < maxValue) value++ }) {
+                Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
+            }
+            Button(onClick = OnClose) {
+                Text(text = "Select")
+            }
         }
     }
 
-    }
-
+}

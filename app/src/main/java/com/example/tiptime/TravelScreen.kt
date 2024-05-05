@@ -19,7 +19,7 @@ import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Date
 
 enum class screen{
-    booking , detail, summary,payment
+    home , booking , detail, summary,payment
 }
 @Composable
 fun TravelApp(
@@ -36,10 +36,17 @@ fun TravelApp(
             startDestination = screen.booking.name,
             modifier = Modifier.padding(innerPadding)
         ){
+            composable(route = screen.home.name){
+                HomeScreen (
+                    onSelectedHotel = {
+                        viewModel.setHotelId(it)
+                        navController.navigate(screen.booking.name)},
+
+                )
+            }
             composable( route = screen.booking.name){
                 booking(
                     onNextButtonClicked = {
-
                         navController.navigate(screen.detail.name) },
                     onCancelButtonClicked = {cancelOrderAndNavigateToStart(navController)},
                     "",
@@ -60,14 +67,14 @@ fun TravelApp(
                         //viewModel.setRoomType(it)
                         navController.navigate(screen.summary.name)
                     },
-                    OnBookingStartDateChange ={viewModel.setBookingStartDate(it)} ,
-                    OnBookingEndDateChange = {viewModel.setBookingEndDate(it)},
-                    OnPaxChange ={viewModel.setPax(it)} ,
+                    OnBookingStartDateChange ={viewModel.updateBookingStartDate(it)} ,
+                    OnBookingEndDateChange = {viewModel.updateBookingEndDate(it)},
+                    OnPaxChange ={viewModel.updatePax(it)} ,
                     HotelId = "",
-                    BookingStartDate = viewModel.BookedStartDate,
-                    BookingEndDate = viewModel.BookedEndDate,
+                    BookingStartDate = viewModel.setBookingStartDate(),
+                    BookingEndDate = viewModel.setBookingEndDate(),
                     Price = viewModel.calculatePrice(),
-                    pax = viewModel.Pax,
+                    pax = viewModel.setPax(),
                     roomType = "",
                 )
             }

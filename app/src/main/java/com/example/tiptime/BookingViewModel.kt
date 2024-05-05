@@ -115,14 +115,14 @@ class BookingViewModel : ViewModel(){
         }
         updatePax()
     }
-    fun setHotelId(hotelId:String){
+    /*fun setHotelId(hotelId:String){
         _uiBookingState.update {
             uiBookingState ->
             uiBookingState.copy(
                 HotelId = hotelId
             )
         }
-    }
+    }*/
     /*fun ConfirmedBooking():String{
         val hotelId : String = ""
         val roomtype : String = setBooking(hotelId).toString()
@@ -144,7 +144,6 @@ class BookingViewModel : ViewModel(){
     fun updatePrice(){
         Price = uiBookingState.value.Price
     }
-
 
 
 }

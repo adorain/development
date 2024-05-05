@@ -48,7 +48,6 @@ import com.example.tiptime.SqlliteManagement.BookingDb
 import com.example.tiptime.SqlliteManagement.RoomDb
 import kotlinx.coroutines.delay
 
-
 @Composable
 fun PaymentLayout(
 

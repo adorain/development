@@ -20,6 +20,7 @@ class HotelDb
                 "FOREIGN KEY(" + USER_COLUMN + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_ID_COLUMN + "))"+"TEXT"+
                 NAME_COL+ "TEXT" +
                 ADDRESS_COL +"TEXT" +
+                DESCRIPTION_COL + "TEXT"+
                 PAX_COL+"TEXT"+
                 TYPE_COL+"TEXT"+
                 STATUS_COL+"STATUS")
@@ -46,6 +47,8 @@ class HotelDb
         const val STATUS_COL = "status"
         const val STAFF_ID_COLUMN = "id"
         const val USER_ID_COLUMN = " user_id"
+        const val DESCRIPTION_COL = "description"
+
 
     }
 
@@ -62,6 +65,7 @@ class HotelDb
         value.put(ADDRESS_COL,hotel.HotelAddress)
         value.put(TYPE_COL,hotel.Type)
         value.put(STATUS_COL,hotel.Status)
+        value.put(DESCRIPTION_COL,hotel.HotelDesciption)
         db.close()
     }
 
@@ -70,7 +74,7 @@ class HotelDb
         var hotelId: String = " "
 
         val cursorRoom: Cursor = db.rawQuery(
-            "SELECT * FROM ${HotelDb.TABLE_NAME} WHERE ${HotelDb.NAME_COL} = ? LIMIT 1",
+            "SELECT * FROM $TABLE_NAME WHERE $NAME_COL = ? LIMIT 1",
             arrayOf(hotelName)
         )
         if (cursorRoom.moveToFirst()) {
@@ -91,7 +95,7 @@ class HotelDb
         val db = this.readableDatabase
 
         val cursor = db.rawQuery(
-            "SELECT $ID_COLUMN, $NAME_COL, $ADDRESS_COL, $TYPE_COL, $STATUS_COL FROM $TABLE_NAME WHERE $ADDRESS_COL LIKE '%$hotelAddress%' AND $STATUS_COL = 'Available' ",
+            "SELECT $ID_COLUMN, $NAME_COL, $ADDRESS_COL, $TYPE_COL, $STATUS_COL FROM $TABLE_NAME WHERE $ADDRESS_COL LIKE '%$hotelAddress%' AND $STATUS_COL = 'Available' AND $PAX_COL >= $Pax",
             null
         )
 
@@ -112,32 +116,8 @@ class HotelDb
         return hotels
     }
 
-    /*fun PaxRange(Pax:Int){
-        val hotels = mutableListOf<Hotel>()
-        val db = this.readableDatabase
-        val cursor = db.rawQuery(
-            "SELECT $ID_COLUMN, $NAME_COL, $ADDRESS_COL, $TYPE_COL, $STATUS_COL FROM $TABLE_NAME WHERE $PAX_COL >= $Pax AND $STATUS_COL = 'Available'",
-            null
-        )
 
-        while (cursor.moveToNext()) { // Loop through the cursor to get all hotels
-            val hotel = Hotel(
-                HotelId = cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN)),
-                HotelName = cursor.getString(cursor.getColumnIndexOrThrow(NAME_COL)),
-                HotelAddress = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS_COL)),
-                Type = cursor.getString(cursor.getColumnIndexOrThrow(TYPE_COL)),
-                Status = cursor.getString(cursor.getColumnIndexOrThrow(STATUS_COL))
-            )
-            hotels.add(hotel) // Add each hotel to the list
-        }
 
-        cursor.close()
-        db.close()
 
-        return hotels
-
-    }
-
-     */
 
 }

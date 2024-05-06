@@ -91,4 +91,22 @@ class RoomDb(context : Context?) :
         return roomType
     }
 
+    fun PriceRange(hotelId : String) : String{
+        var minPrice = 0.0
+        var maxPrice = 0.0
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT MIN(${PRICE_COLUMN}), MAX(${PRICE_COLUMN}) FROM $TABLE_NAME WHERE ID_COLUMN = ?",
+            arrayOf(hotelId)
+        )
+
+        if (cursor.moveToFirst()) {
+            minPrice = cursor.getDouble(0)
+            maxPrice = cursor.getDouble(1)
+        }
+        cursor.close()
+        db.close()
+        return "$minPrice - $maxPrice"
+
+    }
 }

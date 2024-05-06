@@ -135,16 +135,7 @@ fun bookingSummary(
 @Preview
 @Composable
 fun BookingSummary() {
-    val roomType : String = ""
-    val booking = Booking(
-        "12345",
-        "Hotel123",
-        "SINGLEROOM",
-        Date(),
-        Date(),1,
-        "Confirmed",
-        0.00
-    )
+
     TipTimeTheme {
         bookingSummary( onCancelButtonClicked = {},
             onNextButtonClicked = {},

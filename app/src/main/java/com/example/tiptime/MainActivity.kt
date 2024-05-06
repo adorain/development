@@ -62,10 +62,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.PaymentMethod
 import com.example.tiptime.Model.Pmethod
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.NumberFormat
+import java.util.Date
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +78,9 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    TravelApp()
+                    TipTimeTheme {
+                        booking(HotelAddress = "dasdsaasdasssdasds", HotelName = "Hotel Tranversa", HotelId = "H0001")
+                    }
                 }
             }
         }
@@ -89,7 +93,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipTimeLayoutPreview() {
     TipTimeTheme {
-
+        booking(HotelAddress = "dasdsaasdasssdasds", HotelName = "Hotel Tranversa", HotelId = "H0001")
     }
 }
 

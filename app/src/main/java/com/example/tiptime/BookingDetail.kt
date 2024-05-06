@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -30,6 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,21 +50,26 @@ import javax.sql.DataSource
 @Composable
 fun bookingDetails(
 
-    onNextButtonClicked:() -> Unit = {},
-    onCancelButtonClicked : () -> Unit = {},
-    OnBookingStartDateChange : (String) -> Unit={},
-    OnBookingEndDateChange : (String) -> Unit={},
+    onNextButtonClicked:() -> Unit ,
+    onCancelButtonClicked : () -> Unit,
+    OnBookingStartDateChange : (String) -> Unit,
+    OnBookingEndDateChange : (String) -> Unit,
     OnPaxChange : (String) -> Unit={},
-    HotelId : String = " ",
+    HotelId : String ,
     BookingStartDate : Date,
     BookingEndDate :Date,
     Price : Double,
     pax:Int,
     roomType:String
 ) {
+
     var TotalPrice by remember{ mutableStateOf(0.00) }
     var showDialog by remember { mutableStateOf(false) }
     var showDialog2 by remember { mutableStateOf(false) }
+    var selectedStartDate by remember { mutableStateOf(BookingStartDate) }
+    var selectedEndDate by remember { mutableStateOf(BookingEndDate) }
+    var showStartButtonText by remember { mutableStateOf("Select start Date") }
+    var showEndButtonText by remember { mutableStateOf("Select end Date") }
 
     Column {
 
@@ -103,7 +112,7 @@ fun bookingDetails(
                 Button(
                     onClick = { showDialog = true }
                 ) {
-                    Text("Select start Date")
+                    Text(showStartButtonText)
                 }
             }
 
@@ -118,7 +127,7 @@ fun bookingDetails(
                 Button(
                     onClick = { showDialog2 = true }
                 ) {
-                    Text("Select End Date")
+                    Text(showEndButtonText)
                 }
             }
         }
@@ -134,10 +143,10 @@ fun bookingDetails(
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {
-                Text(text = "Room Type: ", fontSize = 21.sp)
+                Text(text = "Pax: ", fontSize = 21.sp)
             }
             Column {
-                TextField(value =pax.toString(), onValueChange = OnPaxChange, label = {})
+                TextField(value =pax.toString(), onValueChange = OnPaxChange, label = {}, textStyle = TextStyle(fontSize = 21.sp), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),modifier = Modifier.fillMaxWidth())
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -171,26 +180,63 @@ fun bookingDetails(
                 onClick = onNextButtonClicked,
                 modifier = Modifier.size(width = 100.dp, height = 50.dp)
             ) {
-                Text(text = "Pay")
+                Text(text = "Next")
 
             }
 
 
         }
     }
-    if(!showDialog){
-        showDatePicker(context = LocalContext.current, onStartDateSelected = {BookingStartDate ->OnBookingStartDateChange(BookingStartDate.toString())})
-    }
-    else{
+    if (showDialog) {
+        showDatePicker(
+            context = LocalContext.current,
+            date = selectedStartDate,
+            onDateSelected = { selectedDate ->
+                selectedStartDate = selectedDate
+                OnBookingStartDateChange(selectedDate.toString())
+            }
+        )
         showDialog = false
     }
 
-    if(!showDialog2){
-        showDatePicker(context = LocalContext.current, onStartDateSelected = {BookingEndDate ->OnBookingEndDateChange(BookingEndDate.toString())})
-    }
-    else{
+
+
+    if (showDialog2) {
+        showDatePicker(
+            context = LocalContext.current,
+            date = selectedEndDate,
+            onDateSelected = { selectedDate ->
+                selectedEndDate = selectedDate
+                OnBookingEndDateChange(selectedDate.toString())
+            }
+        )
         showDialog2 = false
     }
+
+
+
+
+
+
+
+    /*if (showDialog) {
+        showDatePicker(context = LocalContext.current) { selectedDate ->
+            OnBookingStartDateChange(selectedDate.toString())
+            showDialog = false // Dismiss the dialog after selecting a date
+        }
+    }
+
+
+
+
+    if (showDialog2) {
+        showDatePicker(context = LocalContext.current) { selectedDate ->
+            OnBookingEndDateChange(selectedDate.toString())
+            showDialog2 = false // Dismiss the dialog after selecting a date
+        }
+    }
+
+     */
 }
 
 @Composable
@@ -204,27 +250,23 @@ fun calculatePrice(STARTDATE:Date,ENDDATE:Date,PRICE:Double):Double{
 fun BookingDetail() {
     
     TipTimeTheme {
-        bookingDetails(onCancelButtonClicked = {}, onNextButtonClicked = {}, OnBookingEndDateChange = {}, OnBookingStartDateChange = {}, OnPaxChange = {}, BookingStartDate = Date(), BookingEndDate = Date(), roomType = "",Price=0.00,pax = 0)
+        bookingDetails(onCancelButtonClicked = {}, onNextButtonClicked = {}, OnBookingEndDateChange = {}, OnBookingStartDateChange = {}, OnPaxChange = {}, BookingStartDate = Date(), BookingEndDate = Date(), roomType = "",Price=0.00,pax = 0 , HotelId = "")
     }
 }
 
-@Composable
-fun showDatePicker(context:Context, onStartDateSelected: (Date) -> Unit){
-    val year:Int
-    val month: Int
-    val day:Int
+fun showDatePicker(context: Context, date: Date, onDateSelected: (Date) -> Unit) {
     val calendar = Calendar.getInstance()
-    year= calendar.get(Calendar.YEAR)
-    month=calendar.get(Calendar.MONTH)
-    day = calendar.get(Calendar.DAY_OF_MONTH)
-    calendar.time=Date()
-    val date = remember {
-        mutableStateOf("")
-    }
+    calendar.time = date
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
     val datePickerDialog = android.app.DatePickerDialog(
         context,
-        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            date.value = "$dayOfMonth/$month/$year"
+        { _, year, month, dayOfMonth ->
+            calendar.set(year, month, dayOfMonth)
+            val selectedDate = calendar.time
+            onDateSelected(selectedDate)
         },
         year,
         month,

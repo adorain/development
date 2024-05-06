@@ -230,6 +230,6 @@ fun showDatePicker(context:Context, onStartDateSelected: (Date) -> Unit){
         month,
         day
     )
-    
 
+    datePickerDialog.show()
 }

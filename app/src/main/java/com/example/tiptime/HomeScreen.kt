@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.SqlliteManagement.HotelDb
+import com.example.tiptime.SqlliteManagement.RoomDb
 import java.util.Calendar
 import java.util.Date
 
@@ -51,6 +52,9 @@ import java.util.Date
 @Composable
 fun HomeScreen(
     onSelectedHotel:(String)->Unit,
+    onSelectedHotelName: (String) -> Unit,
+    onSelectedHotelAddress: (String) -> Unit,
+    onSelectedHotelDes: (String) -> Unit
 
 ){
     val hotelDb = HotelDb(context = LocalContext.current)
@@ -110,6 +114,8 @@ fun HomeScreen(
                                     pax
                                 )
                             )
+
+
                         }
                 )
 
@@ -206,7 +212,12 @@ fun HomeScreen(
         hotels.forEach { hotel ->
             HotelItem(
                 hotel = hotel,
-                onItemClick = {onSelectedHotel(hotel.HotelId)}
+                onItemClick = {
+                    onSelectedHotel(hotel.HotelId)
+                    onSelectedHotelName(hotel.HotelName)
+                    onSelectedHotelDes(hotel.HotelDesciption)
+                    onSelectedHotelAddress(hotel.HotelAddress)
+                }
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -217,7 +228,7 @@ fun HomeScreen(
 
 
     if(!showDialog){
-        showDatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
     }
     else{
         showDialog = false
@@ -226,7 +237,7 @@ fun HomeScreen(
 
 
     if(!showDialog2){
-        showDatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
     }
     else{
         showDialog2 = false
@@ -250,7 +261,9 @@ fun HomeScreen(
 
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
+    val RoomDb = RoomDb(LocalContext.current)
     Row(
+
         modifier = Modifier
             .border(3.dp, Color.Black)
             .width(350.dp)
@@ -275,14 +288,14 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Hotel Name :")
+                Text(text = hotel.HotelName)
             }
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Address")
+                Text(text = hotel.HotelAddress)
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Description")
+                Text(text = hotel.HotelDesciption)
             }
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -291,7 +304,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
                     Text(text = "Rating:")
                 }
                 Column(modifier = Modifier.weight(1f)){
-                    Text(text = "Price")
+                    Text(text = RoomDb.PriceRange(hotel.HotelId))
                 }
             }
 

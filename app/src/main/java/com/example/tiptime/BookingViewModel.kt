@@ -29,6 +29,7 @@ class BookingViewModel : ViewModel(){
     var BookedStartDate by mutableStateOf(Date())
     var BookedEndDate by mutableStateOf(Date())
     var Pax by mutableStateOf(0)
+    var roomtype by mutableStateOf("")
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     fun insertNewBooking(Booking_id : String , Hotel_Id : String,ROOM_TYPE: String,BookedStartDate : Date, BookedEndDate:Date , Pax:Int, STATUS:String,PRICE:Double){
@@ -121,11 +122,7 @@ class BookingViewModel : ViewModel(){
             )
         }
     }
-    /*fun ConfirmedBooking():String{
-        val hotelId : String = ""
-        val roomtype : String = setBooking(hotelId).toString()
-        return roomtype.toString()
-    }*/
+
 
     fun updateBookingStartDate(bookedStartDate : String) {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -146,6 +143,18 @@ class BookingViewModel : ViewModel(){
     fun updatePrice(price : String){
         Price = price.toDouble()
     }
+    fun updateRoomType(RoomType:String){
+        roomtype = RoomType
+    }
 
+    fun setRoomType():String{
+        _uiState.update{
+                currentState->
+            currentState.copy(
+                roomType = roomtype
+            )
+        }
+        return roomtype
+    }
 
 }

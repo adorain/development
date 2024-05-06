@@ -40,9 +40,10 @@ fun booking (
     HotelAddress:String,
     HotelName: String,
     HotelId : String,
-    RoomType : String
 ){
-
+    var RoomType by remember {
+        mutableStateOf("")
+    }
 
     Column {
         Row (
@@ -82,12 +83,15 @@ fun booking (
             HorizontalDivider(modifier = Modifier.padding(start = 2.dp ), thickness = 3.dp)
             Row {
                 Column {
-                    Text(text = HotelName, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                    Text(text = "Single Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
                 }
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = RoomType), color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Single Room"
+                    ) { selectedRoomType ->
+                        RoomType = selectedRoomType // Update RoomType
+                    }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
                 }
             }
 
@@ -97,12 +101,15 @@ fun booking (
             )
             Row {
                 Column {
-                    Text(text = RoomType, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                    Text(text = "Double Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
                 }
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = RoomType), color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room"
+                    ) { selectedRoomType ->
+                        RoomType = selectedRoomType // Update RoomType
+                    }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
                 }
             }
             HorizontalDivider(
@@ -111,12 +118,15 @@ fun booking (
             )
             Row {
                 Column {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = RoomType), color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                    Text(text = "King Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
                 }
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = RoomType) , color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room"
+                    ) { selectedRoomType ->
+                        RoomType = selectedRoomType // Update RoomType
+                    }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
                 }
             }
             HorizontalDivider(
@@ -163,7 +173,7 @@ fun Bookings() {
 }
 */
 @Composable
-fun checkAvailable(hotelId : String , roomtype: String ) : String{
+fun checkAvailable(hotelId : String , roomtype: String,onRoomTypeSelected: (String) -> Unit ) : String{
     val roomDb = RoomDb(context = LocalContext.current)
     val status = roomDb.checkRoomStatus(hotelId,roomtype)
     val price : Double = 0.00
@@ -172,7 +182,9 @@ fun checkAvailable(hotelId : String , roomtype: String ) : String{
     var textcolor by remember{ mutableStateOf(Color.Green) }
     if(status == "Available"){
         canClick =true
-        Text(text = price.toString(), modifier = Modifier.clickable { selectedRoom = true },color = textcolor)
+        Text(text = price.toString(), modifier = Modifier.clickable { selectedRoom = true
+                                                                    onRoomTypeSelected(roomtype)
+                                                                    },color = textcolor)
         if(selectedRoom){
             textcolor = Color.Red
         }else{

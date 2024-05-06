@@ -73,7 +73,7 @@ fun HomeScreen(
     var showDialog2 by remember { mutableStateOf(false) }
     var showNumberPicker by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(top = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
 
@@ -135,7 +135,7 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Check in Date : ")
+                        Text(text = "Check in Date : ", color = Color.Black)
                     }
                 }
                 Row(modifier = Modifier
@@ -153,13 +153,13 @@ fun HomeScreen(
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Button(onClick = { showDialog2 } , modifier = Modifier
+                    Button(onClick = { showDialog2 = true } , modifier = Modifier
                         .width(200.dp)
                         .height(60.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Check Out Date : ")
+                        Text(text = "Check Out Date : ",color = Color.Black)
                     }
                 }
                 Row(modifier = Modifier
@@ -183,20 +183,14 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Pax : $pax")
+                        Text(text = "Pax : $pax", color = Color.Black)
                     }
                 }
 
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        Row(
-            modifier = Modifier.padding(start = 340.dp)
-        ) {
-            Image(painter = painterResource(R.drawable.down_icon), contentDescription = null, modifier = Modifier
-                .width(10.dp)
-            )
-        }
+
+
         LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
             hotels.clear()
             hotels.addAll(
@@ -221,31 +215,27 @@ fun HomeScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
-
-
     }
 
 
 
-    if(!showDialog){
+
+
+    if(showDialog){
         showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
-    }
-    else{
         showDialog = false
     }
 
 
 
-    if(!showDialog2){
+    if(showDialog2){
         showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
-    }
-    else{
         showDialog2 = false
     }
 
 
 
-    if(!showNumberPicker){
+    if(showNumberPicker){
         NumberPickerShow(
             minValue = 0,
             maxValue = 20,
@@ -253,9 +243,8 @@ fun HomeScreen(
             onValueChange = {pax},
             OnClose = { showNumberPicker = false},
         )
-    }
-    else{
-        showNumberPicker = false
+
+
     }
 }
 
@@ -337,6 +326,7 @@ fun showdatePicker(context: Context, onStartDateSelected: (Date) -> Unit){
         month,
         day
     )
+    datePickerDialog.show()
 }
 
 @Composable

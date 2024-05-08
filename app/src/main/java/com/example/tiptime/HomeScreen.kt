@@ -353,6 +353,7 @@ fun NumberPickerShow(
                 Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
             }
             Button(onClick = OnClose) {
+                onValueChange(value)
                 Text(text = "Select")
             }
         }

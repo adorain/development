@@ -92,7 +92,7 @@ fun booking (
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
                     }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
-                    
+
 
 
                 }

@@ -91,6 +91,16 @@ fun bookingSummary(
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {
+                Text(text = "Pax : ", fontSize = 21.sp)
+            }
+            Column {
+                Text(text = pax.toString(), fontSize = 21.sp)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        Row {
+            Column {
                 Text(text = "Room Type: ", fontSize = 21.sp)
             }
             Column {

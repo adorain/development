@@ -4,6 +4,7 @@ package com.example.tiptime
 import android.content.Context
 import android.widget.DatePicker
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,12 +14,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,9 +35,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,6 +78,7 @@ fun bookingDetails(
     var selectedEndDate by remember { mutableStateOf(BookingEndDate) }
     var showStartButtonText by remember { mutableStateOf("Select start Date") }
     var showEndButtonText by remember { mutableStateOf("Select end Date") }
+    var showNoPicker by remember { mutableStateOf(false) }
 
     Column {
 
@@ -105,29 +114,36 @@ fun bookingDetails(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Row {
-            Column {
+            Column (modifier =Modifier.padding(top = 10.dp)){
                 Text(text = "Booking Start Date : ", fontSize = 21.sp)
             }
             Column {
                 Button(
-                    onClick = { showDialog = true }
+                    onClick = { showDialog = true },
+                    modifier = Modifier.border(width = 1.dp, color = Color.Black, shape = RectangleShape),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    shape = RoundedCornerShape(0)
                 ) {
-                    Text(showStartButtonText)
+                    Text(showStartButtonText,color = Color.Black)
                 }
             }
 
         }
         Spacer(modifier = Modifier.height(20.dp))
         Row {
-            Column {
+            Column(
+                modifier =Modifier.padding(top = 10.dp)
+            ) {
                 Text(text = "Booking End Date : ", fontSize = 21.sp)
             }
             Column{
 
                 Button(
-                    onClick = { showDialog2 = true }
+                    onClick = { showDialog2 = true },modifier = Modifier.border(width = 1.dp, color = Color.Black, shape = RectangleShape),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    shape = RoundedCornerShape(0)
                 ) {
-                    Text(showEndButtonText)
+                    Text(showEndButtonText,color = Color.Black)
                 }
             }
         }
@@ -142,11 +158,16 @@ fun bookingDetails(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Row {
-            Column {
+            Column(modifier = Modifier.padding(top = 10.dp)) {
                 Text(text = "Pax: ", fontSize = 21.sp)
             }
             Column {
-                TextField(value =pax.toString(), onValueChange = OnPaxChange, label = {}, textStyle = TextStyle(fontSize = 21.sp), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),modifier = Modifier.fillMaxWidth())
+                //TextField(value =pax.toString(), onValueChange = OnPaxChange, label = {}, textStyle = TextStyle(fontSize = 21.sp), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),modifier = Modifier.fillMaxWidth())
+                Button(onClick = { showNoPicker = true }, modifier = Modifier.border(width = 1.dp, color = Color.Black, shape = RectangleShape),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    shape = RoundedCornerShape(0)) {
+                    Text(text = "$pax", color = Color.Black)
+                }
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -215,7 +236,10 @@ fun bookingDetails(
 
 
 
-
+    if(showNoPicker){
+        showNumberPicker(minValue = 0, maxValue = 20, initialValue = 0, onValueChange = {OnPaxChange(pax.toString())}, OnClose = {showNoPicker = false})
+    }
+    
 
 
 
@@ -274,4 +298,36 @@ fun showDatePicker(context: Context, date: Date, onDateSelected: (Date) -> Unit)
     )
 
     datePickerDialog.show()
+}
+
+@Composable
+fun showNumberPicker(
+    minValue: Int,
+    maxValue: Int,
+    initialValue: Int,
+    onValueChange: (Int) -> Unit,
+    OnClose:()-> Unit,
+) {
+    var value by remember { mutableStateOf(initialValue) }
+    Dialog(onDismissRequest = OnClose) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            IconButton(onClick = { if (value > minValue) value-- }) {
+                Icon(painterResource( R.drawable.down_icon), contentDescription = "Increase")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = value.toString())
+            Spacer(modifier = Modifier.height(8.dp))
+            IconButton(onClick = { if (value < maxValue) value++ }) {
+                Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
+            }
+            Button(onClick = OnClose) {
+                onValueChange(value)
+                Text(text = "Select")
+            }
+        }
+    }
+
 }

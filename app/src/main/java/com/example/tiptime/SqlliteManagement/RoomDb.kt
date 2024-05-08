@@ -8,15 +8,15 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.tiptime.Data.room
 
 class RoomDb(context : Context?) :
-    SQLiteOpenHelper(context, RoomDb.DB_NAME, null, RoomDb.DB_VERSION) {
+    SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
         val query =
-            ("CREATE TABLE" + TABLE_NAME + "(" + TYPE_COLUMN + "TEXT PRIMARY KEY" + ID_COLUMN + "TEXT" + "FOREIGN KEY(" + RoomDb.ID_COLUMN + ") REFERENCES " + RoomDb.HOTEL_TABLE + "(" + RoomDb.HOTELID_TABLE + ")" + "TEXT" + STATUS_COLUMN + "TEXT" + PRICE_COLUMN + "TEXT")
+            ("CREATE TABLE" + TABLE_NAME + "(" + TYPE_COLUMN + "TEXT PRIMARY KEY ," + ID_COLUMN + "TEXT NOT NULL," + "FOREIGN KEY(" + ID_COLUMN + ") REFERENCES " + HOTEL_TABLE + "(" + HOTELID_TABLE + ")" + STATUS_COLUMN + "TEXT NOT NULL," + PRICE_COLUMN + "TEXT NOT NULL)")
         db?.execSQL(query)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS" + RoomDb.TABLE_NAME)
+        db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME)
         onCreate(db)
     }
 

@@ -10,7 +10,7 @@ import com.example.tiptime.Data.PaymentMethod
 class BookingDb (context : Context?) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
-        val query= ("CREATE TABLE" + TABLE_NAME + "(" + ID_COLUMN + "TEXT PRIMARY KEY" + "FOREIGN KEY("+ HID_COLUMN +") REFERENCES " + HOTEL_TABLE + "(" + HOTELID_COLUMN + ")"+ "TEXT" + "FOREIGN KEY("+ ROOM_COLUMN +") REFERENCES " + ROOMTABLE + "(" + RTYPE + ")"+ "TEXT" + PRICE_COLUMN+"TEXT"+ STARTDATE_COLUMN + "TEXT"+ END_DATE + "TEXT" + END_DATE + "TEXT"+ STATUS_COLUMN +"TEXT")
+        val query= ("CREATE TABLE" + TABLE_NAME + "(" + ID_COLUMN + "TEXT PRIMARY KEY ," + HID_COLUMN + " TEXT NOT NULL," +"FOREIGN KEY("+ HID_COLUMN +") REFERENCES " + HOTEL_TABLE + "(" + HOTELID_COLUMN + ")"+ ROOM_COLUMN + "TEXT NOT NULL," + "FOREIGN KEY("+ ROOM_COLUMN +") REFERENCES " + ROOMTABLE + "(" + RTYPE + ")"+ PRICE_COLUMN+"TEXT NOT NULL,"+ STARTDATE_COLUMN + "TEXT NOT NULL,"+ END_DATE + "TEXT NOT NULL," + END_DATE + "TEXT NOT NULL,"+ STATUS_COLUMN +"TEXT NOT NULL)")
         db?.execSQL(query)
     }
 

@@ -1,12 +1,12 @@
-package com.example.jomtravel
+package com.example.tiptime
 
-import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-//import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,21 +23,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import com.example.jomtravel.ui.theme.JomTravelTheme
+import com.example.tiptime.ui.theme.TipTimeTheme
+import com.example.tiptime.ui.theme.black
+import com.example.tiptime.ui.theme.lavender
+import com.example.tiptime.ui.theme.white
 
 class UserLogin : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JomTravelTheme {
-                // A surface container using the 'background' color from the theme
+            TipTimeTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -51,21 +54,30 @@ class UserLogin : ComponentActivity() {
 
 @Composable
 fun UserLoginContent(){
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.normal_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
+        )
     Column(
-         modifier=Modifier
+        modifier= Modifier
             .fillMaxSize()
-             .background(color=Color(R.color.purple_500))
+/*            .background(color = lavender)*/
             .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(
-            text = "App User Login",
+            text = "User Sign-in",
             fontSize = 40.sp,
-            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            color = white,
             modifier = Modifier
                 .padding(
                     vertical = 120.dp,
-                    horizontal = 70.dp)
+                    horizontal = 70.dp
+                )
         )
         UserLoginTextField(
             hint = "E-mail Address",
@@ -76,6 +88,17 @@ fun UserLoginContent(){
             hint = "Password",
             keyboardType = KeyboardType.Password
         )
+        Spacer(modifier = Modifier.height(40.dp))
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Submit")
+
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "New User? Please Sign-up")
+
+        }
+    }
     }
 
 }
@@ -88,7 +111,7 @@ fun UserLoginTextField(hint: String, keyboardType: KeyboardType) {
         placeholder = { Text(text = hint) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
-        textStyle = TextStyle(color = Color.White),
+        textStyle = TextStyle(color = white),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }
@@ -97,7 +120,7 @@ fun UserLoginTextField(hint: String, keyboardType: KeyboardType) {
 @Preview
 @Composable
 fun UserLoginPreview() {
-    JomTravelTheme {
+    TipTimeTheme {
         UserLoginContent()
     }
 }

@@ -1,12 +1,11 @@
-package com.example.jomtravel
+package com.example.tiptime
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-//import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,21 +22,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import com.example.jomtravel.ui.theme.JomTravelTheme
+import com.example.tiptime.ui.theme.TipTimeTheme
+import com.example.tiptime.ui.theme.navy_blue
+import com.example.tiptime.ui.theme.white
 
 class HotelLogin : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JomTravelTheme {
-                // A surface container using the 'background' color from the theme
+            TipTimeTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -51,34 +53,60 @@ class HotelLogin : ComponentActivity() {
 
 @Composable
 fun HotelLoginContent(){
-    Column(
-        modifier=Modifier
-            .fillMaxSize()
-            .background(color=Color(R.color.navy_blue))
-            .padding(horizontal = 30.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Text(
-            text = "Hotel User Login",
-            fontSize = 40.sp,
-            color = Color.White,
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.hotel_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
+        )
+        Column(
             modifier = Modifier
-                .padding(
-                    vertical = 120.dp,
-                    horizontal = 70.dp)
-        )
-        UserLoginTextField(
-            hint = "E-mail Address",
-            keyboardType = KeyboardType.Email
-        )
-        Spacer(modifier = Modifier.height(40.dp))
-        UserLoginTextField(
-            hint = "Password",
-            keyboardType = KeyboardType.Password
-        )
+                .fillMaxSize()
+/*                .background(color = navy_blue)*/
+                .padding(horizontal = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Hotel Sign-in",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = white,
+                modifier = Modifier
+                    .padding(
+                        vertical = 120.dp,
+                        horizontal = 70.dp
+                    )
+            )
+            HotelLoginTextField(
+                hint = "E-mail Address",
+                keyboardType = KeyboardType.Email
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+            HotelLoginTextField(
+                hint = "Password",
+                keyboardType = KeyboardType.Password
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "Submit")
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "New User? Please Sign-up")
+
+            }
+
+        }
     }
 
 }
+
+
+
 
 @Composable
 fun HotelLoginTextField(hint: String, keyboardType: KeyboardType) {
@@ -88,7 +116,7 @@ fun HotelLoginTextField(hint: String, keyboardType: KeyboardType) {
         placeholder = { Text(text = hint) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
-        textStyle = TextStyle(color = Color.White),
+        textStyle = TextStyle(color = white),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }
@@ -97,7 +125,7 @@ fun HotelLoginTextField(hint: String, keyboardType: KeyboardType) {
 @Preview
 @Composable
 fun HotelLoginPreview() {
-    JomTravelTheme {
+    TipTimeTheme {
         HotelLoginContent()
     }
 }

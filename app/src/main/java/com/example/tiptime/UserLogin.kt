@@ -1,4 +1,4 @@
-/*package com.example.jomtravel
+package com.example.jomtravel
 
 import android.content.Intent
 import android.os.Bundle
@@ -101,7 +101,3 @@ fun UserLoginPreview() {
         UserLoginContent()
     }
 }
-
-
-
- */

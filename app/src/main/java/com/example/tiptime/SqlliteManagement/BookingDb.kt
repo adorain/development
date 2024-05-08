@@ -17,6 +17,7 @@ class BookingDb (context : Context?) :
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME)
         onCreate(db)
+
     }
 
     companion object{

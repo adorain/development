@@ -98,6 +98,7 @@ fun bookingSummary(
             }
         }
 
+
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {

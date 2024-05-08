@@ -112,6 +112,7 @@ fun bookingDetails(
                 Text(text = HotelId, fontSize = 21.sp)
             }
         }
+
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column (modifier =Modifier.padding(top = 10.dp)){

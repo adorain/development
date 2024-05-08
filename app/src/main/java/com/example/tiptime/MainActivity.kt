@@ -39,13 +39,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     TipTimeTheme {
-                        TravelApp()
+                        booking(HotelAddress = "dasdsaasdasssdasds", HotelName = "Hotel Tranversa", HotelId = "H0001")
                     }
                 }
             }
         }
     }
 }
+
 
 
 

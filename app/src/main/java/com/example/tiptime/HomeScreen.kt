@@ -39,11 +39,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.SqlliteManagement.HotelDb
 import com.example.tiptime.SqlliteManagement.RoomDb
+import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Calendar
 import java.util.Date
 
@@ -73,7 +75,9 @@ fun HomeScreen(
     var showDialog2 by remember { mutableStateOf(false) }
     var showNumberPicker by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier.fillMaxSize().padding(top = 25.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
 
@@ -84,6 +88,7 @@ fun HomeScreen(
                 .border(3.dp, Color.Black)
                 .width(350.dp)
         ) {
+
 
             Row(
                 modifier = Modifier,
@@ -251,6 +256,19 @@ fun HomeScreen(
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
     val RoomDb = RoomDb(LocalContext.current)
+    val HotelDb = HotelDb(LocalContext.current)
+    var isChangeColor by remember{ mutableStateOf(false) }
+    var color by remember {
+        mutableStateOf(Color.White)
+    }
+    var status by remember{ mutableStateOf("") }
+    Row {
+        Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
+            modifier = Modifier.clickable {
+                isChangeColor = true
+            }
+            )
+    }
     Row(
 
         modifier = Modifier
@@ -300,6 +318,15 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
         }
 
 
+        if(isChangeColor){
+            color = Color.Red
+            status = "Favorite"
+            HotelDb.updateHotelStatus(hotel.HotelId,status)
+        }else{
+            color = Color.White
+            status = ""
+            HotelDb.updateHotelStatus(hotel.HotelId,"")
+        }
     }
 }
 
@@ -359,4 +386,14 @@ fun NumberPickerShow(
         }
     }
 
+}
+
+@Preview
+@Composable
+fun HomePreview(){
+    TipTimeTheme{
+        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={} ) {
+
+        }
+    }
 }

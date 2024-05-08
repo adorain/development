@@ -38,6 +38,7 @@ import com.example.tiptime.Data.PaymentMethod
 import com.example.tiptime.Model.Pmethod
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.SqlliteManagement.BookingDb
+import com.example.tiptime.ui.theme.TipTimeTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -120,11 +121,11 @@ fun PaymentLayout(
                 )
             }
             Column(
-                modifier = Modifier.padding(start = 100.dp, top = 35.dp)
+                modifier = Modifier.padding(start = 50.dp, top = 35.dp)
             ) {
                 Text(text = "Online Banking", fontSize = 20.sp, color = Color.Black)
             }
-            Column(modifier = Modifier.padding(start = 30.dp,top=30.dp)) {
+            Column(modifier = Modifier.padding(start = 10.dp,top=30.dp)) {
                 Image(
                     painterResource(iconResId),
                     contentDescription = null,
@@ -171,6 +172,7 @@ fun ExpandList(sections: List<Pmethod>) {
         }
     }
 }
+
 
 @Composable
 fun ListItem(item: Pmethod) {
@@ -243,3 +245,12 @@ fun paymentSuccessful(
     }
 }
 
+@Preview
+@Composable
+fun paymentPreview(){
+    TipTimeTheme {
+        PaymentLayout(booking = Booking()) {
+            
+        }
+    }
+}

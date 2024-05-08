@@ -27,6 +27,7 @@ class hotelViewModel : ViewModel(){
         }
     }
 
+
     fun setHomeAddress(hotelAddress : String){
        _uiState.update {
            currentState->

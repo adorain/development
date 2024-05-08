@@ -8,10 +8,11 @@ import androidx.room.PrimaryKey
 
 data class User(
 
-    val UserId : String = "",
-    val Name:String = "",
-    val PhoneNumber : String = "",
-    val UserEmail :String = "",
-    val Gender : Char = 'M',
-    val Status : String = ""
+    val UserId: String = "",
+    val UserName:String = "",
+    val UserPhoneNumber: String = "",
+    val UserEmail:String = "",
+    val UserGender : Char='M',
+    val UserStatus: String = "",
+    val UserPassword: String = ""
 )

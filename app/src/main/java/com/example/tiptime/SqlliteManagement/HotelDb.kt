@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.compose.runtime.mutableStateOf
 import com.example.tiptime.Data.Hotel
 import java.util.Date
 
@@ -15,15 +16,15 @@ class HotelDb
     // below method is for creating a database by running a sqlite query
     override fun onCreate(db: SQLiteDatabase?) {
         val query = ("CREATE TABLE" + TABLE_NAME + "("
-                + ID_COLUMN + "TEXT PRIMARY KEY" +
-                "FOREIGN KEY(" + STAFF_COLUMN + ") REFERENCES " + STAFF_TABLE_NAME + "(" + STAFF_ID_COLUMN + ")" +"TEXT"+
-                "FOREIGN KEY(" + USER_COLUMN + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_ID_COLUMN + "))"+"TEXT"+
-                NAME_COL+ "TEXT" +
-                ADDRESS_COL +"TEXT" +
-                DESCRIPTION_COL + "TEXT"+
-                PAX_COL+"TEXT"+
-                TYPE_COL+"TEXT"+
-                STATUS_COL+"STATUS")
+                + ID_COLUMN + "TEXT PRIMARY KEY ," +
+                STAFF_COLUMN + "TEXT NOT NULL," +"FOREIGN KEY(" + STAFF_COLUMN + ") REFERENCES " + STAFF_TABLE_NAME + "(" + STAFF_ID_COLUMN + ")" +
+                USER_COLUMN + "TEXT NOT NULL," +"FOREIGN KEY(" + USER_COLUMN + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_ID_COLUMN + ")"+
+                NAME_COL+ "TEXT NOT NULL," +
+                ADDRESS_COL +"TEXT NOT NULL," +
+                DESCRIPTION_COL + "TEXT NOT NULL,"+
+                PAX_COL+"TEXT NOT NULL,"+
+                TYPE_COL+"TEXT NOT NULL,"+
+                STATUS_COL+"TEXT NOT NULL)")
         db?.execSQL(query)
     }
 
@@ -95,8 +96,16 @@ class HotelDb
         val db = this.readableDatabase
 
         val cursor = db.rawQuery(
-            "SELECT $ID_COLUMN, $NAME_COL, $ADDRESS_COL, $TYPE_COL, $STATUS_COL FROM $TABLE_NAME WHERE $ADDRESS_COL LIKE '%$hotelAddress%' AND $STATUS_COL = 'Available' AND $PAX_COL >= $Pax",
-            null
+            "SELECT DISTINCT $ID_COLUMN, $NAME_COL, $ADDRESS_COL, $TYPE_COL, $STATUS_COL " +
+                    "FROM $TABLE_NAME " +
+                    "JOIN ${BookingDb.TABLE_NAME} " +
+                    "ON $ID_COLUMN = ${BookingDb.HID_COLUMN} " +
+                    "WHERE $ADDRESS_COL LIKE '%$hotelAddress%' " +
+                    "AND $STATUS_COL = 'Available' " +
+                    "AND $PAX_COL >= $Pax" +
+                    "AND ${BookingDb.STARTDATE_COLUMN} < ? " +
+                    "AND ${BookingDb.END_DATE} > ?",
+            arrayOf(ENDDATE.time.toString(), STARTDATE.time.toString())
         )
 
         while (cursor.moveToNext()) { // Loop through the cursor to get all hotels
@@ -116,6 +125,39 @@ class HotelDb
         return hotels
     }
 
+    fun getFavoriteHotel(): List<Hotel> {
+        val hotels = mutableListOf<Hotel>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT DISTINCT $ID_COLUMN, $NAME_COL, $ADDRESS_COL, $TYPE_COL, $STATUS_COL FROM " +
+                    "$TABLE_NAME WHERE $STATUS_COL = 'Favorite'",
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            val hotel = Hotel(
+                HotelId = cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN)),
+                HotelName = cursor.getString(cursor.getColumnIndexOrThrow(NAME_COL)),
+                HotelAddress = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS_COL)),
+                Type = cursor.getString(cursor.getColumnIndexOrThrow(TYPE_COL)),
+                Status = cursor.getString(cursor.getColumnIndexOrThrow(STATUS_COL))
+            )
+            hotels.add(hotel)
+        }
+
+        cursor.close()
+        db.close()
+
+        return hotels
+    }
+
+    fun updateHotelStatus(hotelId: String, newStatus: String) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(STATUS_COL, newStatus)
+        db.update(TABLE_NAME, contentValues, "$ID_COLUMN=?", arrayOf(hotelId))
+        db.close()
+    }
 
 
 

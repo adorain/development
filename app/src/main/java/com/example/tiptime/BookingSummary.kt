@@ -91,6 +91,17 @@ fun bookingSummary(
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {
+                Text(text = "Pax : ", fontSize = 21.sp)
+            }
+            Column {
+                Text(text = pax.toString(), fontSize = 21.sp)
+            }
+        }
+
+
+        Spacer(modifier = Modifier.height(20.dp))
+        Row {
+            Column {
                 Text(text = "Room Type: ", fontSize = 21.sp)
             }
             Column {
@@ -135,16 +146,7 @@ fun bookingSummary(
 @Preview
 @Composable
 fun BookingSummary() {
-    val roomType : String = ""
-    val booking = Booking(
-        "12345",
-        "Hotel123",
-        "SINGLEROOM",
-        Date(),
-        Date(),1,
-        "Confirmed",
-        0.00
-    )
+
     TipTimeTheme {
         bookingSummary( onCancelButtonClicked = {},
             onNextButtonClicked = {},

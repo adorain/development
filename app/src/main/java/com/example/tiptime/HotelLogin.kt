@@ -128,4 +128,3 @@ fun HotelLoginPreview() {
     TipTimeTheme {
         HotelLoginContent()
     }
-}

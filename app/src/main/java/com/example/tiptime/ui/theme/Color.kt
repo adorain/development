@@ -77,6 +77,7 @@ val md_theme_dark_surfaceTint = Color(0xFFFFB0C8)
 val md_theme_dark_outlineVariant = Color(0xFF514347)
 val md_theme_dark_scrim = Color(0xFF000000)
 
+
 val violet = Color(0xffffbb86fc)
 val lavender = Color(0xff6200ee)
 val purple =  Color(0xff3700be)
@@ -90,3 +91,4 @@ val ocean_blue = Color(0xff016064)
 val matte_puple = Color(0xff392a48)
 val navy_blue = Color(0xff000080)
 val shadow = Color(0xff373737)
+

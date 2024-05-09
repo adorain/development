@@ -31,6 +31,8 @@ import com.example.tiptime.ui.theme.violet
 import com.example.tiptime.ui.theme.watermelon
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.example.tiptime.ui.theme.lavender
 
 class UserSelection : ComponentActivity() {
@@ -43,10 +45,14 @@ class UserSelection : ComponentActivity() {
                 ) {
                     UserSelectionContent()
                 }
+
             }
+
         }
+
     }
 }
+
 
 @Composable
 fun UserSelectionContent() {
@@ -83,10 +89,12 @@ fun UserSelectionContent() {
             }
             Spacer(modifier = Modifier.height(60.dp))
             UserSelectionButton("Hotel User") {
-                /* val intent = Intent(context, HotelLoginContent())
-            context.startActivity(intent)*/
+                /* val intent = Intent(this, HotelLoginContent()::class.java)
+            startActivity(intent)*/
                 /*import from HotelLogin.kt */
             }
+
+
         }
     }
 }

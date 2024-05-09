@@ -132,3 +132,4 @@ fun NewHotelPreview() {
     TipTimeTheme {
         NewHotelContent()
     }
+}

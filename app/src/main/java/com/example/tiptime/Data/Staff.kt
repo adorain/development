@@ -10,7 +10,9 @@ import androidx.room.PrimaryKey
 data class Staff(
     val StaffId : String = "",
     val StaffName : String = "",
-    val PhoneNumber : String= "",
+    val StaffPhoneNumber : String= "",
     val StaffEmail : String="",
-    val Gender : Char='M'
+    val StaffGender : Char='M',
+    val StaffStatus: String = "",
+    val StaffPassword : String = ""
 )

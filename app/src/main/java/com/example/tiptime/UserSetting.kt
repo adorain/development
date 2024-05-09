@@ -24,6 +24,7 @@ import com.example.tiptime.ui.theme.lavender
 import com.example.tiptime.ui.theme.white
 
 
+
 class UserSetting : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

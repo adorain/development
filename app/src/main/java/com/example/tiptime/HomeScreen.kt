@@ -39,11 +39,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.SqlliteManagement.HotelDb
 import com.example.tiptime.SqlliteManagement.RoomDb
+import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Calendar
 import java.util.Date
 
@@ -73,7 +75,9 @@ fun HomeScreen(
     var showDialog2 by remember { mutableStateOf(false) }
     var showNumberPicker by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
 
@@ -84,6 +88,7 @@ fun HomeScreen(
                 .border(3.dp, Color.Black)
                 .width(350.dp)
         ) {
+
 
             Row(
                 modifier = Modifier,
@@ -135,7 +140,7 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Check in Date : ")
+                        Text(text = "Check in Date : ", color = Color.Black)
                     }
                 }
                 Row(modifier = Modifier
@@ -153,13 +158,13 @@ fun HomeScreen(
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Button(onClick = { showDialog2 } , modifier = Modifier
+                    Button(onClick = { showDialog2 = true } , modifier = Modifier
                         .width(200.dp)
                         .height(60.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Check Out Date : ")
+                        Text(text = "Check Out Date : ",color = Color.Black)
                     }
                 }
                 Row(modifier = Modifier
@@ -183,20 +188,14 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Pax : $pax")
+                        Text(text = "Pax : $pax", color = Color.Black)
                     }
                 }
 
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        Row(
-            modifier = Modifier.padding(start = 340.dp)
-        ) {
-            Image(painter = painterResource(R.drawable.down_icon), contentDescription = null, modifier = Modifier
-                .width(10.dp)
-            )
-        }
+
+
         LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
             hotels.clear()
             hotels.addAll(
@@ -221,31 +220,27 @@ fun HomeScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
-
-
     }
 
 
 
-    if(!showDialog){
+
+
+    if(showDialog){
         showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
-    }
-    else{
         showDialog = false
     }
 
 
 
-    if(!showDialog2){
+    if(showDialog2){
         showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
-    }
-    else{
         showDialog2 = false
     }
 
 
 
-    if(!showNumberPicker){
+    if(showNumberPicker){
         NumberPickerShow(
             minValue = 0,
             maxValue = 20,
@@ -253,15 +248,27 @@ fun HomeScreen(
             onValueChange = {pax},
             OnClose = { showNumberPicker = false},
         )
-    }
-    else{
-        showNumberPicker = false
+
+
     }
 }
 
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
     val RoomDb = RoomDb(LocalContext.current)
+    val HotelDb = HotelDb(LocalContext.current)
+    var isChangeColor by remember{ mutableStateOf(false) }
+    var color by remember {
+        mutableStateOf(Color.White)
+    }
+    var status by remember{ mutableStateOf("") }
+    Row {
+        Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
+            modifier = Modifier.clickable {
+                isChangeColor = true
+            }
+            )
+    }
     Row(
 
         modifier = Modifier
@@ -311,6 +318,15 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
         }
 
 
+        if(isChangeColor){
+            color = Color.Red
+            status = "Favorite"
+            HotelDb.updateHotelStatus(hotel.HotelId,status)
+        }else{
+            color = Color.White
+            status = ""
+            HotelDb.updateHotelStatus(hotel.HotelId,"")
+        }
     }
 }
 
@@ -337,6 +353,7 @@ fun showdatePicker(context: Context, onStartDateSelected: (Date) -> Unit){
         month,
         day
     )
+    datePickerDialog.show()
 }
 
 @Composable
@@ -363,9 +380,20 @@ fun NumberPickerShow(
                 Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
             }
             Button(onClick = OnClose) {
+                onValueChange(value)
                 Text(text = "Select")
             }
         }
     }
 
+}
+
+@Preview
+@Composable
+fun HomePreview(){
+    TipTimeTheme{
+        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={} ) {
+
+        }
+    }
 }

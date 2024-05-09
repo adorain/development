@@ -8,27 +8,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,12 +33,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.tiptime.Data.PaymentMethod
 import com.example.tiptime.Model.Pmethod
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.SqlliteManagement.BookingDb
-import com.example.tiptime.SqlliteManagement.RoomDb
+import com.example.tiptime.ui.theme.TipTimeTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -65,7 +58,7 @@ fun PaymentLayout(
         verticalArrangement = Arrangement.Top
     ) {
         Row(
-            Modifier.padding(30.dp)
+            Modifier.padding(40.dp)
         ) {
 
             Text(text = "Choose a payment option", color = Color.Black)
@@ -128,11 +121,11 @@ fun PaymentLayout(
                 )
             }
             Column(
-                modifier = Modifier.padding(start = 100.dp, top = 35.dp)
+                modifier = Modifier.padding(start = 50.dp, top = 35.dp)
             ) {
                 Text(text = "Online Banking", fontSize = 20.sp, color = Color.Black)
             }
-            Column(modifier = Modifier.padding(start = 30.dp,top=30.dp)) {
+            Column(modifier = Modifier.padding(start = 10.dp,top=30.dp)) {
                 Image(
                     painterResource(iconResId),
                     contentDescription = null,
@@ -180,6 +173,7 @@ fun ExpandList(sections: List<Pmethod>) {
     }
 }
 
+
 @Composable
 fun ListItem(item: Pmethod) {
     var showDialog by remember{ mutableStateOf(false) }
@@ -214,18 +208,49 @@ fun ListItem(item: Pmethod) {
 fun paymentSuccessful(
     onNavigation : () -> Unit
 ){
-
+    var countdown by remember{mutableStateOf(5)}
     LaunchedEffect(Unit) {
-        delay(5000)
+        while (countdown > 0) {
+            delay(5000)
+            countdown--
+        }
+        onNavigation()
     }
-    Dialog(onDismissRequest = onNavigation) {
-        Card {
+    Dialog(
+        onDismissRequest = onNavigation,
+        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+    ) {
+        Card(
+            modifier = Modifier
+                .width(500.dp)
+                .height(500.dp)
+                .background(Color.White)
+        ) {
             Column {
                 Image(painterResource(R.drawable.tick),contentDescription = null)
             }
-            Column {
-                Text(text = "Payment Successful")
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                Text(text = "Payment Successful", fontSize = 30.sp)
             }
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                Text(text = "Return to home $countdown in seconds", fontSize = 20.sp)
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun paymentPreview(){
+    TipTimeTheme {
+        PaymentLayout(booking = Booking()) {
+            
         }
     }
 }

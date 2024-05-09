@@ -55,20 +55,20 @@ fun booking (
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 245.dp),
+            .padding(top = 260.dp),
 
     ){
         Row (
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(text = HotelName , color = Color.White, fontSize = 35.sp )
+            Text(text = HotelName , color = Color.Black, fontSize = 35.sp )
 
         }
         Spacer(modifier = Modifier.height(10.dp))
         Row(
 
         ) {
-            Text(text = HotelAddress, fontSize = 15.sp , color = Color.White,)
+            Text(text = HotelAddress, fontSize = 15.sp , color = Color.Black,)
         }
     }
 
@@ -83,7 +83,7 @@ fun booking (
             HorizontalDivider(modifier = Modifier.padding(start = 2.dp ), thickness = 3.dp)
             Row {
                 Column {
-                    Text(text = "Single Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                    Text(text = "Single Room", color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
                 }
                 Column(
 
@@ -92,8 +92,12 @@ fun booking (
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
                     }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+
+
+
                 }
             }
+
 
             HorizontalDivider(
                 modifier = Modifier.padding(start = 2.dp , top = 90.dp),
@@ -101,7 +105,7 @@ fun booking (
             )
             Row {
                 Column {
-                    Text(text = "Double Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                    Text(text = "Double Room", color = Color.Black, fontSize = 20.sp,modifier = Modifier.padding(top = 130.dp))
                 }
                 Column(
 
@@ -110,6 +114,8 @@ fun booking (
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
                     }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    
+
                 }
             }
             HorizontalDivider(
@@ -118,7 +124,7 @@ fun booking (
             )
             Row {
                 Column {
-                    Text(text = "King Room", color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp))
+                    Text(text = "King Room", color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 230.dp))
                 }
                 Column(
 
@@ -127,6 +133,9 @@ fun booking (
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
                     }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    
+
+
                 }
             }
             HorizontalDivider(

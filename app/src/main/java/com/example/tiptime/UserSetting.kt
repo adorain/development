@@ -184,16 +184,3 @@ fun UserSettingContent(){
     }
 
 }
-
-
-
-
-
-
-@Preview
-@Composable
-fun UserSettingPreview() {
-    TipTimeTheme {
-        UserSettingContent()
-    }
-}

@@ -26,11 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.Data.room
 import com.example.tiptime.SqlliteManagement.RoomDb
+import com.example.tiptime.ui.theme.TipTimeTheme
 
 
 @Composable
@@ -40,6 +43,7 @@ fun booking (
     HotelAddress:String,
     HotelName: String,
     HotelId : String,
+    status: String
 ){
     var RoomType by remember {
         mutableStateOf("")
@@ -88,10 +92,10 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Single Room"
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Single Room",status = status
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
-                    }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp))
 
 
 
@@ -110,11 +114,11 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room"
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room",status = status
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
-                    }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
-                    
+                    }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp))
+
 
                 }
             }
@@ -129,10 +133,10 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room"
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room",status = status
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
-                    }, color = Color.White , fontSize = 20.sp,modifier = Modifier.padding(top = 35.dp,start = 270.dp))
+                    }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp))
                     
 
 
@@ -172,37 +176,38 @@ fun booking (
     }
 
 }
-/*@Preview
+@Preview
 @Composable
 fun Bookings() {
 
     TipTimeTheme {
-        booking()
+        booking(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "", HotelAddress = "", HotelName = "", status = "")
     }
 }
-*/
+
 @Composable
-fun checkAvailable(hotelId : String , roomtype: String,onRoomTypeSelected: (String) -> Unit ) : String{
-    val roomDb = RoomDb(context = LocalContext.current)
-    val status = roomDb.checkRoomStatus(hotelId,roomtype)
-    val price : Double = 0.00
+fun checkAvailable(hotelId : String , roomtype: String,status:String,onRoomTypeSelected: (String) -> Unit ) : String{
+
+    var price by remember { mutableStateOf("") }
     var canClick by remember{ mutableStateOf(false) }
     var selectedRoom by remember { mutableStateOf(false) }
     var textcolor by remember{ mutableStateOf(Color.Green) }
     if(status == "Available"){
         canClick =true
-        Text(text = price.toString(), modifier = Modifier.clickable { selectedRoom = true
+        Text(text = price, modifier = Modifier.clickable { selectedRoom = true
                                                                     onRoomTypeSelected(roomtype)
                                                                     },color = textcolor)
-        if(selectedRoom){
-            textcolor = Color.Red
+        textcolor = if(selectedRoom){
+            Color.Red
         }else{
-            textcolor = Color.Green
+            Color.Green
         }
-    }else{
-        canClick = false
-        Text(text = "UnAvailable" , color = Color.Red)
     }
-    return price.toString()
+    else if (status == "UnAvailable"){
+        canClick = false
+        price = "UnAvailable"
+        return price
+    }
+    return price
 
 }

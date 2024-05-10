@@ -15,19 +15,20 @@ class HotelDb
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     // below method is for creating a database by running a sqlite query
     override fun onCreate(db: SQLiteDatabase?) {
-        val query = ("CREATE TABLE" + TABLE_NAME + "("
-                + ID_COLUMN + "TEXT PRIMARY KEY ," +
-                STAFF_COLUMN + "TEXT NOT NULL," +"FOREIGN KEY(" + STAFF_COLUMN + ") REFERENCES " + STAFF_TABLE_NAME + "(" + STAFF_ID_COLUMN + ")" +
-                USER_COLUMN + "TEXT NOT NULL," +"FOREIGN KEY(" + USER_COLUMN + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_ID_COLUMN + ")"+
-                NAME_COL+ "TEXT NOT NULL," +
-                ADDRESS_COL +"TEXT NOT NULL," +
-                DESCRIPTION_COL + "TEXT NOT NULL,"+
-                PAX_COL+"TEXT NOT NULL,"+
-                TYPE_COL+"TEXT NOT NULL,"+
-                STATUS_COL+"TEXT NOT NULL)")
+        val query = ("CREATE TABLE $TABLE_NAME (" +
+                "$ID_COLUMN TEXT PRIMARY KEY ," +
+                "$STAFF_COLUMN TEXT NOT NULL," +
+                "FOREIGN KEY($STAFF_COLUMN) REFERENCES $STAFF_TABLE_NAME($STAFF_ID_COLUMN)," +
+                "$USER_COLUMN TEXT NOT NULL," +
+                "FOREIGN KEY($USER_COLUMN) REFERENCES $USER_TABLE_NAME($USER_ID_COLUMN)," +
+                "$NAME_COL TEXT NOT NULL," +
+                "$ADDRESS_COL TEXT NOT NULL," +
+                "$DESCRIPTION_COL TEXT NOT NULL," +
+                "$PAX_COL TEXT NOT NULL," +
+                "$TYPE_COL TEXT NOT NULL," +
+                "$STATUS_COL TEXT NOT NULL)")
         db?.execSQL(query)
     }
-
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME)
         onCreate(db)

@@ -44,11 +44,12 @@ import kotlinx.coroutines.delay
 @Composable
 fun PaymentLayout(
 
-    booking: Booking,
+
     onClickedButton :() -> Unit,
+
 ){
 
-    val bookingDb = BookingDb(context = LocalContext.current)
+
     var showDialog by remember{ mutableStateOf(false) }
     var isVisaExpanded by remember { mutableStateOf(false) }
     var iconResId by remember { mutableStateOf(R.drawable.down_icon) }
@@ -148,24 +149,21 @@ fun PaymentLayout(
 
         // If Visa section is expanded, show the list
         if (isVisaExpanded) {
-            ExpandList(sections = PaymentMethod().listPaymentMethod())
+            ExpandList(sections = PaymentMethod().listPaymentMethod(), onNavigation = onClickedButton)
         }
 
 
         if(showDialog){
             paymentSuccessful(onClickedButton)
-            showDialog=false
-            val booked= Booking(booking.Booked_id ,booking.HotelId,booking.ROOMTYPE,booking.BookedStartDate,booking.BookedEndDate,booking.Pax,booking.Status,booking.Price )
-            bookingDb.addNewBooking(booked )
         }
     }
 }
 
 @Composable
-fun ExpandList(sections: List<Pmethod>) {
+fun ExpandList(sections: List<Pmethod>,onNavigation: () -> Unit) {
     LazyColumn {
         itemsIndexed(sections) { index, item ->
-            ListItem(item = item)
+            ListItem(item = item, onNavigation = onNavigation)
             if (index < sections.size - 1) {
                 Divider(modifier = Modifier.padding(horizontal = 30.dp))
             }
@@ -175,7 +173,7 @@ fun ExpandList(sections: List<Pmethod>) {
 
 
 @Composable
-fun ListItem(item: Pmethod) {
+fun ListItem(item: Pmethod , onNavigation: () -> Unit) {
     var showDialog by remember{ mutableStateOf(false) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -195,10 +193,9 @@ fun ListItem(item: Pmethod) {
             modifier = Modifier.clickable { showDialog = true }
         )
         if(showDialog){
-            paymentSuccessful{
-
-                showDialog=false
-            }
+            paymentSuccessful(
+                onNavigation
+            )
         }
 
     }
@@ -249,7 +246,7 @@ fun paymentSuccessful(
 @Composable
 fun paymentPreview(){
     TipTimeTheme {
-        PaymentLayout(booking = Booking()) {
+        PaymentLayout {
             
         }
     }

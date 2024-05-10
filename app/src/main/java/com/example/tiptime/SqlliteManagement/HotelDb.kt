@@ -125,7 +125,6 @@ class HotelDb
 
         return hotels
     }
-
     fun getFavoriteHotel(): List<Hotel> {
         val hotels = mutableListOf<Hotel>()
         val db = this.readableDatabase

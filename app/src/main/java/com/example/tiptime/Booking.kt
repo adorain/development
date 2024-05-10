@@ -196,7 +196,7 @@ fun checkAvailable(hotelId : String , roomtype: String,status:String,onRoomTypeS
         canClick =true
         Text(text = price, modifier = Modifier.clickable { selectedRoom = true
                                                                     onRoomTypeSelected(roomtype)
-                                                                    },color = textcolor)
+                                                         },color = textcolor)
         textcolor = if(selectedRoom){
             Color.Red
         }else{

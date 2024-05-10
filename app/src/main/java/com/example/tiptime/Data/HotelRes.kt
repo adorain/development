@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import java.util.Date
 
 
+
 interface HotelRes {
     fun getAvailableHotels(hotelAddress: String, startDate: Date, endDate: Date, pax: Int): List<Hotel>
 

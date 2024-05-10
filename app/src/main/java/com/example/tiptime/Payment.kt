@@ -147,6 +147,7 @@ fun PaymentLayout(
             }
         }
 
+
         // If Visa section is expanded, show the list
         if (isVisaExpanded) {
             ExpandList(sections = PaymentMethod().listPaymentMethod(), onNavigation = onClickedButton)

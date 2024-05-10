@@ -28,6 +28,7 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
     }
 
 
+
     fun checkRoomStatus(): String{
         return roomRes.checkRoomStatus(hotelId,roomType)
     }

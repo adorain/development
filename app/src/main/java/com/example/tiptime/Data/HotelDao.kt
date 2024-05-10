@@ -14,6 +14,7 @@ interface HotelDao {
     @Query("SELECT * FROM hotel WHERE HotelName = :hotelName LIMIT 1")
     fun getHotelId(hotelName: String): String
 
+
     @Query("SELECT * FROM hotel WHERE HotelAddress LIKE '%' || :hotelAddress || '%' " +
             "AND status = 'Available' AND pax >= :pax " +
             "AND NOT EXISTS (SELECT * FROM booking " +

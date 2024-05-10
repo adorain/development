@@ -54,5 +54,4 @@ class BookingDb (context : Context?) :
         db.close()
     }
 
-
 }

@@ -2,6 +2,7 @@ package com.example.tiptime.Data
 
 import java.util.Date
 
+
 class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     override fun getAvailableHotels(
         hotelAddress: String,

@@ -128,6 +128,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     }
 
 
+
     fun updateBookingStartDate(bookedStartDate : String) {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         val date = dateFormat.parse(bookedStartDate)

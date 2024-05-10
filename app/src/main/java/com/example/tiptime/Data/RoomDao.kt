@@ -7,7 +7,7 @@ import androidx.room.Room
 @Dao
 interface RoomDao {
     @Insert
-    fun addNewRoom(room: Room)
+    suspend fun addNewRoom(room: Room)
 
     @Query("SELECT price FROM room WHERE hotel_id = :hotelId AND roomType = :roomType LIMIT 1")
     fun checkRoomStatus(hotelId: String, roomType: String): String

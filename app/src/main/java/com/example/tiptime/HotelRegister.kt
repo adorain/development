@@ -27,6 +27,7 @@ class HotelRegister : ViewModel(){
 
     }
 
+
     fun setHotelPassword() : String{
         _uiRegisterState.update {
                 uiRegisterState ->

@@ -6,8 +6,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+@Entity(tableName = "Hotel")
 data class Hotel(
-
+    @PrimaryKey(autoGenerate = true)
     val HotelId : String = "",
 
     val StaffId : String="",

@@ -203,7 +203,6 @@ fun bookingDetails(
                 modifier = Modifier.size(width = 100.dp, height = 50.dp)
             ) {
                 Text(text = "Next")
-
             }
 
 

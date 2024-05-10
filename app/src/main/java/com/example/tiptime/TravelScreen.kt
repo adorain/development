@@ -25,6 +25,7 @@ enum class screen{
 fun TravelApp(
     viewModel: BookingViewModel = viewModel(),
     viewModelhotel: hotelViewModel = viewModel(),
+    viewRoomViewModel: RoomViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
 
@@ -33,7 +34,7 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.booking.name,
+            startDestination = screen.home.name,
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = screen.home.name){
@@ -43,7 +44,13 @@ fun TravelApp(
                         navController.navigate(screen.booking.name)},
                     onSelectedHotelAddress = {viewModelhotel.setHomeName(it)},
                     onSelectedHotelDes = {viewModelhotel.setHomeDes(it)},
-                    onSelectedHotelName = {viewModelhotel.setHomeName(it)}
+                    onSelectedHotelName = {viewModelhotel.setHomeName(it)},
+                    onSearch = {viewModelhotel.updateSearchText(it)},
+                    onSelectedEndDate = {viewModelhotel.updateEndDate(it)},
+                    onSelectedPax = {viewModel.updatePax(it)},
+                    onSelectedStartDate = {viewModelhotel.updateStartDate(it)},
+                    hotels = viewModelhotel.searchHotel()
+
                 )
             }
             composable( route = screen.booking.name){
@@ -54,7 +61,8 @@ fun TravelApp(
                     onCancelButtonClicked = {cancelOrderAndNavigateToStart(navController)},
                     HotelName = uiHotelState.HotelName,
                     HotelId = uiHotelState.HotelId,
-                    HotelAddress = uiHotelState.HotelAddress
+                    HotelAddress = uiHotelState.HotelAddress,
+                    status = viewRoomViewModel.checkRoomStatus()
 
                 )
             }
@@ -94,16 +102,9 @@ fun TravelApp(
             }
             composable( route = screen.payment.name){
                 PaymentLayout(
-                    booking = Booking(Booked_id = "",
-                        BookedStartDate = uiState.BookedStartDate,
-                        BookedEndDate = uiState.BookedEndDate,
-                        Pax = uiState.Pax,
-                        Status = uiState.Status,
-                        ROOMTYPE = uiState.ROOMTYPE,
-                        Price = uiState.Price,
-                        HotelId = uiState.HotelId
-                    ),
-                    onClickedButton = {(navController.navigate(screen.booking.name))}
+                    onClickedButton = {navController.navigate(screen.booking.name)
+                    viewModel.insertNewBooking()
+                    }
                 )
             }
         }
@@ -117,4 +118,6 @@ private fun cancelOrderAndNavigateToStart(
 
     navController.popBackStack(screen.booking.name , inclusive = false)
 }
+
+
 

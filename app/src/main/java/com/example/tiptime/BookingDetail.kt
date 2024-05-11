@@ -174,6 +174,7 @@ fun bookingDetails(
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {
+
                 Text(text = "Total Price : ", fontSize = 21.sp)
             }
             Column {

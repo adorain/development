@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     TipTimeTheme {
-                        TravelApp()
+                        LanscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "WWWW", HotelAddress = "Helll", HotelName = "Hiiiii", status = "")
                     }
                 }
             }
@@ -55,9 +55,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipTimeLayoutPreview() {
     TipTimeTheme {
-        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedStartDate = {}, onSelectedPax = {}, onSelectedEndDate = {}, onSearch = {}, onSelectedHotelDes = {} , hotels = listOf(
-            Hotel()
-        ) )
+        LanscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "", HotelAddress = "", HotelName = "", status = "")
     }
 }
 

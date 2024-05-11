@@ -17,6 +17,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <users-permission android:name="android.permissiom.INTERNET"/>
 
     <application
         android:allowBackup="true"

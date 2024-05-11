@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="jt_currency">Currency Converter</string>
+
+    <string-array name="Currencies">
+        <item>MYR</item>
+        <item>THB</item>
+        <item>RMB</item>
+        <item>RUP</item>
+        <item>YEN</item>
+        <item>PHP</item>
+        <item>SGD</item>
+        <item>KRW</item>
+        <item>GBP</item>
+        <item>USD</item>
+        <item>BND</item>
+    </string-array>
+
+    <string-array name="Currencies2">
+        <item>MYR</item>
+        <item>THB</item>
+        <item>RMB</item>
+        <item>RUP</item>
+        <item>YEN</item>
+        <item>PHP</item>
+        <item>SGD</item>
+        <item>KRW</item>
+        <item>GBP</item>
+        <item>USD</item>
+        <item>BND</item>
+    </string-array>
+</resources>

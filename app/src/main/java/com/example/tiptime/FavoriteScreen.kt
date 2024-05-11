@@ -37,7 +37,8 @@ fun favoritelayout(
     onSelectedHotel:(String)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
-    onSelectedHotelDes: (String) -> Unit
+    onSelectedHotelDes: (String) -> Unit,
+    PriceRange: String
 ){
     val db = HotelDb(LocalContext.current)
     val hotels = remember { mutableStateListOf<Hotel>() }
@@ -55,7 +56,8 @@ fun favoritelayout(
                         onSelectedHotelName(hotel.HotelName)
                         onSelectedHotelDes(hotel.HotelDesciption)
                         onSelectedHotelAddress(hotel.HotelAddress)
-                    }
+                    },
+                    PriceRange = PriceRange
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -78,7 +80,7 @@ fun favoritelayout(
 }
 
 @Composable
-fun Hotels(hotel: Hotel, onItemClick: () -> Unit) {
+fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
     val RoomDb = RoomDb(LocalContext.current)
     Row(
 
@@ -124,7 +126,7 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit) {
                     Text(text = "Rating:")
                 }
                 Column(modifier = Modifier.weight(1f)){
-                    Text(text = RoomDb.PriceRange(hotel.HotelId))
+                    Text(text = PriceRange)
                 }
             }
 

@@ -20,6 +20,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,6 +58,8 @@ class UserLogin : ComponentActivity() {
 
 @Composable
 fun UserLoginContent(){
+    var clickSubmit by remember { mutableStateOf(false) }
+    var clickNewUserRegister by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.normal_user_background),
@@ -89,15 +95,27 @@ fun UserLoginContent(){
             keyboardType = KeyboardType.Password
         )
         Spacer(modifier = Modifier.height(40.dp))
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { clickSubmit = true }, modifier = Modifier) {
             Text(text = "Submit")
 
         }
         Spacer(modifier = Modifier.height(40.dp))
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { clickNewUserRegister = true }, modifier = Modifier) {
             Text(text = "New User? Please Sign-up")
 
         }
+
+        if(clickSubmit){
+            //Validation
+        }else{
+
+        }
+        if(clickNewUserRegister){
+            //redirect to register page
+        }else{
+
+        }
+
     }
     }
 

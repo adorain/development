@@ -19,6 +19,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,6 +57,8 @@ class HotelLogin : ComponentActivity() {
 
 @Composable
 fun HotelLoginContent(){
+    var clickSubmit by remember { mutableStateOf(false) }
+    var clickNewHotelRegister by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.hotel_user_background),
@@ -89,14 +95,25 @@ fun HotelLoginContent(){
             )
             Spacer(modifier = Modifier.height(40.dp))
 
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { clickSubmit = true },modifier = Modifier) {
                 Text(text = "Submit")
             }
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { clickNewHotelRegister = true }, modifier = Modifier) {
                 Text(text = "New User? Please Sign-up")
+
+            }
+
+            if(clickSubmit){
+                //Validation
+            }else{
+
+            }
+            if(clickNewHotelRegister){
+                //redirect to register page
+            }else{
 
             }
 
@@ -128,4 +145,6 @@ fun HotelLoginPreview() {
     TipTimeTheme {
         HotelLoginContent()
     }
+
 }
+

@@ -174,6 +174,7 @@ fun bookingDetails(
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             Column {
+
                 Text(text = "Total Price : ", fontSize = 21.sp)
             }
             Column {
@@ -203,7 +204,6 @@ fun bookingDetails(
                 modifier = Modifier.size(width = 100.dp, height = 50.dp)
             ) {
                 Text(text = "Next")
-
             }
 
 

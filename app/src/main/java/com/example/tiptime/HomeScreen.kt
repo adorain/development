@@ -42,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.SqlliteManagement.HotelDb
 import com.example.tiptime.SqlliteManagement.RoomDb
@@ -56,10 +57,16 @@ fun HomeScreen(
     onSelectedHotel:(String)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
-    onSelectedHotelDes: (String) -> Unit
+    onSelectedHotelDes: (String) -> Unit,
+    onSelectedStartDate :(String)->Unit,
+    onSearch :(String)->Unit,
+    onSelectedEndDate :(String)->Unit,
+    onSelectedPax:(String)->Unit,
+    hotels:List<Hotel>
 
 ){
-    val hotelDb = HotelDb(context = LocalContext.current)
+
+
     var chooseStartDate by remember {
         mutableStateOf(Date())
     }
@@ -67,13 +74,16 @@ fun HomeScreen(
         mutableStateOf(Date())
     }
     var searchQuery by remember { mutableStateOf("") }
-    val hotels = remember { mutableStateListOf<Hotel>() }
     var pax by remember {
         mutableStateOf(0)
     }
     var showDialog by remember { mutableStateOf(false) }
     var showDialog2 by remember { mutableStateOf(false) }
     var showNumberPicker by remember { mutableStateOf(false) }
+    var filtered by remember {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +106,7 @@ fun HomeScreen(
             ){
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { searchQuery = it},
+                    onValueChange = { onSearch(searchQuery)},
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f),
@@ -109,19 +119,8 @@ fun HomeScreen(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .height(30.dp)
-                        .clickable {
-                            hotels.clear()
-                            hotels.addAll(
-                                hotelDb.getHotelDetails(
-                                    searchQuery,
-                                    chooseStartDate,
-                                    chooseEndDate,
-                                    pax
-                                )
-                            )
+                        .clickable (onClick = {filtered = true})
 
-
-                        }
                 )
 
             }
@@ -195,30 +194,20 @@ fun HomeScreen(
             }
         }
 
-
-        LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
-            hotels.clear()
-            hotels.addAll(
-                hotelDb.getHotelDetails(
-                    searchQuery,
-                    chooseStartDate,
-                    chooseEndDate,
-                    pax
-                )
-            )
-        }
                         // Display list of hotels
         hotels.forEach { hotel ->
-            HotelItem(
-                hotel = hotel,
-                onItemClick = {
-                    onSelectedHotel(hotel.HotelId)
-                    onSelectedHotelName(hotel.HotelName)
-                    onSelectedHotelDes(hotel.HotelDesciption)
-                    onSelectedHotelAddress(hotel.HotelAddress)
-                }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            if (filtered) {
+                HotelItem(
+                    hotel = hotel,
+                    onItemClick = {
+                        onSelectedHotel(hotel.HotelId)
+                        onSelectedHotelName(hotel.HotelName)
+                        onSelectedHotelDes(hotel.HotelDesciption)
+                        onSelectedHotelAddress(hotel.HotelAddress)
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 
@@ -227,14 +216,14 @@ fun HomeScreen(
 
 
     if(showDialog){
-        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {onSelectedStartDate(chooseStartDate.toString())})
         showDialog = false
     }
 
 
 
     if(showDialog2){
-        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {onSelectedEndDate(chooseEndDate.toString())})
         showDialog2 = false
     }
 
@@ -245,7 +234,7 @@ fun HomeScreen(
             minValue = 0,
             maxValue = 20,
             initialValue = 0,
-            onValueChange = {pax},
+            onValueChange = {onSelectedPax(pax.toString())},
             OnClose = { showNumberPicker = false},
         )
 
@@ -255,12 +244,12 @@ fun HomeScreen(
 
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
-    val RoomDb = RoomDb(LocalContext.current)
-    val HotelDb = HotelDb(LocalContext.current)
     var isChangeColor by remember{ mutableStateOf(false) }
     var color by remember {
         mutableStateOf(Color.White)
     }
+    val viewModelhotel: hotelViewModel = viewModel()
+    val viewModelRoom : RoomViewModel = viewModel()
     var status by remember{ mutableStateOf("") }
     Row {
         Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
@@ -311,7 +300,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
                     Text(text = "Rating:")
                 }
                 Column(modifier = Modifier.weight(1f)){
-                    Text(text = RoomDb.PriceRange(hotel.HotelId))
+                    Text(text = viewModelRoom.setPriceRange(hotel.HotelId))
                 }
             }
 
@@ -321,11 +310,11 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
         if(isChangeColor){
             color = Color.Red
             status = "Favorite"
-            HotelDb.updateHotelStatus(hotel.HotelId,status)
+            viewModelhotel.updateHotelStatus(hotel.HotelId,status)
         }else{
             color = Color.White
             status = ""
-            HotelDb.updateHotelStatus(hotel.HotelId,"")
+            viewModelhotel.updateHotelStatus(hotel.HotelId,"")
         }
     }
 }
@@ -371,13 +360,13 @@ fun NumberPickerShow(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(onClick = { if (value > minValue) value-- }) {
-                Icon(painterResource( R.drawable.down_icon), contentDescription = "Increase")
+                Icon(painterResource( R.drawable.up_icon_154668), contentDescription = null)
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = value.toString())
             Spacer(modifier = Modifier.height(8.dp))
             IconButton(onClick = { if (value < maxValue) value++ }) {
-                Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
+                Icon(painterResource( R.drawable.down_icon), contentDescription = null)
             }
             Button(onClick = OnClose) {
                 onValueChange(value)
@@ -388,12 +377,15 @@ fun NumberPickerShow(
 
 }
 
+/*
 @Preview
 @Composable
 fun HomePreview(){
     TipTimeTheme{
-        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={} ) {
-
-        }
+        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedStartDate = {}, onSelectedPax = {}, onSelectedEndDate = {}, onSearch = {}, onSelectedHotelDes = {} , hotels = listOf(
+                            Hotel()
+                        ) )
     }
 }
+
+ */

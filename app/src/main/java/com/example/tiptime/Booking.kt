@@ -32,15 +32,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tiptime.Data.Hotel
-import com.example.tiptime.Data.room
-import com.example.tiptime.SqlliteManagement.RoomDb
 import com.example.tiptime.ui.theme.TipTimeTheme
 
 
 @Composable
 fun booking (
+    //userType: UserType,
     onNextButtonClicked:(String) -> Unit = {},
     onCancelButtonClicked : () -> Unit = {},
     HotelAddress:String,
@@ -48,10 +45,21 @@ fun booking (
     HotelId : String,
     status: String
 ){
+
     var RoomType by remember {
         mutableStateOf("")
     }
+    var count by remember{ mutableStateOf(0) }
+    /*if(userType == UserType.user){
 
+    }else if(
+        userType == UserType.staff
+    ){
+
+    }
+
+     */
+    do{
     Column {
         Row (
             ){
@@ -119,7 +127,8 @@ fun booking (
                 ) {
                     Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room",status = status
                     ) { selectedRoomType ->
-                        RoomType = selectedRoomType // Update RoomType
+                        RoomType = selectedRoomType
+                      // Update RoomType
                     }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp))
 
 
@@ -139,6 +148,7 @@ fun booking (
                     Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room",status = status
                     ) { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
+                        count =  1
                     }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp))
                     
 
@@ -155,6 +165,7 @@ fun booking (
         }
 
     }
+    }while (!checkSelection(count))
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -215,7 +226,12 @@ fun checkAvailable(hotelId : String , roomtype: String,status:String,onRoomTypeS
 
 }
 
-
+fun checkSelection(count :Int):Boolean{
+    if(count != 0 || count > 1){
+        return false
+    }
+    return true
+}
 @Composable
 fun LanscapeLayout(
     onNextButtonClicked: (String) -> Unit = {},

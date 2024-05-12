@@ -9,7 +9,8 @@ import java.text.DateFormat
 import java.util.Date
 
 
-@Entity(tableName = "Booking")
+@Entity(tableName = "Booking" ,foreignKeys = [ForeignKey(entity = Hotel::class, parentColumns = ["HotelId"], childColumns = ["HotelId"])
+    ,ForeignKey(entity = room::class, parentColumns = ["roomType"], childColumns = ["ROOMTYPE"])])
 data class Booking(
     @PrimaryKey(autoGenerate = true)
     val Booked_id : String = "",

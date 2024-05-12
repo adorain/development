@@ -6,23 +6,23 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [Hotel::class], version = 1, exportSchema = false)
-abstract class InventoryDatabase : RoomDatabase() {
+interface AppContainer{
+    val bookingRes: BookingRes
+    val hotelRes : HotelRes
+    val roomRes : RoomRes
 
-    abstract fun hotelDao() : HotelDao
-    abstract fun bookingDao():BookingDao
-    abstract fun roomDao():RoomDao
+}
 
-    companion object {
-        @Volatile
-        private var Instance: InventoryDatabase? = null
+class AppDataContainer(private val context: Context) : AppContainer {
+    override val bookingRes: BookingRes by lazy {
+        BookingOfflineRes(ApplicationInventory.getDatabase(context).bookingDao())
+    }
 
-        fun getDatabase(context: Context): InventoryDatabase {
-            // if the Instance is not null, return it, otherwise create a new database instance.
-            return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, InventoryDatabase::class.java, "hotel_database")
-                    .build().also { Instance = it }
-            }
-        }
+    override val hotelRes: HotelRes by lazy {
+        HotelOfflineRes(ApplicationInventory.getDatabase(context).hotelDao())
+    }
+
+    override val roomRes: RoomRes by lazy {
+        RoomOfflineRes(ApplicationInventory.getDatabase(context).roomDao())
     }
 }

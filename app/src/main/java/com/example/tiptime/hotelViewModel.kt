@@ -55,15 +55,15 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         }
     }
 
-    fun searchHotel():List<Hotel>{
-        return hotelRes.getAvailableHotels(searchtext,StartDate,EndDate,pax)
+    fun searchHotel(SearchText:String,STARTDATE:Date,ENDDATE:Date,Pax: Int):List<Hotel>{
+        return hotelRes.getAvailableHotels(SearchText,STARTDATE,ENDDATE,Pax)
     }
 
     fun updateHotelStatus(hotelId: String, newStatus: String){
         hotelRes.updateHotelStatus(hotelId,newStatus)
     }
 
-    fun updateSearchText(searchText:String){
+    /*fun updateSearchText(searchText:String){
         searchtext = searchText
     }
 
@@ -82,5 +82,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     fun updatePax(Pax:String){
         pax = Pax.toInt()
     }
+
+     */
 
 }

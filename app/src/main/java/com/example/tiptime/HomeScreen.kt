@@ -54,15 +54,12 @@ import java.util.Date
 
 @Composable
 fun HomeScreen(
+    //userType: UserType,
     onSelectedHotel:(String)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
-    onSelectedStartDate :(String)->Unit,
-    onSearch :(String)->Unit,
-    onSelectedEndDate :(String)->Unit,
-    onSelectedPax:(String)->Unit,
-    hotels:List<Hotel>
+    viewModel: hotelViewModel =viewModel()
 
 ){
 
@@ -84,6 +81,13 @@ fun HomeScreen(
         mutableStateOf(false)
     }
 
+    val hotelList = remember{ mutableStateListOf<Hotel>() }
+    /*if(userType == UserType.user){
+
+    }
+    else if(userType == UserType.staff){}
+
+     */
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -106,7 +110,7 @@ fun HomeScreen(
             ){
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { onSearch(searchQuery)},
+                    onValueChange = {searchQuery = it},
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f),
@@ -119,7 +123,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .height(30.dp)
-                        .clickable (onClick = {filtered = true})
+                        .clickable(onClick = { filtered = true })
 
                 )
 
@@ -193,10 +197,21 @@ fun HomeScreen(
 
             }
         }
+        LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
+            hotelList.clear()
+            hotelList.addAll(
+                viewModel.searchHotel(searchQuery,
+                    chooseStartDate,
+                    chooseEndDate,
+                    pax)
+
+            )
+
+        }
 
                         // Display list of hotels
-        hotels.forEach { hotel ->
-            if (filtered) {
+        hotelList.forEach { hotel ->
+
                 HotelItem(
                     hotel = hotel,
                     onItemClick = {
@@ -207,7 +222,7 @@ fun HomeScreen(
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-            }
+
         }
     }
 
@@ -216,14 +231,14 @@ fun HomeScreen(
 
 
     if(showDialog){
-        showdatePicker(context = LocalContext.current, onStartDateSelected = {onSelectedStartDate(chooseStartDate.toString())})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
         showDialog = false
     }
 
 
 
     if(showDialog2){
-        showdatePicker(context = LocalContext.current, onStartDateSelected = {onSelectedEndDate(chooseEndDate.toString())})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
         showDialog2 = false
     }
 
@@ -234,7 +249,7 @@ fun HomeScreen(
             minValue = 0,
             maxValue = 20,
             initialValue = 0,
-            onValueChange = {onSelectedPax(pax.toString())},
+            onValueChange = {pax},
             OnClose = { showNumberPicker = false},
         )
 

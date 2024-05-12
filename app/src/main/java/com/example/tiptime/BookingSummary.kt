@@ -129,7 +129,9 @@ fun bookingSummary(
 
             OutlinedButton(
                 onClick = onCancelButtonClicked,
-                modifier = Modifier.padding(end = 100.dp).size(width = 100.dp, height = 50.dp)
+                modifier = Modifier
+                    .padding(end = 100.dp)
+                    .size(width = 100.dp, height = 50.dp)
             ) {
                 Text(text = "Cancel")
             }
@@ -149,7 +151,7 @@ fun bookingSummary(
 fun BookingSummary() {
 
     TipTimeTheme {
-        bookingSummary( onCancelButtonClicked = {},
+        LandscapeLayout( onCancelButtonClicked = {},
             onNextButtonClicked = {},
             BookingStartDate = Date(),
             BookingEndDate = Date(),
@@ -161,4 +163,122 @@ fun BookingSummary() {
 
         )
     }
+}
+@Composable
+fun LandscapeLayout(
+    onNextButtonClicked:() -> Unit = {},
+    onCancelButtonClicked : () -> Unit = {},
+    HotelId : String = " ",
+    BookingStartDate : Date,
+    BookingEndDate :Date,
+    Price : Double,
+    pax:Int,
+    roomType:String
+){
+    Row (
+        modifier = Modifier.fillMaxSize()
+    ){
+        Column(modifier = Modifier.weight(1f)) {
+            Image(
+                painter = painterResource(R.drawable.nitro_wallpaper_02_3840x2400),
+                contentDescription = null
+            )
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 10.dp),
+                verticalArrangement = Arrangement.Center,
+
+
+
+                ) {
+
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Column {
+                        Text(text = "Hotel Id : ", fontSize = 13.sp)
+                    }
+                    Column {
+                        Text(text = HotelId, fontSize = 13.sp)
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Column {
+                        Text(text = "Booking Start Date : ", fontSize = 13.sp)
+                    }
+                    Column {
+                        Text(text = BookingStartDate.toString(), fontSize = 13.sp)
+                    }
+
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Column {
+                        Text(text = "Booking End Date : ", fontSize = 13.sp)
+                    }
+                    Column {
+                        Text(text = BookingEndDate.toString(), fontSize = 13.sp)
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Column {
+                        Text(text = "Pax : ", fontSize = 13.sp)
+                    }
+                    Column {
+                        Text(text = pax.toString(), fontSize = 13.sp)
+                    }
+                }
+
+
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Column {
+                        Text(text = "Room Type: ", fontSize = 13.sp)
+                    }
+                    Column {
+                        Text(text = roomType,  fontSize = 13.sp)
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Column {
+                        Text(text = "Total Price : ", fontSize = 13.sp)
+                    }
+                    Column {
+                        Text(text =Price.toString(), fontSize = 13.sp)
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Divider(modifier = Modifier.padding(start = 2.dp, top = 20.dp,end = 10.dp), thickness = 3.dp)
+                }
+                Spacer(modifier = Modifier.height(30.dp))
+                Row(
+                    modifier = Modifier.padding(start = 40.dp)
+                ) {
+
+                    OutlinedButton(
+                        onClick = onCancelButtonClicked,
+                        modifier = Modifier
+                            .padding(end = 100.dp)
+                            .size(width = 100.dp, height = 50.dp)
+                    ) {
+                        Text(text = "Cancel")
+                    }
+                    OutlinedButton(
+                        onClick = onNextButtonClicked,
+                        modifier = Modifier.size(width = 100.dp, height = 50.dp)
+                    ) {
+                        Text(text = "Pay")
+                    }
+
+                }
+            }
+        }
+    }
+
 }

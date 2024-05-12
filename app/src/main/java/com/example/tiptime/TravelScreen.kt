@@ -21,6 +21,10 @@ import java.util.Date
 enum class screen{
     home , booking , detail, summary,payment
 }
+
+enum class UserType{
+    user , staff
+}
 @Composable
 fun TravelApp(
     viewModel: BookingViewModel = viewModel(),
@@ -42,14 +46,9 @@ fun TravelApp(
                     onSelectedHotel = {
                         viewModel.setHotelId(it)
                         navController.navigate(screen.booking.name)},
-                    onSelectedHotelAddress = {viewModelhotel.setHomeName(it)},
+                    onSelectedHotelAddress = {viewModelhotel.setHomeAddress(it)},
                     onSelectedHotelDes = {viewModelhotel.setHomeDes(it)},
-                    onSelectedHotelName = {viewModelhotel.setHomeName(it)},
-                    onSearch = {viewModelhotel.updateSearchText(it)},
-                    onSelectedEndDate = {viewModelhotel.updateEndDate(it)},
-                    onSelectedPax = {viewModel.updatePax(it)},
-                    onSelectedStartDate = {viewModelhotel.updateStartDate(it)},
-                    hotels = viewModelhotel.searchHotel()
+                    onSelectedHotelName = {viewModelhotel.setHomeName(it)}
 
                 )
             }
@@ -71,11 +70,6 @@ fun TravelApp(
 
                     onCancelButtonClicked = {cancelOrderAndNavigateToStart(navController)},
                     onNextButtonClicked = {
-
-
-
-                        //viewModel.setHotelId(it)
-                        //viewModel.setRoomType(it)
                         navController.navigate(screen.summary.name)
                     },
                     OnBookingStartDateChange ={viewModel.updateBookingStartDate(it)} ,

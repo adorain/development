@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     TipTimeTheme {
-                        LanscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "WWWW", HotelAddress = "Helll", HotelName = "Hiiiii", status = "")
+                        TravelApp()
                     }
                 }
             }

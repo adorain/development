@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,7 +60,16 @@ fun HomeScreen(
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
-    viewModel: hotelViewModel =viewModel()
+/*
+    onSelectedStartDate :(String)->Unit,
+    onSearch :(String)->Unit,
+    onSelectedEndDate :(String)->Unit,
+    onSelectedPax:(String)->Unit,
+    hotel : List<Hotel>,
+    availableHotel : List<Hotel>,
+
+ */
+    viewModel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
 
 ){
 
@@ -82,6 +92,13 @@ fun HomeScreen(
     }
 
     val hotelList = remember{ mutableStateListOf<Hotel>() }
+    val filteredHotelList = remember {
+        mutableStateListOf<Hotel>()
+    }
+    var allHotelList = remember {
+        mutableStateListOf<Hotel>()
+    }
+
     /*if(userType == UserType.user){
 
     }
@@ -110,7 +127,7 @@ fun HomeScreen(
             ){
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = {searchQuery = it},
+                    onValueChange = {searchQuery=it},
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f),
@@ -196,21 +213,44 @@ fun HomeScreen(
                 }
 
             }
+
+        }
+        Column (
+            Modifier.padding(start = 310.dp).clickable {
+                allHotelList.clear()
+                allHotelList.addAll(hotelList)
+            }
+        ){
+            Text(text = "Clear",)
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        LaunchedEffect(Unit) {
+            hotelList.clear()
+            hotelList.addAll(viewModel.getAllHotel())
+            allHotelList.clear()
+            allHotelList = hotelList
         }
         LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
-            hotelList.clear()
-            hotelList.addAll(
-                viewModel.searchHotel(searchQuery,
-                    chooseStartDate,
-                    chooseEndDate,
-                    pax)
+            filteredHotelList.clear()
+            //filteredHotelList.addAll(availableHotel)
+            filteredHotelList.addAll(
+                hotelList.filter {
+                    viewModel.searchHotel(
+                        searchQuery,
+                        chooseStartDate,
+                        chooseEndDate,
+                        pax
+                    )
+                }
 
             )
+            allHotelList.clear()
+            allHotelList = filteredHotelList
 
         }
 
                         // Display list of hotels
-        hotelList.forEach { hotel ->
+        allHotelList.forEach { hotel ->
 
                 HotelItem(
                     hotel = hotel,
@@ -392,15 +432,14 @@ fun NumberPickerShow(
 
 }
 
-/*
+
 @Preview
 @Composable
 fun HomePreview(){
+    val hotel :List<Hotel> = listOf()
     TipTimeTheme{
-        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedStartDate = {}, onSelectedPax = {}, onSelectedEndDate = {}, onSearch = {}, onSelectedHotelDes = {} , hotels = listOf(
-                            Hotel()
-                        ) )
+        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
     }
 }
 
- */
+

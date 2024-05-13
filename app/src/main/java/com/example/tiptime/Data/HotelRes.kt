@@ -16,4 +16,6 @@ interface HotelRes {
 
     fun getFavoriteHotels(): List<Hotel>
     fun updateHotelStatus(hotelId: String, newStatus: String)
+
+    fun getAllHotel():List<Hotel>
 }

@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.ui.theme.TipTimeTheme
 
 
@@ -43,7 +44,7 @@ fun booking (
     HotelAddress:String,
     HotelName: String,
     HotelId : String,
-    status: String
+    //status: String
 ){
 
     var RoomType by remember {
@@ -103,10 +104,11 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Single Room",status = status
-                    ) { selectedRoomType ->
-                        RoomType = selectedRoomType // Update RoomType
-                    }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp))
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Single Room",/*status = status*/
+                        onRoomTypeSelected = { selectedRoomType ->
+                            RoomType = selectedRoomType // Update RoomType
+                            count = 1
+                        }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp))
 
 
 
@@ -125,11 +127,11 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room",status = status
-                    ) { selectedRoomType ->
-                        RoomType = selectedRoomType
-                      // Update RoomType
-                    }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp))
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room",/*status = status*/
+                        onRoomTypeSelected = { selectedRoomType ->
+                            RoomType = selectedRoomType // Update RoomType
+                            count = 1
+                        }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp))
 
 
                 }
@@ -145,11 +147,10 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room",status = status
-                    ) { selectedRoomType ->
+                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room",onRoomTypeSelected = { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
-                        count =  1
-                    }, color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp))
+                        count = 1
+                    }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp))
                     
 
 
@@ -195,13 +196,15 @@ fun booking (
 fun Bookings() {
 
     TipTimeTheme {
-        LanscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "Hiiii", HotelAddress = "Heee", HotelName = "WWWWWW", status = "")
+        //LanscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "Hiiii", HotelAddress = "Heee", HotelName = "WWWWWW", status = "")
     }
 }
 
 @Composable
-fun checkAvailable(hotelId : String , roomtype: String,status:String,onRoomTypeSelected: (String) -> Unit ) : String{
-
+fun checkAvailable(hotelId : String , roomtype: String,/*status:String, */onRoomTypeSelected: (String) -> Unit ,viewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)) : String{
+    var status by remember {
+        mutableStateOf(viewModel.checkRoomStatus(hotelId,roomtype))
+    }
     var price by remember { mutableStateOf("") }
     var canClick by remember{ mutableStateOf(false) }
     var selectedRoom by remember { mutableStateOf(false) }
@@ -232,6 +235,8 @@ fun checkSelection(count :Int):Boolean{
     }
     return true
 }
+
+/*
 @Composable
 fun LanscapeLayout(
     onNextButtonClicked: (String) -> Unit = {},
@@ -394,3 +399,5 @@ fun LanscapeLayout(
         }
     }
 }
+
+ */

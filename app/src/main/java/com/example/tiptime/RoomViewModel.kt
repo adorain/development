@@ -20,8 +20,10 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
 
     private val _uiState = MutableStateFlow(room())
     val uiState: StateFlow<room> = _uiState.asStateFlow()
-    var roomType by mutableStateOf("")
+    /*var roomType by mutableStateOf("")
     var hotelId by mutableStateOf("")
+
+     */
 
     fun setPriceRange(hotelId:String):String{
         return roomRes.getPriceRange(hotelId)
@@ -29,7 +31,7 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
 
 
 
-    fun checkRoomStatus(): String{
+    fun checkRoomStatus(hotelId:String,roomType:String): String{
         return roomRes.checkRoomStatus(hotelId,roomType)
     }
 

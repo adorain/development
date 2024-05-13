@@ -27,9 +27,9 @@ enum class UserType{
 }
 @Composable
 fun TravelApp(
-    viewModel: BookingViewModel = viewModel(),
-    viewModelhotel: hotelViewModel = viewModel(),
-    viewRoomViewModel: RoomViewModel = viewModel(),
+    viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory),
+    viewModelhotel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory),
+    viewRoomViewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory),
     navController: NavHostController = rememberNavController()
 ) {
 
@@ -48,7 +48,15 @@ fun TravelApp(
                         navController.navigate(screen.booking.name)},
                     onSelectedHotelAddress = {viewModelhotel.setHomeAddress(it)},
                     onSelectedHotelDes = {viewModelhotel.setHomeDes(it)},
-                    onSelectedHotelName = {viewModelhotel.setHomeName(it)}
+                    onSelectedHotelName = {viewModelhotel.setHomeName(it)},
+                    /*onSearch = {viewModelhotel.updateSearchText(it)},
+                    onSelectedEndDate = {viewModelhotel.updateEndDate(it)},
+                    onSelectedPax = {viewModelhotel.updatePax(it)},
+                    onSelectedStartDate = {viewModelhotel.updateStartDate(it)},
+                    hotel = viewModelhotel.getAllHotel(),
+                    availableHotel = viewModelhotel.searchHotel(viewModelhotel.searchtext,viewModel.BookedStartDate,viewModel.BookedEndDate,viewModel.Pax)
+
+                     */
 
                 )
             }
@@ -61,7 +69,7 @@ fun TravelApp(
                     HotelName = uiHotelState.HotelName,
                     HotelId = uiHotelState.HotelId,
                     HotelAddress = uiHotelState.HotelAddress,
-                    status = viewRoomViewModel.checkRoomStatus()
+                    //status = viewRoomViewModel.checkRoomStatus()
 
                 )
             }

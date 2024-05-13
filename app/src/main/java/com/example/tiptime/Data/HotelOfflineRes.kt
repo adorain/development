@@ -14,4 +14,6 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     override fun getFavoriteHotels(): List<Hotel> = hotelDao.getFavoriteHotels()
     override fun getHotelById(hotelName: String): String = hotelDao.getHotelId(hotelName)
     override fun updateHotelStatus(hotelId: String, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)
+
+    override fun getAllHotel(): List<Hotel> = hotelDao.getAllHotels()
 }

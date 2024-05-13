@@ -28,4 +28,7 @@ interface HotelDao {
 
     @Query("UPDATE hotel SET status = :newStatus WHERE HotelId = :hotelId")
     fun updateHotelStatus(hotelId: String, newStatus: String)
+
+    @Query("SELECT * FROM hotel")
+    fun getAllHotels():List<Hotel>
 }

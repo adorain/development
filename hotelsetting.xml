@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="355dp"
+        android:layout_height="63dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="10dp"
+        android:text="Setting"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/hotelAccount"
+        android:layout_width="355dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Account"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/hotelProfile"
+        android:layout_width="355dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:text="Edit Profile"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/hotelLogOut"
+        android:layout_width="355dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:text="Log Out"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/hotelPreferences"
+        android:layout_width="355dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Preferences"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/hotelLanguage"
+        android:layout_width="355dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:text="Language"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+
+    <TextView
+        android:id="@+id/hotelCurrency"
+        android:layout_width="355dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:text="Currency"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/hotelAppInfo"
+        android:layout_width="355dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="App Information"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/hotelAbout"
+        android:layout_width="355dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:text="About"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+</LinearLayout>

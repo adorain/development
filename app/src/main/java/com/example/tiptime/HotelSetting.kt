@@ -1,5 +1,6 @@
 package com.example.tiptime
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,22 +36,40 @@ class HotelSetting : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HotelSettingContent()
+                    HotelSettingContent(
+                        onLogout = { navigateToLogout() },
+                        onCurrency = { navigateToCurrency() },
+                        onAbout = {navigateToAbout()}
+                    )
                 }
             }
         }
     }
+    private fun navigateToLogout() {
+        val intent = Intent(this, Logout::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToCurrency() {
+        val intent = Intent(this, CurrencyConverter::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToAbout() {
+        val intent = Intent(this, About::class.java)
+        startActivity(intent)
+    }
 }
 
 @Composable
-fun HotelSettingContent(){
+fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
     var showLogoutDialog by remember {mutableStateOf(false)}
     var showAboutDialog by remember { mutableStateOf(false)}
-    if (showLogoutDialog){
+   /* if (showLogoutDialog){
         LogoutContent {
-            var onDismiss = { showLogoutDialog = false }
+            var onLogout = { showLogoutDialog = false }
         }
-    }
+    }*/
 
     if (showAboutDialog){
         AboutContent {
@@ -61,8 +79,8 @@ fun HotelSettingContent(){
 
     Column(
         modifier= Modifier
-            /*.fillMaxSize()*/
-           /* .background(color = navy_blue)*/
+            .fillMaxSize()
+           .background(color = navy_blue)
             .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -73,7 +91,7 @@ fun HotelSettingContent(){
             fontSize = 40.sp,
             modifier = Modifier
                 .padding(
-                    horizontal = 355.dp,
+                    horizontal = 35.dp,
                     vertical = 63.dp
                 )
         )
@@ -93,7 +111,7 @@ fun HotelSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 35.dp
                     )
             )
 
@@ -104,12 +122,12 @@ fun HotelSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp,
+                        horizontal = 35.dp,
                         vertical = 30.dp
                     )
             )
 
-            Button(onClick = {showLogoutDialog=true}){
+            Button(onClick = onLogout){
                 Text(
                     "Log Out",
                     color = white,
@@ -117,7 +135,7 @@ fun HotelSettingContent(){
                     fontSize = 30.sp,
                     modifier = Modifier
                         .padding(
-                            horizontal = 355.dp,
+                            horizontal = 35.dp,
                             vertical = 30.dp
                         )
                 )
@@ -141,7 +159,7 @@ fun HotelSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 60.dp
                     )
             )
 
@@ -152,22 +170,24 @@ fun HotelSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp,
+                        horizontal = 35.dp,
                         vertical = 30.dp
                     )
             )
 
-            Text(
-                "Currency",
-                color = white,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 355.dp,
-                        vertical = 30.dp
-                    )
-            )
+            Button(onClick = onCurrency) {
+                Text(
+                    "Currency",
+                    color = white,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 35.dp,
+                            vertical = 30.dp
+                        )
+                )
+            }
         }
 
         Column(
@@ -185,11 +205,11 @@ fun HotelSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 35.dp
                     )
             )
 
-            Button(onClick = {showAboutDialog=true}) {
+            Button(onClick = onAbout) {
                 Text(
                     "About",
                     color = white,
@@ -197,7 +217,7 @@ fun HotelSettingContent(){
                     fontSize = 30.sp,
                     modifier = Modifier
                         .padding(
-                            horizontal = 355.dp,
+                            horizontal = 35.dp,
                             vertical = 30.dp
                         )
                 )
@@ -212,7 +232,7 @@ fun HotelSettingContent(){
 @Composable
 fun HotelSettingPreview() {
     TipTimeTheme {
-        HotelSettingContent()
+        HotelSettingContent(onLogout={}, onCurrency = {}, onAbout={})
     }
 }
 

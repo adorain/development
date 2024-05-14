@@ -1,12 +1,12 @@
 package com.example.tiptime
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -28,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,21 +35,117 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tiptime.ui.theme.TipTimeTheme
-import com.example.tiptime.ui.theme.black
-import com.example.tiptime.ui.theme.lavender
-import com.example.tiptime.ui.theme.white
 
 class UserLogin : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TipTimeTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+            UserLoginScreen(context = this)
+        }
+    }
+}
+
+@Composable
+fun UserLoginScreen(context: Context) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var invalidEmail by remember { mutableStateOf(false) }
+    var invalidPassword by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.hotel_user_background),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 30.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Hotel Sign-in",
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.padding(vertical = 120.dp, horizontal =70.dp)
+                )
+                HotelLoginTextField(
+                    hint = "E-mail Address",
+                    keyboardType = KeyboardType.Email,
+                    value = email,
+                    onValueChange = {
+                        email = it
+                        invalidEmail = false
+                    },
+                    isError = invalidEmail
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                HotelLoginTextField(
+                    hint = "Password",
+                    keyboardType = KeyboardType.Password,
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        invalidPassword = false
+                    },
+                    isError = invalidPassword
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                if (showError) {
+                    Text(
+                        text = "Invalid email or password",
+                        color = Color.Red
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = {
+                        if (email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                            invalidEmail = true
+                        } else if (password.length < 6) {
+                            invalidPassword = true
+                        } else {
+                            // Placeholder logic for demonstration purposes
+                            val validCredentials = email == "JT@gmail.com" && password == "JT123"
+
+                            if (validCredentials) {
+                                // Navigate to home page (replace MainActivity::class.java with your actual home activity)
+                                val intent = Intent(context, MainActivity::class.java)
+                                context.startActivity(intent)
+                                // Finish the current activity to prevent going back to it after login
+                                (context as ComponentActivity).finish()
+                            } else {
+                                // Show error message
+                                showError = true
+                            }
+                        }
+                    }
                 ) {
-                    UserLoginContent()
+                    Text(text = "Submit")
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = {
+                        // Navigate to registration page
+                        // Implement logic to navigate to the registration page
+                        val intent = Intent(context, NewHotel::class.java)
+                        context.startActivity(intent)
+                    }
+                ) {
+                    Text(text = "New User? Please Sign-up")
                 }
             }
         }
@@ -57,88 +153,27 @@ class UserLogin : ComponentActivity() {
 }
 
 @Composable
-fun UserLoginContent(){
-    var clickSubmit by remember { mutableStateOf(false) }
-    var clickNewUserRegister by remember { mutableStateOf(false) }
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(R.drawable.normal_user_background),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
-        )
-    Column(
-        modifier= Modifier
-            .fillMaxSize()
-/*            .background(color = lavender)*/
-            .padding(horizontal = 30.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "User Sign-in",
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            color = white,
-            modifier = Modifier
-                .padding(
-                    vertical = 120.dp,
-                    horizontal = 70.dp
-                )
-        )
-        UserLoginTextField(
-            hint = "E-mail Address",
-            keyboardType = KeyboardType.Email
-        )
-        Spacer(modifier = Modifier.height(40.dp))
-        UserLoginTextField(
-            hint = "Password",
-            keyboardType = KeyboardType.Password
-        )
-        Spacer(modifier = Modifier.height(40.dp))
-        Button(onClick = { clickSubmit = true }, modifier = Modifier) {
-            Text(text = "Submit")
-
-        }
-        Spacer(modifier = Modifier.height(40.dp))
-        Button(onClick = { clickNewUserRegister = true }, modifier = Modifier) {
-            Text(text = "New User? Please Sign-up")
-
-        }
-
-        if(clickSubmit){
-            //Validation
-        }else{
-
-        }
-        if(clickNewUserRegister){
-            //redirect to register page
-        }else{
-
-        }
-
-    }
-    }
-
-}
-
-@Composable
-fun UserLoginTextField(hint: String, keyboardType: KeyboardType) {
+fun UserLoginTextField(
+    hint: String,
+    keyboardType: KeyboardType,
+    value: String,
+    onValueChange: (String) -> Unit,
+    isError: Boolean
+) {
     TextField(
-        value = "",
-        onValueChange = { },
+        value = value,
+        onValueChange = onValueChange,
         placeholder = { Text(text = hint) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
-        textStyle = TextStyle(color = white),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+        textStyle = TextStyle(color = Color.White),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        isError = isError
     )
 }
-
 
 @Preview
 @Composable
 fun UserLoginPreview() {
-    TipTimeTheme {
-        UserLoginContent()
-    }
+    UserLoginScreen(context = LocalContext.current)
 }

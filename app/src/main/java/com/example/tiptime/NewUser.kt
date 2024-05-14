@@ -83,11 +83,11 @@ fun NewUserContent(){
                 hint = "Phone Number",
                 keyboardType = KeyboardType.Phone
             )
-            Spacer(modifier = Modifier.height(40.dp))
+            /*Spacer(modifier = Modifier.height(40.dp))
             NewUserTextField(
                 hint = "Gender (Male/Female)",
                 keyboardType = KeyboardType.Text
-            )
+            )*/
             Spacer(modifier = Modifier.height(40.dp))
             NewUserTextField(
                 hint = "E-mail Address",

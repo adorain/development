@@ -1,5 +1,8 @@
 package com.example.tiptime.Data
 
+import androidx.room.Entity
+
+@Entity(tableName = "User")
 data class User(
 
     val UserId: String = "",

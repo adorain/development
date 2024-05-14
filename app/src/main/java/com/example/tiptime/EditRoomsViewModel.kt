@@ -1,58 +1,54 @@
 package com.example.tiptime
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import java.time.LocalDate
+import androidx.lifecycle.viewModelScope
+import com.example.tiptime.Data.room
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Date
 
-@RequiresApi(Build.VERSION_CODES.O)
-class EditRoomsViewModel:ViewModel() {
-    var selectedDate by mutableStateOf(LocalDate.now())
-        private set
+enum class RoomStatus {
+    AVAILABLE, OCCUPIED, UNDER_MAINTENANCE
+}
 
+class EditRoomsViewModel : ViewModel() {
+    var rooms = listOf<com.example.tiptime.Data.room>()
     var selectedRoom by mutableStateOf("")
-        internal set
-
-    var isMonthDropdownExpanded by mutableStateOf(false)
-        private set
-
-    var isYearDropdownExpanded by mutableStateOf(false)
-        private set
-
-    var roomAvailable by mutableStateOf(true)
-        internal set
-
+    var availableRooms by mutableStateOf(0)
+    var occupiedRooms by mutableStateOf(0)
+    var underMaintenanceRooms by mutableStateOf(0)
+    var selectedStartDate: Long = 0
+    var selectedEndDate: Long = 0
     var checkAv by mutableStateOf(false)
-        private set
-
     var checkOc by mutableStateOf(false)
-        private set
-
     var checkUnMa by mutableStateOf(false)
-        private set
+    var roomAvailable by mutableStateOf(false)
 
-    var selectedStartDate by mutableStateOf(Date())
-    var selectedEndDate by mutableStateOf(Date())
-
-    fun onDateSelected(date: LocalDate) {
-        selectedDate = date
+    // Fetch rooms from the repository
+    fun fetchRoomsForDateRangeAndType(hotelId: String, roomType: String, startDate: Long, endDate: Long) {
+        // Assuming you have a repository to fetch data from the database
+        viewModelScope.launch {
+            rooms = withContext(Dispatchers.IO) {
+                // Replace this with the actual repository call
+                // repository.getRoomsForDateRangeAndType(hotelId, roomType, startDate, endDate)
+                listOf()  // Example placeholder
+            }
+            updateRoomCounts()
+        }
     }
 
-    fun toggleMonthDropdown() {
-        isMonthDropdownExpanded = !isMonthDropdownExpanded
+    fun updateRoomCounts() {
+        availableRooms = rooms.count { it.Status == "Available" }
+        occupiedRooms = rooms.count { it.Status == "Occupied" }
+        underMaintenanceRooms = rooms.count { it.Status == "Under Maintenance" }
     }
 
-    fun toggleYearDropdown() {
-        isYearDropdownExpanded = !isYearDropdownExpanded
-    }
-
-    fun selectRoom(roomName: String) {
-        selectedRoom = roomName
-        roomAvailable = true // Reset availability
+    fun selectRoom(roomId: String) {
+        selectedRoom = roomId
     }
 
     fun updateRoomAvailability(status: RoomStatus) {
@@ -75,17 +71,21 @@ class EditRoomsViewModel:ViewModel() {
         }
     }
 
+    fun updateRoomStatus(room: room) {
+        // Assuming you have a repository to update the room status in the database
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                // Replace this with the actual repository call to update the room status
+                // repository.updateRoomStatus(room)
+            }
+        }
+    }
+
     fun updateStartDate(date: Date) {
-        selectedStartDate = date
+        selectedStartDate = date.time
     }
 
     fun updateEndDate(date: Date) {
-        selectedEndDate = date
+        selectedEndDate = date.time
     }
-}
-
-enum class RoomStatus {
-    AVAILABLE,
-    OCCUPIED,
-    UNDER_MAINTENANCE
 }

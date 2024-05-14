@@ -159,7 +159,7 @@ fun BookedDetails(){
             fees = "Fees: $200",
             onDeleteBooking = {},
             onReview = {},
-            isReviewButton= true
+            isReviewButton= false
         )
     }
 }

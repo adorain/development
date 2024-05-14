@@ -80,8 +80,8 @@ fun HotelLoginContent(){
                 color = white,
                 modifier = Modifier
                     .padding(
-                        vertical = 120.dp,
-                        horizontal = 70.dp
+                        vertical = 100.dp,
+                        horizontal = 20.dp
                     )
             )
             HotelLoginTextField(

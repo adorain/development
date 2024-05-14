@@ -181,6 +181,3 @@ fun HotelLoginPreview() {
     HotelLoginScreen(context = LocalContext.current)
 }
 
-
-
-

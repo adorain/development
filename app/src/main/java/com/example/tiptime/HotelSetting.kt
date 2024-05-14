@@ -235,4 +235,3 @@ fun HotelSettingPreview() {
         HotelSettingContent(onLogout={}, onCurrency = {}, onAbout={})
     }
 }
-

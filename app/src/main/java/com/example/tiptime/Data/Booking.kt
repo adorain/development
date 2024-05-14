@@ -8,8 +8,11 @@ import androidx.room.PrimaryKey
 import java.text.DateFormat
 import java.util.Date
 
-data class Booking(
 
+@Entity(tableName = "Booking" ,foreignKeys = [ForeignKey(entity = Hotel::class, parentColumns = ["HotelId"], childColumns = ["HotelId"])
+    ,ForeignKey(entity = room::class, parentColumns = ["roomType"], childColumns = ["ROOMTYPE"])])
+data class Booking(
+    @PrimaryKey(autoGenerate = true)
     val Booked_id : String = "",
 
     val HotelId : String = "",

@@ -119,6 +119,7 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
             }
 
 
+
             Spacer(modifier = Modifier.height(30.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f)){

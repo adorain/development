@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.SqlliteManagement.HotelDb
 import com.example.tiptime.SqlliteManagement.RoomDb
@@ -53,13 +55,25 @@ import java.util.Date
 
 @Composable
 fun HomeScreen(
+    //userType: UserType,
     onSelectedHotel:(String)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
-    onSelectedHotelDes: (String) -> Unit
+    onSelectedHotelDes: (String) -> Unit,
+/*
+    onSelectedStartDate :(String)->Unit,
+    onSearch :(String)->Unit,
+    onSelectedEndDate :(String)->Unit,
+    onSelectedPax:(String)->Unit,
+    hotel : List<Hotel>,
+    availableHotel : List<Hotel>,
+
+ */
+    viewModel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
 
 ){
-    val hotelDb = HotelDb(context = LocalContext.current)
+
+
     var chooseStartDate by remember {
         mutableStateOf(Date())
     }
@@ -67,13 +81,30 @@ fun HomeScreen(
         mutableStateOf(Date())
     }
     var searchQuery by remember { mutableStateOf("") }
-    val hotels = remember { mutableStateListOf<Hotel>() }
     var pax by remember {
         mutableStateOf(0)
     }
     var showDialog by remember { mutableStateOf(false) }
     var showDialog2 by remember { mutableStateOf(false) }
     var showNumberPicker by remember { mutableStateOf(false) }
+    var filtered by remember {
+        mutableStateOf(false)
+    }
+
+    val hotelList = remember{ mutableStateListOf<Hotel>() }
+    val filteredHotelList = remember {
+        mutableStateListOf<Hotel>()
+    }
+    var allHotelList = remember {
+        mutableStateListOf<Hotel>()
+    }
+
+    /*if(userType == UserType.user){
+
+    }
+    else if(userType == UserType.staff){}
+
+     */
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +127,7 @@ fun HomeScreen(
             ){
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { searchQuery = it},
+                    onValueChange = {searchQuery=it},
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f),
@@ -109,19 +140,8 @@ fun HomeScreen(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .height(30.dp)
-                        .clickable {
-                            hotels.clear()
-                            hotels.addAll(
-                                hotelDb.getHotelDetails(
-                                    searchQuery,
-                                    chooseStartDate,
-                                    chooseEndDate,
-                                    pax
-                                )
-                            )
+                        .clickable(onClick = { filtered = true })
 
-
-                        }
                 )
 
             }
@@ -193,32 +213,56 @@ fun HomeScreen(
                 }
 
             }
+
         }
-
-
+        Column (
+            Modifier.padding(start = 310.dp).clickable {
+                allHotelList.clear()
+                allHotelList.addAll(hotelList)
+            }
+        ){
+            Text(text = "Clear",)
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        LaunchedEffect(Unit) {
+            hotelList.clear()
+            hotelList.addAll(viewModel.getAllHotel())
+            allHotelList.clear()
+            allHotelList = hotelList
+        }
         LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
-            hotels.clear()
-            hotels.addAll(
-                hotelDb.getHotelDetails(
-                    searchQuery,
-                    chooseStartDate,
-                    chooseEndDate,
-                    pax
-                )
-            )
-        }
-                        // Display list of hotels
-        hotels.forEach { hotel ->
-            HotelItem(
-                hotel = hotel,
-                onItemClick = {
-                    onSelectedHotel(hotel.HotelId)
-                    onSelectedHotelName(hotel.HotelName)
-                    onSelectedHotelDes(hotel.HotelDesciption)
-                    onSelectedHotelAddress(hotel.HotelAddress)
+            filteredHotelList.clear()
+            //filteredHotelList.addAll(availableHotel)
+            filteredHotelList.addAll(
+                hotelList.filter {
+                    viewModel.searchHotel(
+                        searchQuery,
+                        chooseStartDate,
+                        chooseEndDate,
+                        pax
+                    )
                 }
+
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            allHotelList.clear()
+            allHotelList = filteredHotelList
+
+        }
+
+                        // Display list of hotels
+        allHotelList.forEach { hotel ->
+
+                HotelItem(
+                    hotel = hotel,
+                    onItemClick = {
+                        onSelectedHotel(hotel.HotelId)
+                        onSelectedHotelName(hotel.HotelName)
+                        onSelectedHotelDes(hotel.HotelDesciption)
+                        onSelectedHotelAddress(hotel.HotelAddress)
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
         }
     }
 
@@ -255,12 +299,12 @@ fun HomeScreen(
 
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
-    val RoomDb = RoomDb(LocalContext.current)
-    val HotelDb = HotelDb(LocalContext.current)
     var isChangeColor by remember{ mutableStateOf(false) }
     var color by remember {
         mutableStateOf(Color.White)
     }
+    val viewModelhotel: hotelViewModel = viewModel()
+    val viewModelRoom : RoomViewModel = viewModel()
     var status by remember{ mutableStateOf("") }
     Row {
         Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
@@ -311,7 +355,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
                     Text(text = "Rating:")
                 }
                 Column(modifier = Modifier.weight(1f)){
-                    Text(text = RoomDb.PriceRange(hotel.HotelId))
+                    Text(text = viewModelRoom.setPriceRange(hotel.HotelId))
                 }
             }
 
@@ -321,11 +365,11 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
         if(isChangeColor){
             color = Color.Red
             status = "Favorite"
-            HotelDb.updateHotelStatus(hotel.HotelId,status)
+            viewModelhotel.updateHotelStatus(hotel.HotelId,status)
         }else{
             color = Color.White
             status = ""
-            HotelDb.updateHotelStatus(hotel.HotelId,"")
+            viewModelhotel.updateHotelStatus(hotel.HotelId,"")
         }
     }
 }
@@ -371,13 +415,13 @@ fun NumberPickerShow(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(onClick = { if (value > minValue) value-- }) {
-                Icon(painterResource( R.drawable.down_icon), contentDescription = "Increase")
+                Icon(painterResource( R.drawable.up_icon_154668), contentDescription = null)
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = value.toString())
             Spacer(modifier = Modifier.height(8.dp))
             IconButton(onClick = { if (value < maxValue) value++ }) {
-                Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
+                Icon(painterResource( R.drawable.down_icon), contentDescription = null)
             }
             Button(onClick = OnClose) {
                 onValueChange(value)
@@ -388,12 +432,14 @@ fun NumberPickerShow(
 
 }
 
+
 @Preview
 @Composable
 fun HomePreview(){
+    val hotel :List<Hotel> = listOf()
     TipTimeTheme{
-        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={} ) {
-
-        }
+        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
     }
 }
+
+

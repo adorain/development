@@ -16,16 +16,23 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Date
 import javax.sql.DataSource
+
 
 
 @Composable
@@ -37,8 +44,21 @@ fun bookingSummary(
     BookingEndDate :Date,
     Price : Double,
     pax:Int,
-    roomType:String
+    roomType:String,
+    viewModel: BookingViewModel = viewModel()
 ) {
+    var status by remember {
+        mutableStateOf(viewModel.updateStatus())
+    }
+    var text by remember{ mutableStateOf("Pay") }
+    var canClick by remember { mutableStateOf(!status) }
+
+
+    LaunchedEffect(status) {
+        text = if (status) "Unavailable" else "Pay"
+        canClick = !status
+    }
+
     Column {
         Row(
         ) {
@@ -135,13 +155,21 @@ fun bookingSummary(
                 Text(text = "Cancel")
             }
             OutlinedButton(
-                onClick = onNextButtonClicked,
+                onClick = {
+                    if (canClick) {
+                        onNextButtonClicked()
+                    }
+                },
+                enabled = canClick,
                 modifier = Modifier.size(width = 100.dp, height = 50.dp)
             ) {
-                Text(text = "Pay")
+                Text(text = text)
             }
 
         }
+
+
+
     }
 }
 
@@ -150,19 +178,18 @@ fun bookingSummary(
 fun BookingSummary() {
 
     TipTimeTheme {
-        LandscapeLayout( onCancelButtonClicked = {},
+        bookingSummary( onCancelButtonClicked = {},
             onNextButtonClicked = {},
             BookingStartDate = Date(),
             BookingEndDate = Date(),
             Price = 0.00,
             HotelId = "",
             pax = 0,
-            roomType = ""
-
-
-        )
+            roomType = "",
+            )
     }
 }
+/*
 @Composable
 fun LandscapeLayout(
     onNextButtonClicked:() -> Unit = {},
@@ -280,4 +307,4 @@ fun LandscapeLayout(
         }
     }
 
-}
+}*/

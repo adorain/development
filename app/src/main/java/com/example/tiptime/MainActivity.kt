@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tiptime.Data.Booking
+import com.example.tiptime.Data.Hotel
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.NumberFormat
 import java.util.Date
@@ -39,7 +40,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     TipTimeTheme {
-                        booking(HotelAddress = "dasdsaasdasssdasds", HotelName = "Hotel Tranversa", HotelId = "H0001")
+                        //val hotel :List<Hotel> = listOf()
+                        ///HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
+                        //booking(HotelAddress = "", HotelName = "", HotelId = "")
+                        TravelApp()
                     }
                 }
             }
@@ -54,11 +58,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipTimeLayoutPreview() {
     TipTimeTheme {
-        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={} ) {
-            
-        }
+       // LanscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "", HotelAddress = "", HotelName = "", status = "")
     }
 }
+
 
 
 

@@ -42,7 +42,8 @@ class MainActivity : ComponentActivity() {
                     TipTimeTheme {
                         //val hotel :List<Hotel> = listOf()
                         ///HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
-                        booking(HotelAddress = "", HotelName = "", HotelId = "")
+                        //booking(HotelAddress = "", HotelName = "", HotelId = "")
+                        TravelApp()
                     }
                 }
             }

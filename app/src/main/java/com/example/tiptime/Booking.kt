@@ -45,6 +45,8 @@ fun booking (
     HotelName: String,
     HotelId : String,
     //status: String
+    viewModel: RoomViewModel = viewModel(),
+
 ){
 
     var RoomType by remember {
@@ -104,11 +106,16 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Single Room",/*status = status*/
+                    /*Text(text = checkAvailable(hotelId = HotelId, roomtype = "Single Room",/*status = status*/
                         onRoomTypeSelected = { selectedRoomType ->
                             RoomType = selectedRoomType // Update RoomType
                             count = 1
                         }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp))
+
+                     */
+                    Text(text = viewModel.checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString(), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp).clickable { count = 1
+                        RoomType = "Single Room"
+                    })
 
 
 
@@ -127,11 +134,18 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room",/*status = status*/
+                    /*Text(text = checkAvailable(hotelId = HotelId, roomtype = "Double Room",/*status = status*/
                         onRoomTypeSelected = { selectedRoomType ->
                             RoomType = selectedRoomType // Update RoomType
                             count = 1
                         }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp))
+
+                     */
+                    Text(text = viewModel.checkRoomPrice(hotelId = HotelId, roomType = "Double Room").toString()
+                        , color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp)
+                            .clickable { count = 1
+                                RoomType = "Double Room"
+                            })
 
 
                 }
@@ -147,10 +161,18 @@ fun booking (
                 Column(
 
                 ) {
-                    Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room",onRoomTypeSelected = { selectedRoomType ->
+                    /*Text(text = checkAvailable(hotelId = HotelId, roomtype = "King Room",onRoomTypeSelected = { selectedRoomType ->
                         RoomType = selectedRoomType // Update RoomType
                         count = 1
                     }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp))
+
+                     */
+                    Text(text = viewModel.checkRoomPrice(hotelId = HotelId, roomType = "King Room") .toString()// Update RoomType
+                        , color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp)
+                            .clickable {
+                                count = 1
+                                RoomType = "King Room"
+                            })
                     
 
 
@@ -200,7 +222,7 @@ fun Bookings() {
     }
 }
 
-@Composable
+/*@Composable
 fun checkAvailable(hotelId : String , roomtype: String,/*status:String, */onRoomTypeSelected: (String) -> Unit ,viewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)) : String{
     var status by remember {
         mutableStateOf(viewModel.checkRoomStatus(hotelId,roomtype))
@@ -229,6 +251,8 @@ fun checkAvailable(hotelId : String , roomtype: String,/*status:String, */onRoom
 
 }
 
+
+ */
 fun checkSelection(count :Int):Boolean{
     if(count != 0 || count > 1){
         return false

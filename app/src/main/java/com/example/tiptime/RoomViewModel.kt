@@ -38,12 +38,5 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
         return roomRes.checkRoomPrice(hotelId,roomType)
     }
 
-    fun checkRoomStatus(hotelId: String,roomType: String,BookingStartDate:Date,BookingEndDate:Date):Boolean{
 
-        //viewModelScope.launch {
-           return roomRes.checkRoomStatus(hotelId,roomType,BookingStartDate,BookingEndDate)
-
-    //}
-
-    }
 }

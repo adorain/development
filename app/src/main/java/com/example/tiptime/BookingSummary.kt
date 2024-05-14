@@ -45,11 +45,20 @@ fun bookingSummary(
     Price : Double,
     pax:Int,
     roomType:String,
-    viewModel: RoomViewModel = viewModel()
+    viewModel: BookingViewModel = viewModel()
 ) {
-    var status by remember{ mutableStateOf(false) }
+    var status by remember {
+        mutableStateOf(viewModel.updateStatus())
+    }
     var text by remember{ mutableStateOf("Pay") }
-    var canClick by remember { mutableStateOf(false) }
+    var canClick by remember { mutableStateOf(!status) }
+
+
+    LaunchedEffect(status) {
+        text = if (status) "Unavailable" else "Pay"
+        canClick = !status
+    }
+
     Column {
         Row(
         ) {
@@ -146,7 +155,7 @@ fun bookingSummary(
                 Text(text = "Cancel")
             }
             OutlinedButton(
-                onClick =  {
+                onClick = {
                     if (canClick) {
                         onNextButtonClicked()
                     }
@@ -159,12 +168,6 @@ fun bookingSummary(
 
         }
 
-
-        LaunchedEffect(HotelId, roomType, BookingStartDate, BookingEndDate) {
-            status = viewModel.checkRoomStatus(HotelId, roomType, BookingStartDate, BookingEndDate)
-            text = if (status) "Unavailable" else "Pay"
-            canClick = !status
-        }
 
 
     }
@@ -182,10 +185,8 @@ fun BookingSummary() {
             Price = 0.00,
             HotelId = "",
             pax = 0,
-            roomType = ""
-
-
-        )
+            roomType = "",
+            )
     }
 }
 /*

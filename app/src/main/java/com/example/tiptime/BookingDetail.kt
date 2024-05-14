@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Calendar
@@ -69,7 +70,8 @@ fun bookingDetails(
     BookingEndDate :Date,
     Price : Double,
     pax:Int,
-    roomType:String
+    roomType:String,
+    viewModel: BookingViewModel = viewModel()
 ) {
 
     var TotalPrice by remember { mutableStateOf(0.00) }
@@ -231,7 +233,10 @@ fun bookingDetails(
                     Text(text = "Cancel")
                 }
                 OutlinedButton(
-                    onClick = onNextButtonClicked,
+                    onClick = {
+                        viewModel.setStatus(HotelId,roomType, BookingStartDate, BookingEndDate)
+                        onNextButtonClicked()
+                    },
                     modifier = Modifier.size(width = 100.dp, height = 50.dp)
                 ) {
                     Text(text = "Next")

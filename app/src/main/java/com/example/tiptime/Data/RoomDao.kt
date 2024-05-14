@@ -20,6 +20,4 @@ interface RoomDao {
     @Query("SELECT MIN(price) || ' - ' || MAX(price) FROM room WHERE hotel_id = :hotelId")
     fun getPriceRange(hotelId: String): String
 
-    @Query("SELECT * FROM room JOIN Booking ON ROOMTYPE = roomType WHERE BookedStartDate <= :BookingStartDate AND BookedEndDate >= :BookingEndDate AND Status = 'Completed'")
-    fun checkRoomStatus(hotelId: String , roomType: String , BookingStartDate : Date,BookingEndDate : Date):Boolean
 }

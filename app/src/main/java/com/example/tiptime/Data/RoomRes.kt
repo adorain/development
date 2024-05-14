@@ -8,5 +8,5 @@ interface RoomRes {
     fun findRoomType(hotelId: String): String
     fun getPriceRange(hotelId: String): String
 
-    fun checkRoomStatus(hotelId: String, roomType: String, BookingStartDate : Date, BookingEndDate : Date):Boolean
+
 }

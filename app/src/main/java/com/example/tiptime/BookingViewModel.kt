@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
 import com.example.tiptime.Data.room
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Stack
@@ -33,6 +35,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     var roomtype by mutableStateOf("")
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
+    var status by mutableStateOf(false)
     fun insertNewBooking(){
         bookingRes.addNewBooking(
             Booking(
@@ -161,6 +164,14 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
         return roomtype
     }
+    fun setStatus(hotelId: String,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
+        viewModelScope.launch {
+            status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate, BookingEndDate)
+        }
+    }
 
+    fun updateStatus():Boolean{
+        return status
+    }
 
 }

@@ -7,5 +7,5 @@ class RoomOfflineRes (private val roomDao: RoomDao):RoomRes{
     override fun getPriceRange(hotelId: String) = roomDao.getPriceRange(hotelId)
     override fun checkRoomPrice(hotelId: String, roomType: String) = roomDao.checkRoomPrice(hotelId,roomType)
 
-    override fun checkRoomStatus(hotelId: String, roomType: String, BookingStartDate: Date, BookingEndDate: Date)  = roomDao.checkRoomStatus(hotelId, roomType, BookingStartDate ,BookingEndDate)
+
 }

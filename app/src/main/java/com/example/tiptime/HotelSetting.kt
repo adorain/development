@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tiptime.ui.theme.TipTimeTheme
+import com.example.tiptime.ui.theme.black
 import com.example.tiptime.ui.theme.navy_blue
 import com.example.tiptime.ui.theme.white
 
@@ -63,18 +64,18 @@ fun HotelSettingContent(){
         modifier= Modifier
             /*.fillMaxSize()*/
            /* .background(color = navy_blue)*/
-            .padding(horizontal = 30.dp),
+            .padding(horizontal = 3.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             "Setting",
-            color = white,
+            color = black,
             fontWeight = FontWeight.Bold,
             fontSize = 40.sp,
             modifier = Modifier
                 .padding(
-                    horizontal = 355.dp,
-                    vertical = 63.dp
+                    horizontal = 3.dp,
+                    vertical = 3.dp
                 )
         )
 
@@ -82,29 +83,29 @@ fun HotelSettingContent(){
             modifier = Modifier
                 /*.fillMaxSize()*/
                 /*.background(color = navy_blue)*/
-                .padding(horizontal = 30.dp),
+                .padding(horizontal = 3.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Text(
                 "Account",
-                color = white,
+                color = black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 35.dp
                     )
             )
 
             Text(
                 "Edit Profile",
-                color = white,
+                color = black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp,
+                        horizontal = 35.dp,
                         vertical = 30.dp
                     )
             )
@@ -112,12 +113,12 @@ fun HotelSettingContent(){
             Button(onClick = {showLogoutDialog=true}){
                 Text(
                     "Log Out",
-                    color = white,
+                    color = black,
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     modifier = Modifier
                         .padding(
-                            horizontal = 355.dp,
+                            horizontal = 35.dp,
                             vertical = 30.dp
                         )
                 )
@@ -136,35 +137,35 @@ fun HotelSettingContent(){
 
             Text(
                 "Preferences",
-                color = white,
+                color = black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 35.dp
                     )
             )
 
             Text(
                 "Language",
-                color = white,
+                color = black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp,
+                        horizontal = 35.dp,
                         vertical = 30.dp
                     )
             )
 
             Text(
                 "Currency",
-                color = white,
+                color = black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp,
+                        horizontal = 35.dp,
                         vertical = 30.dp
                     )
             )
@@ -180,24 +181,24 @@ fun HotelSettingContent(){
 
             Text(
                 "App Information",
-                color = white,
+                color = black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 35.dp
                     )
             )
 
             Button(onClick = {showAboutDialog=true}) {
                 Text(
                     "About",
-                    color = white,
+                    color = black,
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     modifier = Modifier
                         .padding(
-                            horizontal = 355.dp,
+                            horizontal = 35.dp,
                             vertical = 30.dp
                         )
                 )
@@ -208,7 +209,7 @@ fun HotelSettingContent(){
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun HotelSettingPreview() {
     TipTimeTheme {

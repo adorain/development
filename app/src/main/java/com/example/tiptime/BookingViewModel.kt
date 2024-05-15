@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.Stack
 
 
@@ -24,7 +25,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
     private val _uiState = MutableStateFlow(room())
     val uiState: StateFlow<room> = _uiState.asStateFlow()
-    var hotel_Id by mutableStateOf("")
+    var hotel_Id by mutableStateOf(0)
     var Price by mutableStateOf(0.00)
     var BookedStartDate by mutableStateOf(Date())
     var BookedEndDate by mutableStateOf(Date())
@@ -38,7 +39,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
             bookingRes.addNewBooking(
             Booking(
                 Booked_id = uiBookingState.value.Booked_id,
-                HotelId = hotel_Id.toInt(),
+                HotelId = hotel_Id,
                 ROOMTYPE = roomtype,
                 BookedStartDate = BookedStartDate.toString(),
                 BookedEndDate = BookedEndDate.toString(),
@@ -120,30 +121,49 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
         return Pax
     }
-    fun setHotelId(hotelId : String){
+    fun setHotelId(hotelId : Int){
         _uiBookingState.update {
             uiBookingState ->
             uiBookingState.copy(
                 HotelId = hotelId.toInt()
             )
         }
+        hotel_Id = hotelId.toInt()
     }
 
 
 
     fun updateBookingStartDate(bookedStartDate : String) {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        _uiBookingState.update {
+                uiBookingState ->
+            uiBookingState.copy(
+                BookedStartDate = bookedStartDate
+            )
+        }
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.CHINA)
         val date = dateFormat.parse(bookedStartDate)
         BookedStartDate = date
     }
 
     fun updateBookingEndDate(bookedEndDate: String) {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        _uiBookingState.update {
+                uiBookingState ->
+            uiBookingState.copy(
+                BookedEndDate = bookedEndDate
+            )
+        }
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.CHINA)
         val date = dateFormat.parse(bookedEndDate)
         BookedEndDate = date
     }
 
     fun updatePax(pax : String){
+        _uiBookingState.update {
+                uiBookingState ->
+            uiBookingState.copy(
+                Pax = pax.toInt()
+            )
+        }
         Pax = pax.toInt()
     }
 

@@ -29,7 +29,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     var HotelName by mutableStateOf("")
     var HotelAddress by mutableStateOf("")
     var roomType by mutableStateOf("")
-    var hotelList = mutableListOf<Hotel>()
+    var hotelList = MutableStateFlow(mutableListOf<Hotel>())
 
     fun setHomeName(hotelName : String){
         _uiState.update {
@@ -91,7 +91,9 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
 
     fun getAllHotel(){
         viewModelScope.launch {
-            hotelList.addAll( hotelRes.getAllHotel())
+            hotelRes.getAllHotel().collect { hotels ->
+                hotelList.value= hotels.toMutableList()
+            }
         }
     }
 

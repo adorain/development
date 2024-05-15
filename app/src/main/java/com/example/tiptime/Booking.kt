@@ -45,7 +45,7 @@ fun booking (
     HotelName: String,
     HotelId : Int,
     //status: String
-    viewModel: RoomViewModel = viewModel(),
+    viewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory),
 
 ){
 

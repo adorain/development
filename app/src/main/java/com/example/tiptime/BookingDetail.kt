@@ -71,7 +71,7 @@ fun bookingDetails(
     Price : Double,
     pax:Int,
     roomType:String,
-    viewModel: BookingViewModel = viewModel()
+    viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
 
     var TotalPrice by remember { mutableStateOf(0.00) }
@@ -82,7 +82,7 @@ fun bookingDetails(
     var showStartButtonText by remember { mutableStateOf("Select start Date") }
     var showEndButtonText by remember { mutableStateOf("Select end Date") }
     var showNoPicker by remember { mutableStateOf(false) }
-    do {
+    //do {
 
 
         Column {
@@ -301,6 +301,7 @@ fun bookingDetails(
     }
 
      */
+        /*
         if (!checkPaxValidate(pax)) {
             Toast.makeText(
                 LocalContext.current,
@@ -333,7 +334,10 @@ fun bookingDetails(
                 ).show()
             }
         }
-    }while (!checkPaxValidate(pax)&&!checkEndDateValidate(selectedStartDate, selectedEndDate)&&!checkStartDateValidate(selectedStartDate))
+
+         */
+
+    //}while (!checkPaxValidate(pax)&&!checkEndDateValidate(selectedStartDate, selectedEndDate)&&!checkStartDateValidate(selectedStartDate))
 }
 
 @Composable
@@ -360,7 +364,7 @@ fun showDatePicker(context: Context, date: Date, onDateSelected: (Date) -> Unit)
 
     val datePickerDialog = android.app.DatePickerDialog(
         context,
-        { _, year, month, dayOfMonth ->
+        { _:DatePicker, year:Int, month:Int, dayOfMonth:Int ->
             calendar.set(year, month, dayOfMonth)
             val selectedDate = calendar.time
             onDateSelected(selectedDate)

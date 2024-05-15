@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Database
 import androidx.room.Entity
 import androidx.room.RoomDatabase
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 
@@ -17,5 +18,5 @@ interface HotelRes {
     fun getFavoriteHotels(): List<Hotel>
     fun updateHotelStatus(hotelId: Int, newStatus: String)
 
-    fun getAllHotel():List<Hotel>
+    fun getAllHotel(): Flow<List<Hotel>>
 }

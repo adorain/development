@@ -1,5 +1,6 @@
 package com.example.tiptime
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,14 +8,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,15 +36,44 @@ class UserSetting : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    UserSettingContent()
+                    UserSettingContent(onLogout = { navigateToLogout() },
+                        onCurrency = { navigateToCurrency() },
+                        onAbout = {navigateToAbout()})
                 }
             }
         }
     }
+    private fun navigateToLogout() {
+        val intent = Intent(this, Logout::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToCurrency() {
+        val intent = Intent(this, CurrencyConverter::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToAbout() {
+        val intent = Intent(this, About::class.java)
+        startActivity(intent)
+    }
 }
 
 @Composable
-fun UserSettingContent(){
+fun UserSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
+    var showLogoutDialog by remember { mutableStateOf(false) }
+    var showAboutDialog by remember { mutableStateOf(false) }
+    /* if (showLogoutDialog){
+         LogoutContent {
+             var onLogout = { showLogoutDialog = false }
+         }
+     }*/
+
+    if (showAboutDialog){
+        AboutContent {
+            var onDismiss = { showAboutDialog = false }
+        }
+    }
 
     Column(
         modifier= Modifier
@@ -56,15 +89,15 @@ fun UserSettingContent(){
             fontSize = 40.sp,
             modifier = Modifier
                 .padding(
-                    horizontal = 355.dp,
+                    horizontal = 35.dp,
                     vertical = 63.dp
                 )
         )
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = lavender)
+                /*.fillMaxSize()*/
+                /*.background(color = navy_blue)*/
                 .padding(horizontal = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -76,7 +109,7 @@ fun UserSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 35.dp
                     )
             )
 
@@ -87,28 +120,32 @@ fun UserSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp,
+                        horizontal = 35.dp,
                         vertical = 30.dp
                     )
             )
 
-            Text(
-                "Log Out",
-                color = white,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 355.dp,
-                        vertical = 30.dp
-                    )
-            )
+            Button(onClick = onLogout){
+                Text(
+                    "Log Out",
+                    color = white,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 35.dp,
+                            vertical = 30.dp
+                        )
+                )
+            }
+
+
         }
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = lavender)
+                /*  .fillMaxSize()*/
+                /*  .background(color = navy_blue)*/
                 .padding(horizontal = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -120,7 +157,7 @@ fun UserSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 60.dp
                     )
             )
 
@@ -131,28 +168,30 @@ fun UserSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp,
+                        horizontal = 35.dp,
                         vertical = 30.dp
                     )
             )
 
-            Text(
-                "Currency",
-                color = white,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 355.dp,
-                        vertical = 30.dp
-                    )
-            )
+            Button(onClick = onCurrency) {
+                Text(
+                    "Currency",
+                    color = white,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 35.dp,
+                            vertical = 30.dp
+                        )
+                )
+            }
         }
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = lavender)
+                /*.fillMaxSize()
+                .background(color = navy_blue)*/
                 .padding(horizontal = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -164,23 +203,31 @@ fun UserSettingContent(){
                 fontSize = 30.sp,
                 modifier = Modifier
                     .padding(
-                        horizontal = 355.dp
+                        horizontal = 35.dp
                     )
             )
 
-            Text(
-                "About",
-                color = white,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 355.dp,
-                        vertical = 30.dp
-                    )
-            )
-
+            Button(onClick = onAbout) {
+                Text(
+                    "About",
+                    color = white,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 35.dp,
+                            vertical = 30.dp
+                        )
+                )
+            }
         }
     }
 
+}
+@Preview
+@Composable
+fun UserSettingPreview() {
+    TipTimeTheme {
+        UserSettingContent(onLogout={}, onCurrency = {}, onAbout={})
+    }
 }

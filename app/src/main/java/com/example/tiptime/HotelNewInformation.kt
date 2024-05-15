@@ -31,8 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.tiptime.ui.theme.TipTimeTheme
 import com.example.tiptime.ui.theme.white
 
-
-class NewHotel : ComponentActivity() {
+class HotelNewInformation : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -41,7 +40,7 @@ class NewHotel : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NewHotelContent()
+                    NewInformationContent()
                 }
             }
         }
@@ -49,8 +48,7 @@ class NewHotel : ComponentActivity() {
 }
 
 @Composable
-fun NewHotelContent(){
-
+fun NewInformationContent(){
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.hotel_user_background),
@@ -61,12 +59,12 @@ fun NewHotelContent(){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                /*                .background(color = navy_blue)*/
+               /* .background(color = navy_blue)*/
                 .padding(horizontal = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Sign-up",
+                text = "Hotel New Information",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = white,
@@ -76,34 +74,25 @@ fun NewHotelContent(){
                         horizontal = 70.dp
                     )
             )
-            NewHotelTextField(
-                hint = "Name",
+            HotelNewInformationTextField(
+                hint = "Hotel Name",
+                keyboardType = KeyboardType.Text
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+            HotelNewInformationTextField(
+                hint = "Hotel Address",
                 keyboardType = KeyboardType.Text
             )
             Spacer(modifier = Modifier.height(40.dp))
-            NewHotelTextField(
-                hint = "Phone Number",
-                keyboardType = KeyboardType.Phone
-            )
-            /*Spacer(modifier = Modifier.height(40.dp))
-            NewHotelTextField(
-                hint = "Gender (Male/Female)",
+            HotelNewInformationTextField(
+                hint = "Hotel Description",
                 keyboardType = KeyboardType.Text
-            )*/
-            Spacer(modifier = Modifier.height(40.dp))
-            NewHotelTextField(
-                hint = "E-mail Address",
-                keyboardType = KeyboardType.Email
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-            NewHotelTextField(
-                hint = "Password",
-                keyboardType = KeyboardType.Password
             )
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(onClick = { /*TODO*/ }) {
-                Text(text = "Submit")
+                Text(text = "Next")
             }
 
 
@@ -116,7 +105,7 @@ fun NewHotelContent(){
 
 
 @Composable
-fun NewHotelTextField(hint: String, keyboardType: KeyboardType) {
+fun HotelNewInformationTextField(hint: String, keyboardType: KeyboardType) {
     TextField(
         value = "",
         onValueChange = { },
@@ -130,8 +119,8 @@ fun NewHotelTextField(hint: String, keyboardType: KeyboardType) {
 
 @Preview
 @Composable
-fun NewHotelPreview() {
+fun HotelNewInformationPreview() {
     TipTimeTheme {
-        NewHotelContent()
+        NewInformationContent()
     }
 }

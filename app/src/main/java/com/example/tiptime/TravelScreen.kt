@@ -38,13 +38,13 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.detail.name,
+            startDestination = screen.summary.name,
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = screen.home.name){
                 HomeScreen (
                     onSelectedHotel = {
-                        viewModel.setHotelId(it)
+                        viewModel.setHotelId(it.toInt())
                         navController.navigate(screen.booking.name)},
                     onSelectedHotelAddress = {viewModelhotel.setHomeAddress(it)},
                     onSelectedHotelDes = {viewModelhotel.setHomeDes(it)},
@@ -84,10 +84,7 @@ fun TravelApp(
                     OnBookingEndDateChange = {viewModel.updateBookingEndDate(it)},
                     OnPaxChange ={viewModel.updatePax(it)} ,
                     HotelId = uiState.HotelId,
-                    BookingStartDate = viewModel.setBookingStartDate(),
-                    BookingEndDate = viewModel.setBookingEndDate(),
                     Price = viewModel.calculatePrice(),
-                    pax = viewModel.setPax(),
                     roomType = viewModel.setRoomType(),
                 )
             }

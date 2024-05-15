@@ -5,8 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tiptime.Data.room
+import com.example.tiptime.Data.Room
+import com.example.tiptime.Data.RoomRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Date
@@ -15,9 +18,13 @@ enum class RoomStatus {
     AVAILABLE, OCCUPIED, UNDER_MAINTENANCE
 }
 
-class EditRoomsViewModel : ViewModel() {
-    var rooms = listOf<com.example.tiptime.Data.room>()
-    var selectedRoom by mutableStateOf("")
+class EditRoomsViewModel(private val repository: RoomRepository) : ViewModel() {
+    private val _rooms = MutableStateFlow<List<Room>>(emptyList())
+    val rooms: StateFlow<List<Room>> get() = _rooms
+
+    private val _selectedRoom = MutableStateFlow<Room?>(null)
+    val selectedRoom: StateFlow<Room?> get() = _selectedRoom
+
     var availableRooms by mutableStateOf(0)
     var occupiedRooms by mutableStateOf(0)
     var underMaintenanceRooms by mutableStateOf(0)
@@ -26,33 +33,43 @@ class EditRoomsViewModel : ViewModel() {
     var checkAv by mutableStateOf(false)
     var checkOc by mutableStateOf(false)
     var checkUnMa by mutableStateOf(false)
-    var roomAvailable by mutableStateOf(false)
 
-    // Fetch rooms from the repository
-    fun fetchRoomsForDateRangeAndType(hotelId: String, roomType: String, startDate: Long, endDate: Long) {
-        // Assuming you have a repository to fetch data from the database
+    init {
+        fetchAllRooms()
+    }
+
+    private fun fetchAllRooms() {
         viewModelScope.launch {
-            rooms = withContext(Dispatchers.IO) {
-                // Replace this with the actual repository call
-                // repository.getRoomsForDateRangeAndType(hotelId, roomType, startDate, endDate)
-                listOf()  // Example placeholder
+            repository.getAllRooms().collect { fetchedRooms ->
+                _rooms.value = fetchedRooms
+                updateRoomCounts(fetchedRooms)
             }
-            updateRoomCounts()
         }
     }
 
-    fun updateRoomCounts() {
+    // Fetch rooms from the repository
+    fun fetchRoomsForDateRangeAndType(hotelId: String, roomType: String, startDate: Long, endDate: Long) {
+        viewModelScope.launch {
+            val fetchedRooms = withContext(Dispatchers.IO) {
+                repository.getRoomsForDateRangeAndType(hotelId, roomType, startDate, endDate)
+            }
+            _rooms.value = fetchedRooms
+            updateRoomCounts(fetchedRooms)
+        }
+    }
+
+    private fun updateRoomCounts(rooms: List<Room>) {
         availableRooms = rooms.count { it.Status == "Available" }
         occupiedRooms = rooms.count { it.Status == "Occupied" }
         underMaintenanceRooms = rooms.count { it.Status == "Under Maintenance" }
     }
 
     fun selectRoom(roomId: String) {
-        selectedRoom = roomId
+        _selectedRoom.value = _rooms.value.find { it.roomId == roomId }
     }
 
-    fun updateRoomAvailability(status: RoomStatus) {
-        when (status) {
+    fun updateRoomAvailability(Status: RoomStatus) {
+        when (Status) {
             RoomStatus.AVAILABLE -> {
                 checkAv = true
                 checkOc = false
@@ -71,12 +88,10 @@ class EditRoomsViewModel : ViewModel() {
         }
     }
 
-    fun updateRoomStatus(room: room) {
-        // Assuming you have a repository to update the room status in the database
+    fun updateRoomStatus(room: Room) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                // Replace this with the actual repository call to update the room status
-                // repository.updateRoomStatus(room)
+                repository.updateRoomStatus(room)
             }
         }
     }

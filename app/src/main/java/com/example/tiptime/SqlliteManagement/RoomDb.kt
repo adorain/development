@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.tiptime.Data.room
+import com.example.tiptime.Data.Room
 
 class RoomDb(context : Context?) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
@@ -34,7 +34,7 @@ class RoomDb(context : Context?) :
     }
 
     fun addNewRoom(
-        room: room
+        room: Room
     ) {
         val db = this.writableDatabase
         val value = ContentValues()

@@ -15,6 +15,7 @@
  */
 package com.example.tiptime
 
+
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,11 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.tiptime.Data.Booking
-import com.example.tiptime.Data.Hotel
 import com.example.tiptime.ui.theme.TipTimeTheme
-import java.text.NumberFormat
-import java.util.Date
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -43,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     TipTimeTheme {
-                        EditRoomsDt()
+                        EditRooms()
                     }
                 }
             }
@@ -59,7 +56,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipTimeLayoutPreview() {
     TipTimeTheme {
-        EditRoomsDt()
+        EditRooms()
     }
 }
 

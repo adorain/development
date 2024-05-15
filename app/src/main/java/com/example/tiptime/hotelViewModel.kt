@@ -4,16 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.tiptime.Data.Booking
-import com.example.tiptime.Data.BookingRes
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.Data.HotelRes
-import com.example.tiptime.Data.room
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.text.SimpleDateFormat
 import java.util.Date
 
 class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){

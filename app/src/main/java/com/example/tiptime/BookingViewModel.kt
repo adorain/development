@@ -1,30 +1,25 @@
 package com.example.tiptime
 
 
-import android.net.http.UrlRequest.Status
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
-import com.example.tiptime.Data.room
-import com.example.tiptime.SqlliteManagement.BookingDb
-import com.example.tiptime.SqlliteManagement.HotelDb
-import com.example.tiptime.SqlliteManagement.RoomDb
+import com.example.tiptime.Data.Room
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Stack
 
 
 class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
-    private val _uiState = MutableStateFlow(room())
-    val uiState: StateFlow<room> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(Room())
+    val uiState: StateFlow<Room> = _uiState.asStateFlow()
     var hotel_Id by mutableStateOf("")
     var Price by mutableStateOf(0.00)
     var BookedStartDate by mutableStateOf(Date())
@@ -151,7 +146,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     fun updateRoomType(RoomType:String){
         roomtype = RoomType
     }
-
+/*
     fun setRoomType():String{
         _uiState.update{
                 currentState->
@@ -163,4 +158,6 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     }
 
 
+
+ */
 }

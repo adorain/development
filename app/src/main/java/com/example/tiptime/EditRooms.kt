@@ -1,19 +1,16 @@
-
 package com.example.tiptime
 
-import android.app.DatePickerDialog
+import EditRoomsViewModelFactory
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
@@ -31,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,19 +41,22 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EditRooms(viewModel: EditRoomsViewModel) {
+fun EditRooms(viewModel: EditRoomsViewModel = viewModel()) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+
+    val rooms by viewModel.rooms.collectAsState(initial = emptyList())
+    val selectedRoom by viewModel.selectedRoom.collectAsState(initial = null)
 
     var expanded by remember { mutableStateOf(false) }
     val roomType = arrayOf("Single", "Double", "King")
@@ -138,9 +139,9 @@ fun EditRooms(viewModel: EditRoomsViewModel) {
 
         Spacer(modifier = Modifier.padding(top = 8.dp))
 
-        Text("Available: ${viewModel.availableRooms}", modifier = Modifier.padding(cusPadding))
-        Text("Occupied: ${viewModel.occupiedRooms}", modifier = Modifier.padding(cusPadding))
-        Text("Under Maintenance: ${viewModel.underMaintenanceRooms}", modifier = Modifier.padding(cusPadding))
+        Text("Available: ${rooms.count { it.Status == "Available" }}", modifier = Modifier.padding(cusPadding))
+        Text("Occupied: ${rooms.count { it.Status == "Occupied" }}", modifier = Modifier.padding(cusPadding))
+        Text("Under Maintenance: ${rooms.count { it.Status == "Under Maintenance" }}", modifier = Modifier.padding(cusPadding))
 
         Divider(
             modifier = Modifier
@@ -158,37 +159,38 @@ fun EditRooms(viewModel: EditRoomsViewModel) {
                 .fillMaxWidth()
                 .wrapContentSize(Alignment.TopStart)
         ) {
+
             ExposedDropdownMenuBox(expanded = expandS, onExpandedChange = { expandS = true }) {
                 TextField(
-                    value = viewModel.selectedRoom,
+                    value = selectedRoom?.roomId ?: "",
                     onValueChange = { viewModel.selectRoom(it) },
                     label = { Text(text = "Type Room Name Here") },
                     trailingIcon = {
-                        if (viewModel.selectedRoom.isNotEmpty()) {
+                        if (selectedRoom?.roomId?.isNotEmpty() == true) {
                             IconButton(onClick = {
-                                if (viewModel.rooms.map { it.roomId }.contains(viewModel.selectedRoom)) {
-                                    viewModel.roomAvailable = true
+                                if (rooms.map { it.roomId }.contains(selectedRoom?.roomId)) {
                                     expandS = false
                                     focusManager.clearFocus()
-                                    Toast.makeText(context, "Confirm: ${viewModel.selectedRoom}", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Confirm: ${selectedRoom?.roomId}", Toast.LENGTH_SHORT).show()
                                 } else {
-                                    viewModel.roomAvailable = false
                                     Toast.makeText(context, "Room Not Available", Toast.LENGTH_SHORT).show()
                                 }
                             }) {
                                 Icon(Icons.Filled.Check, contentDescription = "Confirm")
                             }
+                        } else {
+                            null
                         }
                     },
                     modifier = Modifier.menuAnchor()
                 )
 
-                val filteredOptions = viewModel.rooms.map { it.roomId }.filter { it.contains(viewModel.selectedRoom, ignoreCase = true) }
+                val filteredOptions = rooms.map { it.roomId }.filter { it.contains(selectedRoom?.roomId ?: "", ignoreCase = true) }
                 if (filteredOptions.isNotEmpty()) {
-                    ExposedDropdownMenu(expanded = expandS, onDismissRequest = { expandS = false }) {
+                    ExposedDropdownMenu(expanded = expandS, onDismissRequest = {}) {
                         filteredOptions.forEach { item ->
                             DropdownMenuItem(text = { Text(text = item) }, onClick = {
-                                viewModel.selectedRoom = item
+                                viewModel.selectRoom(item)
                                 expandS = false
                             })
                         }
@@ -200,26 +202,19 @@ fun EditRooms(viewModel: EditRoomsViewModel) {
         Spacer(modifier = Modifier.padding(top = 8.dp))
 
         // Checkbox options for room status
-        CheckboxOption("Available", viewModel.checkAv) {
+        CheckboxOption("Available", selectedRoom?.Status == "Available") {
             viewModel.updateRoomAvailability(RoomStatus.AVAILABLE)
         }
-        CheckboxOption("Occupied", viewModel.checkOc) {
+        CheckboxOption("Occupied", selectedRoom?.Status == "Occupied") {
             viewModel.updateRoomAvailability(RoomStatus.OCCUPIED)
         }
-        CheckboxOption("Under Maintenance", viewModel.checkUnMa) {
+        CheckboxOption("Under Maintenance", selectedRoom?.Status == "Under Maintenance") {
             viewModel.updateRoomAvailability(RoomStatus.UNDER_MAINTENANCE)
         }
 
         Button(onClick = {
-            val selectedRoom = viewModel.rooms.find { it.roomId == viewModel.selectedRoom }
-            if (selectedRoom != null) {
-                selectedRoom.Status = when {
-                    viewModel.checkAv -> "Available"
-                    viewModel.checkOc -> "Occupied"
-                    viewModel.checkUnMa -> "Under Maintenance"
-                    else -> selectedRoom.Status
-                }
-                viewModel.updateRoomStatus(selectedRoom)
+            selectedRoom?.let {
+                viewModel.updateRoomStatus(it)
             }
         }, modifier = Modifier.padding(cusPadding)) {
             Text("Confirm Edit")
@@ -246,35 +241,29 @@ fun EditRooms(viewModel: EditRoomsViewModel) {
 }
 
 @Composable
-fun CheckboxOption(
-    label: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
-        modifier = Modifier
-            .height(30.dp)
-            .padding(
-                start = 8.dp,
-                top = 1.dp,
-                end = 8.dp
-            )
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
+fun CheckboxOption(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(checked = checked, onCheckedChange = onCheckedChange)
         Text(label)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun EditRoomsPreview() {
+    TipTimeTheme {
+        EditRooms(EditRoomsViewModelFactory(LocalContext.current).create(EditRoomsViewModel::class.java))
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun showDatePickerForBooking(context: Context, date: Date, onDateSelected: (Date) -> Unit) {
     val calendar = Calendar.getInstance()
     calendar.time = date
 
-    DatePickerDialog(
+    android.app.DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
@@ -284,13 +273,4 @@ fun showDatePickerForBooking(context: Context, date: Date, onDateSelected: (Date
         calendar.get(Calendar.MONTH),
         calendar.get(Calendar.DAY_OF_MONTH)
     ).show()
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun EditRoomsDt() {
-    TipTimeTheme {
-        EditRooms(EditRoomsViewModel())
-    }
 }

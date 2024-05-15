@@ -1,8 +1,10 @@
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Room
 import androidx.room.Update
+import com.example.tiptime.Data.Room
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RoomDao {
@@ -18,11 +20,11 @@ interface RoomDao {
     @Query("SELECT MIN(price) || ' - ' || MAX(price) FROM room WHERE hotel_id = :hotelId")
     fun getPriceRange(hotelId: String): String
 
-    @Query("SELECT * FROM room WHERE hotel_id = :hotelId")
-    fun getAllRooms(hotelId: String): List<Room>
+    @Query("SELECT * FROM room")
+    fun getAllRooms(): Flow<List<Room>>
 
     @Query("""
-        SELECT * FROM room WHERE hotel_Id = :hotelId AND roomType = :roomType AND roomId IN (
+        SELECT * FROM room WHERE hotel_id = :hotelId AND roomType = :roomType AND roomId IN (
             SELECT roomId FROM booking WHERE 
             (BookedStartDate BETWEEN :startDate AND :endDate) OR 
             (BookedEndDate BETWEEN :startDate AND :endDate)
@@ -32,4 +34,7 @@ interface RoomDao {
 
     @Update
     suspend fun updateRoom(room: Room)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRooms(rooms: List<Room>)
 }

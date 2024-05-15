@@ -13,10 +13,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tiptime.Data.Booking
-import com.example.tiptime.Data.room
-import com.example.tiptime.ui.theme.TipTimeTheme
-import java.util.Date
 
 enum class screen{
     home , booking , detail, summary,payment
@@ -80,7 +76,9 @@ fun TravelApp(
                     BookingEndDate = viewModel.setBookingEndDate(),
                     Price = viewModel.calculatePrice(),
                     pax = viewModel.setPax(),
-                    roomType = viewModel.setRoomType(),
+                    roomType = ""
+
+
                 )
             }
             composable(route = screen.summary.name){

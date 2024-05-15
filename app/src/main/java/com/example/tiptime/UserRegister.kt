@@ -3,17 +3,12 @@ package com.example.tiptime
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.semantics.SemanticsProperties.Password
 import androidx.lifecycle.ViewModel
-import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.Login
-import com.example.tiptime.Data.User
-import com.example.tiptime.Data.room
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.util.Date
 
 class UserRegister : ViewModel(){
     private val _uiState = MutableStateFlow(Login())

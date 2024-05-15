@@ -12,10 +12,10 @@ interface HotelRes {
     fun getAvailableHotels(hotelAddress: String, startDate: Date, endDate: Date, pax: Int): List<Hotel>
 
 
-    fun getHotelById(hotelName: String): String
+    fun getHotelById(hotelName: String): Int
 
     fun getFavoriteHotels(): List<Hotel>
-    fun updateHotelStatus(hotelId: String, newStatus: String)
+    fun updateHotelStatus(hotelId: Int, newStatus: String)
 
     fun getAllHotel():List<Hotel>
 }

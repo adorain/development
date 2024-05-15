@@ -13,13 +13,13 @@ import java.util.Date
     ,ForeignKey(entity = room::class, parentColumns = ["roomType"], childColumns = ["ROOMTYPE"])])
 data class Booking(
     @PrimaryKey(autoGenerate = true)
-    val Booked_id : String = "",
+    val Booked_id : Int = 0,
 
-    val HotelId : String = "",
+    val HotelId : Int = 0,
     val ROOMTYPE : String = "",
-    val BookedStartDate : Date = Date(),
+    val BookedStartDate : String = "",
 
-    val BookedEndDate : Date = Date(),
+    val BookedEndDate : String = "",
     val Pax : Int = 0,
     val Status : String = "",
     val Price : Double= 0.00

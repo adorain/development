@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.RoomRes
 import com.example.tiptime.Data.room
-import com.example.tiptime.SqlliteManagement.RoomDb
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,13 +27,13 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
 
      */
 
-    fun setPriceRange(hotelId:String):String{
+    fun setPriceRange(hotelId:Int):String{
         return roomRes.getPriceRange(hotelId)
     }
 
 
 
-    fun checkRoomPrice(hotelId:String,roomType:String): Double{
+    fun checkRoomPrice(hotelId:Int,roomType:String): Double{
         return roomRes.checkRoomPrice(hotelId,roomType)
     }
 

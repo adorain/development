@@ -9,11 +9,11 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
         startDate: Date,
         endDate: Date,
         pax: Int
-    ): List<Hotel> = hotelDao.getAvailableHotels(hotelAddress,startDate,endDate,pax)
+    ): List<Hotel> = hotelDao.getAvailableHotels(hotelAddress,startDate.toString(),endDate.toString(),pax)
 
     override fun getFavoriteHotels(): List<Hotel> = hotelDao.getFavoriteHotels()
-    override fun getHotelById(hotelName: String): String = hotelDao.getHotelId(hotelName)
-    override fun updateHotelStatus(hotelId: String, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)
+    override fun getHotelById(hotelName: String): Int = hotelDao.getHotelId(hotelName)
+    override fun updateHotelStatus(hotelId: Int, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)
 
     override fun getAllHotel(): List<Hotel> = hotelDao.getAllHotels()
 }

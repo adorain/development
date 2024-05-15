@@ -40,8 +40,8 @@ fun bookingSummary(
     onNextButtonClicked:() -> Unit = {},
     onCancelButtonClicked : () -> Unit = {},
     HotelId : String = " ",
-    BookingStartDate : Date,
-    BookingEndDate :Date,
+    BookingStartDate : String,
+    BookingEndDate :String,
     Price : Double,
     pax:Int,
     roomType:String,
@@ -95,7 +95,7 @@ fun bookingSummary(
                 Text(text = "Booking Start Date : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = BookingStartDate.toString(), fontSize = 21.sp)
+                Text(text = BookingStartDate, fontSize = 21.sp)
             }
 
         }
@@ -105,7 +105,7 @@ fun bookingSummary(
                 Text(text = "Booking End Date : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = BookingEndDate.toString(), fontSize = 21.sp)
+                Text(text = BookingEndDate, fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -180,8 +180,8 @@ fun BookingSummary() {
     TipTimeTheme {
         bookingSummary( onCancelButtonClicked = {},
             onNextButtonClicked = {},
-            BookingStartDate = Date(),
-            BookingEndDate = Date(),
+            BookingStartDate = "Date()",
+            BookingEndDate = "Date()",
             Price = 0.00,
             HotelId = "",
             pax = 0,

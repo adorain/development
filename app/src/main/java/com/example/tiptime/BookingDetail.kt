@@ -65,7 +65,7 @@ fun bookingDetails(
     OnBookingStartDateChange : (String) -> Unit,
     OnBookingEndDateChange : (String) -> Unit,
     OnPaxChange : (String) -> Unit={},
-    HotelId : String ,
+    HotelId : Int ,
     BookingStartDate : Date,
     BookingEndDate :Date,
     Price : Double,
@@ -113,7 +113,7 @@ fun bookingDetails(
                     Text(text = "Hotel Id : ", fontSize = 21.sp)
                 }
                 Column {
-                    Text(text = HotelId, fontSize = 21.sp)
+                    Text(text = HotelId.toString(), fontSize = 21.sp)
                 }
             }
 

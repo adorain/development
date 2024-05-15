@@ -10,9 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
 import com.example.tiptime.Data.room
-import com.example.tiptime.SqlliteManagement.BookingDb
-import com.example.tiptime.SqlliteManagement.HotelDb
-import com.example.tiptime.SqlliteManagement.RoomDb
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,18 +34,20 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     var status by mutableStateOf(false)
     fun insertNewBooking(){
-        bookingRes.addNewBooking(
+        viewModelScope.launch {
+            bookingRes.addNewBooking(
             Booking(
                 Booked_id = uiBookingState.value.Booked_id,
-                HotelId = hotel_Id,
+                HotelId = hotel_Id.toInt(),
                 ROOMTYPE = roomtype,
-                BookedStartDate = BookedStartDate,
-                BookedEndDate = BookedEndDate,
+                BookedStartDate = BookedStartDate.toString(),
+                BookedEndDate = BookedEndDate.toString(),
                 Pax = Pax,
                 Status="Completed",
                 Price = Price
             )
-        )
+        ) }
+
 
 
     }
@@ -95,7 +94,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
         _uiBookingState.update {
             uiBookingState -> uiBookingState.copy(
-                BookedStartDate = BookedStartDate
+                BookedStartDate = BookedStartDate.toString()
             )
 
         }
@@ -106,7 +105,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         _uiBookingState.update {
                 uiBookingState ->
             uiBookingState.copy(
-                BookedEndDate = BookedEndDate
+                BookedEndDate = BookedEndDate.toString()
             )
 
         }
@@ -125,7 +124,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         _uiBookingState.update {
             uiBookingState ->
             uiBookingState.copy(
-                HotelId = hotelId
+                HotelId = hotelId.toInt()
             )
         }
     }
@@ -164,9 +163,9 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
         return roomtype
     }
-    fun setStatus(hotelId: String,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
+    fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
         viewModelScope.launch {
-            status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate, BookingEndDate)
+            status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate.toString(), BookingEndDate.toString())
         }
     }
 

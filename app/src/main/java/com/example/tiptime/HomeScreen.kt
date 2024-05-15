@@ -47,6 +47,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.ui.theme.TipTimeTheme
+import kotlinx.coroutines.flow.toCollection
 import java.util.Calendar
 import java.util.Date
 
@@ -96,6 +97,12 @@ fun HomeScreen(
     }
     var allHotelList = remember {
         mutableStateListOf<Hotel>()
+    }
+    var selectedDate by remember {
+        mutableStateOf("Check in Date")
+    }
+    var selectedEndDate by remember {
+        mutableStateOf("Check out Date")
     }
 
     /*if(userType == UserType.user){
@@ -159,7 +166,7 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Check in Date : ", color = Color.Black)
+                        Text(text = selectedDate, color = Color.Black)
                     }
                 }
                 Row(modifier = Modifier
@@ -183,7 +190,7 @@ fun HomeScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = "Check Out Date : ",color = Color.Black)
+                        Text(text = selectedEndDate,color = Color.Black)
                     }
                 }
                 Row(modifier = Modifier
@@ -215,10 +222,12 @@ fun HomeScreen(
 
         }
         Column (
-            Modifier.padding(start = 310.dp).clickable {
-                allHotelList.clear()
-                allHotelList.addAll(hotelList)
-            }
+            Modifier
+                .padding(start = 310.dp)
+                .clickable {
+                    allHotelList.clear()
+                    allHotelList.addAll(hotelList)
+                }
         ){
             Text(text = "Clear",)
         }
@@ -226,7 +235,7 @@ fun HomeScreen(
         LaunchedEffect(Unit) {
             viewModel.getAllHotel()
             hotelList.clear()
-            hotelList.addAll(viewModel.hotelList)
+            hotelList.addAll(viewModel.hotelList.value)
             allHotelList.clear()
             allHotelList = hotelList
         }
@@ -271,14 +280,20 @@ fun HomeScreen(
 
 
     if(showDialog){
-        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseStartDate})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {
+            chooseStartDate = it
+            selectedDate = chooseStartDate.toString()
+        })
         showDialog = false
     }
 
 
 
     if(showDialog2){
-        showdatePicker(context = LocalContext.current, onStartDateSelected = {chooseEndDate})
+        showdatePicker(context = LocalContext.current, onStartDateSelected = {
+            chooseEndDate = it
+            selectedEndDate = chooseEndDate.toString()
+        })
         showDialog2 = false
     }
 
@@ -289,7 +304,7 @@ fun HomeScreen(
             minValue = 0,
             maxValue = 20,
             initialValue = 0,
-            onValueChange = {pax},
+            onValueChange = {pax = it},
             OnClose = { showNumberPicker = false},
         )
 
@@ -385,13 +400,12 @@ fun showdatePicker(context: Context, onStartDateSelected: (Date) -> Unit){
     month=calendar.get(Calendar.MONTH)
     day = calendar.get(Calendar.DAY_OF_MONTH)
     calendar.time= Date()
-    val date = remember {
-        mutableStateOf("")
-    }
+
     val datePickerDialog = android.app.DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            date.value = "$dayOfMonth/$month/$year"
+            calendar.set(year, month, dayOfMonth)
+            onStartDateSelected(calendar.time)
         },
         year,
         month,

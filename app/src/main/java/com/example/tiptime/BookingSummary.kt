@@ -45,7 +45,7 @@ fun bookingSummary(
     Price : Double,
     pax:Int,
     roomType:String,
-    viewModel: BookingViewModel = viewModel()
+    viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     var status by remember {
         mutableStateOf(viewModel.updateStatus())

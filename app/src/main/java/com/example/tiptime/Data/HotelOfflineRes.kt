@@ -1,5 +1,6 @@
 package com.example.tiptime.Data
 
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 
@@ -15,5 +16,5 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     override fun getHotelById(hotelName: String): Int = hotelDao.getHotelId(hotelName)
     override fun updateHotelStatus(hotelId: Int, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)
 
-    override fun getAllHotel(): List<Hotel> = hotelDao.getAllHotels()
+    override fun getAllHotel(): Flow<List<Hotel>> = hotelDao.getAllHotels()
 }

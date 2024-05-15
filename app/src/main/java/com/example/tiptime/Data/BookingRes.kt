@@ -6,5 +6,5 @@ import java.util.Date
 interface BookingRes{
     fun addNewBooking(booking: Booking)
 
-    fun checkRoomStatus(hotelId: String, roomType: String, BookingStartDate : Date, BookingEndDate : Date):Boolean
+    fun checkRoomStatus(hotelId: Int, roomType: String, BookingStartDate : String, BookingEndDate : String):Boolean
 }

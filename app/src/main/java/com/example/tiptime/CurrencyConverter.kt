@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.widget.doOnTextChanged
 import com.example.tiptime.ui.theme.TipTimeTheme
-
+/*
 class CurrencyConverter : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var spinner1: Spinner
     private lateinit var spinner2: Spinner
@@ -185,3 +185,5 @@ fun CurrencyConverterPreview() {
         CurrencyConverter()
     }
 }
+
+ */

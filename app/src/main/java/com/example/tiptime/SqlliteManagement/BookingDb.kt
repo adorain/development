@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.PaymentMethod
-
+/*
 class BookingDb (context : Context?) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
@@ -55,3 +55,5 @@ class BookingDb (context : Context?) :
     }
 
 }
+
+ */

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.tiptime.ui.theme.TipTimeTheme
 import com.example.tiptime.ui.theme.navy_blue
 import com.example.tiptime.ui.theme.white
-
+/*
 class HotelSetting : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,7 @@ class HotelSetting : ComponentActivity() {
         val intent = Intent(this, Logout::class.java)
         startActivity(intent)
     }
+
 
     private fun navigateToCurrency() {
         val intent = Intent(this, CurrencyConverter::class.java)
@@ -235,3 +236,8 @@ fun HotelSettingPreview() {
         HotelSettingContent(onLogout={}, onCurrency = {}, onAbout={})
     }
 }
+
+
+
+ */
+

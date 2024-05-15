@@ -9,15 +9,15 @@ import java.util.Date
 @Dao
 interface RoomDao {
     @Insert
-    suspend fun addNewRoom(room: Room)
+    suspend fun addNewRoom(room: room)
 
     @Query("SELECT price FROM room WHERE hotel_id = :hotelId AND roomType = :roomType LIMIT 1")
-    fun checkRoomPrice(hotelId: String, roomType: String): Double
+    fun checkRoomPrice(hotelId: Int, roomType: String): Double
 
     @Query("SELECT roomType FROM room WHERE hotel_id = :hotelId LIMIT 1")
-    fun findRoomType(hotelId: String): String
+    fun findRoomType(hotelId: Int): String
 
     @Query("SELECT MIN(price) || ' - ' || MAX(price) FROM room WHERE hotel_id = :hotelId")
-    fun getPriceRange(hotelId: String): String
+    fun getPriceRange(hotelId: Int): String
 
 }

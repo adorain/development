@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,8 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Hotel
-import com.example.tiptime.SqlliteManagement.HotelDb
-import com.example.tiptime.SqlliteManagement.RoomDb
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Calendar
 import java.util.Date
@@ -225,8 +224,9 @@ fun HomeScreen(
         }
         Spacer(modifier = Modifier.height(10.dp))
         LaunchedEffect(Unit) {
+            viewModel.getAllHotel()
             hotelList.clear()
-            hotelList.addAll(viewModel.getAllHotel())
+            hotelList.addAll(viewModel.hotelList)
             allHotelList.clear()
             allHotelList = hotelList
         }
@@ -255,7 +255,7 @@ fun HomeScreen(
                 HotelItem(
                     hotel = hotel,
                     onItemClick = {
-                        onSelectedHotel(hotel.HotelId)
+                        onSelectedHotel(hotel.HotelId.toString())
                         onSelectedHotelName(hotel.HotelName)
                         onSelectedHotelDes(hotel.HotelDesciption)
                         onSelectedHotelAddress(hotel.HotelAddress)

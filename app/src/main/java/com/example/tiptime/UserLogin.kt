@@ -40,11 +40,11 @@ class UserLogin : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            UserLoginScreen(context = this)
+            //UserLoginScreen(context = this)
         }
     }
 }
-
+/*
 @Composable
 fun UserLoginScreen(context: Context) {
     var email by remember { mutableStateOf("") }
@@ -177,3 +177,6 @@ fun UserLoginTextField(
 fun UserLoginPreview() {
     UserLoginScreen(context = LocalContext.current)
 }
+
+ */
+

@@ -43,7 +43,7 @@ fun booking (
     onCancelButtonClicked : () -> Unit = {},
     HotelAddress:String,
     HotelName: String,
-    HotelId : String,
+    HotelId : Int,
     //status: String
     viewModel: RoomViewModel = viewModel(),
 

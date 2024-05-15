@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import androidx.compose.runtime.mutableStateOf
 import com.example.tiptime.Data.Hotel
 import java.util.Date
-
+/*
 
 class HotelDb
     (context : Context?) :
@@ -163,3 +163,5 @@ class HotelDb
 
 
 }
+
+ */

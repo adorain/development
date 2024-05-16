@@ -25,7 +25,6 @@ interface RoomDao {
     @Query("SELECT * FROM room")
     fun getAllRooms(): Flow<List<Room>>
 
-
     @Query("""
         SELECT * FROM room WHERE hotel_id = :hotelId AND roomType = :roomType AND roomId IN (
             SELECT roomId FROM booking WHERE 

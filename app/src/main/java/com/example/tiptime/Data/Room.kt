@@ -12,6 +12,5 @@ data class Room(
     val price: Double = 0.00,
     var Status: String = ""
 
-
 )
 

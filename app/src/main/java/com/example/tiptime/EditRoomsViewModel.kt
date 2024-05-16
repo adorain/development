@@ -18,7 +18,6 @@ enum class RoomStatus {
     AVAILABLE, OCCUPIED, UNDER_MAINTENANCE
 }
 
-
 class EditRoomsViewModel(private val repository: RoomRepository) : ViewModel() {
     private val _rooms = MutableStateFlow<List<Room>>(emptyList())
     val rooms: StateFlow<List<Room>> get() = _rooms

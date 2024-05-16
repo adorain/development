@@ -24,7 +24,6 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         bookingDao.insertBookings(sampleBookings)
     }
 
-
     fun getAllRooms(): Flow<List<Room>> = roomDao.getAllRooms()
 
     suspend fun getRoomsForDateRangeAndType(hotelId: String, roomType: String, startDate: Long, endDate: Long): List<Room> {

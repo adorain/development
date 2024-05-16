@@ -74,7 +74,6 @@ fun EditRooms(viewModel: EditRoomsViewModel = viewModel()) {
         end = 8.dp
     )
 
-
     Column(
         modifier = Modifier
             .padding(top = 30.dp)

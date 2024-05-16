@@ -44,6 +44,7 @@ class HotelSetting : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun HotelSettingContent(){
     var showLogoutDialog by remember {mutableStateOf(false)}

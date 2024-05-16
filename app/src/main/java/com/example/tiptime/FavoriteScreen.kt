@@ -79,6 +79,7 @@ fun favoritelayout(
 
 }
 
+
 @Composable
 fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
     val RoomDb = RoomDb(LocalContext.current)

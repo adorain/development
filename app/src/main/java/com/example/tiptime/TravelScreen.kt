@@ -59,6 +59,7 @@ fun TravelApp(
                     HotelAddress = uiHotelState.HotelAddress,
                     status = viewRoomViewModel.checkRoomStatus()
 
+
                 )
             }
             composable( route = screen.detail.name){

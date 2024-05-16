@@ -17,4 +17,5 @@ class EditRoomsViewModelFactory(private val context: Context) : ViewModelProvide
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+
 }

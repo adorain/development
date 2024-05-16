@@ -35,6 +35,7 @@ class NewUserRegister : ViewModel(){
 
     }
 
+
     fun setNewUserPassword() : String{
         _uiRegisterState.update {
                 uiRegisterState ->

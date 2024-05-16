@@ -18,6 +18,7 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
     var roomType by mutableStateOf("")
     var hotelId by mutableStateOf("")
 
+
     fun setPriceRange(hotelId:String):String{
         return roomRes.getPriceRange(hotelId)
     }

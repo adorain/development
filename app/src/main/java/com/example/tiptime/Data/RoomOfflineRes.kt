@@ -12,5 +12,6 @@ class RoomOfflineRes(private val roomDao: RoomDao) : RoomRes {
     override fun getRoomsForDateRangeAndType(hotelId: String, roomType: String, startDate: Long, endDate: Long): List<Room> =
         roomDao.getRoomsForDateRangeAndType(hotelId, roomType, startDate, endDate)
 
+
     override suspend fun updateRoom(room: Room) = roomDao.updateRoom(room)
 }

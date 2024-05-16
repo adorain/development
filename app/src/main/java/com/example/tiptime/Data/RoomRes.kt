@@ -9,5 +9,6 @@ interface RoomRes {
     fun getPriceRange(hotelId: String): String
     fun getAllRooms(): Flow<List<Room>>
     fun getRoomsForDateRangeAndType(hotelId: String, roomType: String, startDate: Long, endDate: Long): List<Room>
+
     suspend fun updateRoom(room: Room)
 }

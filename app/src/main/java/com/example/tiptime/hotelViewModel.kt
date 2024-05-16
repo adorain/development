@@ -33,6 +33,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     }
 
 
+
     fun setHomeAddress(hotelAddress : String){
        _uiState.update {
            currentState->

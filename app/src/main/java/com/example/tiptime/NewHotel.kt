@@ -47,6 +47,7 @@ class NewHotel : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun NewHotelContent(){
     Box(modifier = Modifier.fillMaxSize()) {

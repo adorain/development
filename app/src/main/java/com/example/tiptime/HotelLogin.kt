@@ -55,6 +55,7 @@ class HotelLogin : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun HotelLoginContent(){
     var clickSubmit by remember { mutableStateOf(false) }

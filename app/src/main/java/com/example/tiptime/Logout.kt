@@ -57,6 +57,7 @@ class Logout : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun LogoutContent(onDismiss:()->Unit){
     var log_out by remember { mutableStateOf(false) }

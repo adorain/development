@@ -18,6 +18,7 @@ class AppDataContainer(private val context: Context) : AppContainer {
         BookingOfflineRes(ApplicationInventory.getDatabase(context).bookingDao())
     }
 
+
     override val hotelRes: HotelRes by lazy {
         HotelOfflineRes(ApplicationInventory.getDatabase(context).hotelDao())
     }

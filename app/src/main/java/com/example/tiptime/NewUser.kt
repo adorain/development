@@ -47,6 +47,7 @@ class NewUser : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun NewUserContent(){
     Box(modifier = Modifier.fillMaxSize()) {

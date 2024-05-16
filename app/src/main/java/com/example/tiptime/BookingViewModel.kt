@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
 import com.example.tiptime.Data.room
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +25,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
     private val _uiState = MutableStateFlow(room())
     val uiState: StateFlow<room> = _uiState.asStateFlow()
-    var hotel_Id by mutableStateOf("")
+    var hotel_Id by mutableStateOf(0)
     var Price by mutableStateOf(0.00)
     var BookedStartDate by mutableStateOf(Date())
     var BookedEndDate by mutableStateOf(Date())
@@ -34,11 +35,11 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     var status by mutableStateOf(false)
     fun insertNewBooking(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             bookingRes.addNewBooking(
-            Booking(
+            booking = Booking(
                 Booked_id = uiBookingState.value.Booked_id,
-                HotelId = hotel_Id.toInt(),
+                HotelId = hotel_Id,
                 ROOMTYPE = roomtype,
                 BookedStartDate = BookedStartDate.toString(),
                 BookedEndDate = BookedEndDate.toString(),

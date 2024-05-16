@@ -38,7 +38,7 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.detail.name,
+            startDestination = screen.summary.name,
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = screen.home.name){
@@ -104,8 +104,9 @@ fun TravelApp(
             }
             composable( route = screen.payment.name){
                 PaymentLayout(
-                    onClickedButton = {navController.navigate(screen.booking.name)
-                    viewModel.insertNewBooking()
+                    onClickedButton = {
+                        navController.navigate(screen.booking.name)
+                        viewModel.insertNewBooking()
                     }
                 )
             }

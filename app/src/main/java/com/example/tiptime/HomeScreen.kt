@@ -411,6 +411,7 @@ fun showdatePicker(context: Context, onStartDateSelected: (Date) -> Unit){
         month,
         day
     )
+    datePickerDialog.datePicker.minDate = calendar.timeInMillis
     datePickerDialog.show()
 }
 

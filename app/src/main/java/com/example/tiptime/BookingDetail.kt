@@ -52,6 +52,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.ui.theme.TipTimeTheme
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
@@ -66,10 +67,7 @@ fun bookingDetails(
     OnBookingEndDateChange : (String) -> Unit,
     OnPaxChange : (String) -> Unit={},
     HotelId : Int ,
-    BookingStartDate : Date,
-    BookingEndDate :Date,
     Price : Double,
-    pax:Int,
     roomType:String,
     viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
@@ -77,11 +75,18 @@ fun bookingDetails(
     var TotalPrice by remember { mutableStateOf(0.00) }
     var showDialog by remember { mutableStateOf(false) }
     var showDialog2 by remember { mutableStateOf(false) }
-    var selectedStartDate by remember { mutableStateOf(BookingStartDate) }
-    var selectedEndDate by remember { mutableStateOf(BookingEndDate) }
     var showStartButtonText by remember { mutableStateOf("Select start Date") }
     var showEndButtonText by remember { mutableStateOf("Select end Date") }
     var showNoPicker by remember { mutableStateOf(false) }
+    var pax by remember {
+        mutableStateOf(0)
+    }
+    var selectedEndDate by remember {
+        mutableStateOf(Date())
+    }
+    var selectedStartDate by remember {
+        mutableStateOf(Date())
+    }
     //do {
 
 
@@ -205,8 +210,8 @@ fun bookingDetails(
                 }
                 Column {
                     TotalPrice = calculatePrice(
-                        STARTDATE = BookingStartDate,
-                        ENDDATE = BookingEndDate,
+                        STARTDATE = selectedStartDate,
+                        ENDDATE = selectedEndDate,
                         PRICE = Price
                     )
                     Text(text = Price.toString(), fontSize = 21.sp)
@@ -234,7 +239,7 @@ fun bookingDetails(
                 }
                 OutlinedButton(
                     onClick = {
-                        viewModel.setStatus(HotelId,roomType, BookingStartDate, BookingEndDate)
+                        viewModel.setStatus(HotelId,roomType, parseDate(selectedStartDate.toString()), parseDate(selectedEndDate.toString()))
                         onNextButtonClicked()
                     },
                     modifier = Modifier.size(width = 100.dp, height = 50.dp)
@@ -248,10 +253,10 @@ fun bookingDetails(
         if (showDialog) {
             showDatePicker(
                 context = LocalContext.current,
-                date = selectedStartDate,
-                onDateSelected = { selectedDate ->
-                    selectedStartDate = selectedDate
-                    OnBookingStartDateChange(selectedDate.toString())
+                onDateSelected = {
+                    showStartButtonText = convertDate(it)
+                    selectedStartDate = parseDate(showStartButtonText)
+                    OnBookingStartDateChange(showStartButtonText)
                 }
             )
             showDialog = false
@@ -262,10 +267,10 @@ fun bookingDetails(
         if (showDialog2) {
             showDatePicker(
                 context = LocalContext.current,
-                date = selectedEndDate,
-                onDateSelected = { selectedDate ->
-                    selectedEndDate = selectedDate
-                    OnBookingEndDateChange(selectedDate.toString())
+                onDateSelected = {
+                    showEndButtonText = convertDate(it)
+                    selectedEndDate = parseDate(showEndButtonText)
+                    OnBookingEndDateChange(showStartButtonText)
                 }
             )
             showDialog2 = false
@@ -278,7 +283,9 @@ fun bookingDetails(
                 minValue = 0,
                 maxValue = 20,
                 initialValue = 0,
-                onValueChange = { OnPaxChange(pax.toString()) },
+                onValueChange = {
+                    pax = it
+                    OnPaxChange(pax.toString()) },
                 OnClose = { showNoPicker = false })
         }
 
@@ -351,13 +358,14 @@ fun calculatePrice(STARTDATE:Date,ENDDATE:Date,PRICE:Double):Double{
 fun BookingDetail() {
     
     TipTimeTheme {
-        landscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, OnBookingEndDateChange = {}, OnBookingStartDateChange = {}, OnPaxChange = {}, BookingStartDate = Date(), BookingEndDate = Date(), roomType = "",Price=0.00,pax = 0 , HotelId = "")
+        //landscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, OnBookingEndDateChange = {}, OnBookingStartDateChange = {}, OnPaxChange = {}, BookingStartDate = Date(), BookingEndDate = Date(), roomType = "",Price=0.00,pax = 0 , HotelId = "")
     }
 }
 
-fun showDatePicker(context: Context, date: Date, onDateSelected: (Date) -> Unit) {
+fun showDatePicker(context: Context, onDateSelected: (Date) -> Unit) {
+
     val calendar = Calendar.getInstance()
-    calendar.time = date
+    calendar.time = Date()
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
@@ -366,8 +374,8 @@ fun showDatePicker(context: Context, date: Date, onDateSelected: (Date) -> Unit)
         context,
         { _:DatePicker, year:Int, month:Int, dayOfMonth:Int ->
             calendar.set(year, month, dayOfMonth)
-            val selectedDate = calendar.time
-            onDateSelected(selectedDate)
+
+            onDateSelected(calendar.time)
         },
         year,
         month,
@@ -392,7 +400,7 @@ fun showNumberPicker(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(onClick = { if (value > minValue) value-- }) {
-                Icon(painterResource( R.drawable.down_icon), contentDescription = "Increase")
+                Icon(painterResource( R.drawable.up_icon_154668), contentDescription = "Increase")
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = value.toString())
@@ -408,7 +416,7 @@ fun showNumberPicker(
     }
 
 }
-
+/*
 @Composable
 fun landscapeLayout(
     onNextButtonClicked:() -> Unit ,
@@ -564,9 +572,9 @@ fun landscapeLayout(
                 showDatePicker(
                     context = LocalContext.current,
                     date = selectedStartDate,
-                    onDateSelected = { selectedDate ->
-                        selectedStartDate = selectedDate
-                        OnBookingStartDateChange(selectedDate.toString())
+                    onDateSelected = {
+                        showStartButtonText = it.toString()
+                        OnBookingStartDateChange(showStartButtonText)
                     }
                 )
                 showDialog = false
@@ -639,4 +647,16 @@ fun checkPaxValidate(Pax:Int):Boolean{
         return false
     }
     return true
+}
+
+ */
+
+private fun convertDate(date: Date): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy")
+    return formatter.format(date)
+}
+
+fun parseDate(dateString: String): Date {
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+    return dateFormat.parse(dateString)
 }

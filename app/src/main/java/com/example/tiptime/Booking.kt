@@ -20,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +46,6 @@ fun booking (
     HotelName: String,
     HotelId : Int,
     //status: String
-    viewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory),
 
 ){
 
@@ -53,6 +53,20 @@ fun booking (
         mutableStateOf("")
     }
     var count by remember{ mutableStateOf(0) }
+    var total by remember { mutableStateOf( 0 ) }
+    var isSelected by remember {
+        mutableStateOf(false)
+    }
+    var textColor1 by remember {
+        mutableStateOf(Color.Green)
+    }
+    var textColor2 by remember {
+        mutableStateOf(Color.Green)
+    }
+    var textColor3 by remember{
+        mutableStateOf(Color.Green)
+    }
+
     /*if(userType == UserType.user){
 
     }else if(
@@ -62,7 +76,7 @@ fun booking (
     }
 
      */
-    do{
+
     Column {
         Row (
             ){
@@ -113,11 +127,23 @@ fun booking (
                         }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp))
 
                      */
-                    Text(text = viewModel.checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString(), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp).clickable { count = 1
-                        RoomType = "Single Room"
-                    })
+                    Text(text = checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString(), color = textColor1 , fontSize = 20.sp,modifier = Modifier
+                        .padding(top = 105.dp, start = 185.dp)
+                        .clickable {
+                            isSelected = true
+                            if (isSelected) {
+                                count+=1
+                                RoomType = "King Room"
+                                textColor1 = Color.Red
+                            }
+                            else{
+                                count -= 1
+                                isSelected = false
+                                textColor1 = Color.Green
+                            }
 
 
+                        })
 
                 }
             }
@@ -141,10 +167,23 @@ fun booking (
                         }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp))
 
                      */
-                    Text(text = viewModel.checkRoomPrice(hotelId = HotelId, roomType = "Double Room").toString()
-                        , color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp)
-                            .clickable { count = 1
-                                RoomType = "Double Room"
+                    Text(text = checkRoomPrice(hotelId = HotelId, roomType = "Double Room").toString()
+                        , color = textColor2 , fontSize = 20.sp,modifier = Modifier
+                            .padding(top = 205.dp, start = 178.dp)
+                            .clickable {
+                                isSelected = true
+                                if (isSelected) {
+                                    count+=1
+                                    RoomType = "King Room"
+                                    textColor2 = Color.Red
+                                }
+                                else{
+                                    count -= 1
+                                    isSelected = false
+                                    textColor2 = Color.Green
+                                }
+
+
                             })
 
 
@@ -167,13 +206,25 @@ fun booking (
                     }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp))
 
                      */
-                    Text(text = viewModel.checkRoomPrice(hotelId = HotelId, roomType = "King Room") .toString()// Update RoomType
-                        , color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp)
+                    Text(text = checkRoomPrice(hotelId = HotelId, roomType = "King Room") .toString()// Update RoomType
+                        , color = textColor3 , fontSize = 20.sp,modifier = Modifier
+                            .padding(top = 10.dp, start = 200.dp)
                             .clickable {
-                                count = 1
-                                RoomType = "King Room"
+                                isSelected = true
+                                count+=1
+                                if (isSelected) {
+                                    RoomType = "King Room"
+                                    textColor3 = Color.Red
+                                }
+                                else{
+                                    count -= 1
+                                    isSelected = false
+                                    textColor3 = Color.Green
+                                }
+
+
                             })
-                    
+
 
 
                 }
@@ -188,7 +239,7 @@ fun booking (
         }
 
     }
-    }while (!checkSelection(count))
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -222,37 +273,10 @@ fun Bookings() {
     }
 }
 
-/*@Composable
-fun checkAvailable(hotelId : String , roomtype: String,/*status:String, */onRoomTypeSelected: (String) -> Unit ,viewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)) : String{
-    var status by remember {
-        mutableStateOf(viewModel.checkRoomStatus(hotelId,roomtype))
-    }
-    var price by remember { mutableStateOf("") }
-    var canClick by remember{ mutableStateOf(false) }
-    var selectedRoom by remember { mutableStateOf(false) }
-    var textcolor by remember{ mutableStateOf(Color.Green) }
-    if(status == "Available"){
-        canClick =true
-        Text(text = price, modifier = Modifier.clickable { selectedRoom = true
-                                                                    onRoomTypeSelected(roomtype)
-                                                         },color = textcolor)
-        textcolor = if(selectedRoom){
-            Color.Red
-        }else{
-            Color.Green
-        }
-    }
-    else if (status == "UnAvailable"){
-        canClick = false
-        price = "UnAvailable"
-        return price
-    }
-    return price
-
-}
 
 
- */
+
+
 fun checkSelection(count :Int):Boolean{
     if(count != 0 || count > 1){
         return false
@@ -425,3 +449,15 @@ fun LanscapeLayout(
 }
 
  */
+
+
+@Composable
+fun checkRoomPrice(hotelId : Int, roomType:String, roomViewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)):Double{
+    val uiState by roomViewModel.uiState.collectAsState()
+    var price by remember {
+        mutableStateOf(0.00)
+    }
+    roomViewModel.checkRoomPrice(hotelId , roomType)
+    price = uiState.price
+    return price
+}

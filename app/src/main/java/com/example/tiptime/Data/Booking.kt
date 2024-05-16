@@ -10,9 +10,9 @@ import java.util.Date
 
 
 
-@Entity(tableName = "Booking" ,foreignKeys = [ForeignKey(entity = Hotel::class, parentColumns = ["HotelId"], childColumns = ["HotelId"], onUpdate = ForeignKey.CASCADE, onDelete = ForeignKey.CASCADE)
+@Entity(tableName = "Booking" ,/*foreignKeys = [ForeignKey(entity = Hotel::class, parentColumns = ["HotelId"], childColumns = ["HotelId"], onUpdate = ForeignKey.CASCADE, onDelete = ForeignKey.CASCADE)
 
-    ,ForeignKey(entity = room::class, parentColumns = ["roomType"], childColumns = ["ROOMTYPE"], onUpdate = ForeignKey.CASCADE, onDelete = ForeignKey.CASCADE)])
+    ,ForeignKey(entity = room::class, parentColumns = ["roomType"], childColumns = ["ROOMTYPE"], onUpdate = ForeignKey.CASCADE, onDelete = ForeignKey.CASCADE)]*/)
 data class Booking(
     @PrimaryKey(autoGenerate = true)
     val Booked_id : Int = 0,

@@ -27,14 +27,30 @@ interface RoomDao {
     @Query("SELECT * FROM room")
     fun getAllRooms(): Flow<List<room>>
 
+    @Query("SELECT * FROM room WHERE hotel_id = :hotelId AND roomType = :roomType")
+    fun getAllRoomsByType(hotelId: Int, roomType: String): List<room>
+
     @Query("""
-        SELECT * FROM room WHERE hotel_id = :hotelId AND roomType = :roomType AND roomId IN (
-            SELECT roomId FROM Booking WHERE 
-            (BookedStartDate BETWEEN :startDate AND :endDate) OR 
-            (BookedEndDate BETWEEN :startDate AND :endDate)
+        SELECT * FROM room WHERE hotel_id = :hotelId AND roomType = :roomType
+    """)
+    fun getAllRoomsForType(hotelId: Int, roomType: String): List<room>
+
+    @Query("""
+        SELECT * FROM room WHERE hotel_id = :hotelId AND roomType = :roomType
+        AND roomId NOT IN (
+            SELECT roomId FROM Booking WHERE
+            (BookedStartDate <= :endDate AND BookedEndDate >= :startDate)
         )
     """)
-    fun getRoomsForDateRangeAndType(hotelId: Int, roomType: String, startDate: Long, endDate: Long): List<room>
+    fun getAvailableRoomsForDateRange(hotelId: Int, roomType: String, startDate: String, endDate: String): List<room>
+
+    @Query("""
+        SELECT * FROM Booking WHERE hotelId = :hotelId AND ROOMTYPE = :roomType
+        AND ((BookedStartDate BETWEEN :startDate AND :endDate) OR 
+             (BookedEndDate BETWEEN :startDate AND :endDate) OR
+             (BookedStartDate <= :startDate AND BookedEndDate >= :endDate))
+    """)
+    fun getBookingsForDateRange(hotelId: Int, roomType: String, startDate: String, endDate: String): List<Booking>
 
     @Update
     suspend fun updateRoom(room: room)

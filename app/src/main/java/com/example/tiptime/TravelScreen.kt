@@ -38,13 +38,13 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.home.name,
+            startDestination = screen.booking.name,
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = screen.home.name){
                 HomeScreen (
                     onSelectedHotel = {
-                        viewModel.setHotelId(it)
+                        viewModel.setHotelId(it.toInt())
                         navController.navigate(screen.booking.name)},
                     onSelectedHotelAddress = {viewModelhotel.setHomeAddress(it)},
                     onSelectedHotelDes = {viewModelhotel.setHomeDes(it)},
@@ -76,7 +76,7 @@ fun TravelApp(
             composable( route = screen.detail.name){
                 bookingDetails(
 
-                    onCancelButtonClicked = {cancelOrderAndNavigateToStart(navController)},
+                    onCancelButtonClicked = { cancelBacktoBookingScreen(navController) },
                     onNextButtonClicked = {
                         navController.navigate(screen.summary.name)
                     },
@@ -84,28 +84,27 @@ fun TravelApp(
                     OnBookingEndDateChange = {viewModel.updateBookingEndDate(it)},
                     OnPaxChange ={viewModel.updatePax(it)} ,
                     HotelId = uiState.HotelId,
-                    BookingStartDate = viewModel.setBookingStartDate(),
-                    BookingEndDate = viewModel.setBookingEndDate(),
                     Price = viewModel.calculatePrice(),
-                    pax = viewModel.setPax(),
                     roomType = viewModel.setRoomType(),
                 )
             }
             composable(route = screen.summary.name){
                 bookingSummary(
                     onNextButtonClicked ={navController.navigate(screen.payment.name)},
-                    onCancelButtonClicked = {cancelOrderAndNavigateToStart(navController)},
+                    onCancelButtonClicked = { cancelBacktoDetailsScreen(navController) },
                     BookingStartDate = uiState.BookedStartDate,
                     BookingEndDate = uiState.BookedEndDate,
                     Price = uiState.Price,
                     pax = uiState.Pax,
-                    roomType = uiState.ROOMTYPE
+                    roomType = uiState.ROOMTYPE,
+                    HotelId = uiState.HotelId
                 )
             }
             composable( route = screen.payment.name){
                 PaymentLayout(
-                    onClickedButton = {navController.navigate(screen.booking.name)
-                    viewModel.insertNewBooking()
+                    onClickedButton = {
+                        navController.navigate(screen.detail.name)
+                        viewModel.insertNewBooking()
                     }
                 )
             }
@@ -118,8 +117,22 @@ private fun cancelOrderAndNavigateToStart(
     navController: NavController
 ){
 
+    navController.popBackStack(screen.home.name , inclusive = false)
+}
+private fun cancelBacktoBookingScreen(
+    navController: NavController
+){
     navController.popBackStack(screen.booking.name , inclusive = false)
 }
+
+private fun cancelBacktoDetailsScreen(
+    navController: NavController
+){
+    navController.popBackStack(screen.detail.name , inclusive = false)
+}
+
+
+
 
 
 

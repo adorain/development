@@ -1,9 +1,6 @@
 package com.example.tiptime.Data
 
-import androidx.lifecycle.LiveData
-import androidx.room.Database
-import androidx.room.Entity
-import androidx.room.RoomDatabase
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 
@@ -11,11 +8,11 @@ import java.util.Date
 interface HotelRes {
     fun getAvailableHotels(hotelAddress: String, startDate: Date, endDate: Date, pax: Int): List<Hotel>
 
+    fun insertHotel(hotelName: String, hotelAddress: String, hotelDescription: String):List<Hotel>
+    fun getHotelById(hotelName: String): Int
 
-    fun getHotelById(hotelName: String): String
+    fun getFavoriteHotels(): Flow<List<Hotel>>
+    fun updateHotelStatus(hotelId: Int, newStatus: String)
 
-    fun getFavoriteHotels(): List<Hotel>
-    fun updateHotelStatus(hotelId: String, newStatus: String)
-
-    fun getAllHotel():List<Hotel>
+    fun getAllHotel(): Flow<List<Hotel>>
 }

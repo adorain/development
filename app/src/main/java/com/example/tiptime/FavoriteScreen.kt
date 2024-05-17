@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,9 +28,10 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Hotel
-import com.example.tiptime.SqlliteManagement.HotelDb
-import com.example.tiptime.SqlliteManagement.RoomDb
+
+
 
 
 @Composable
@@ -38,21 +40,26 @@ fun favoritelayout(
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
-    PriceRange: String
+    PriceRange: String,
+    viewModel: hotelViewModel = viewModel()
 ){
-    val db = HotelDb(LocalContext.current)
-    val hotels = remember { mutableStateListOf<Hotel>() }
 
+    val hotels = remember { mutableStateListOf<Hotel>() }
+    LaunchedEffect(Unit) {
+        viewModel.getFavorite()
+        hotels.clear()
+        hotels.addAll(viewModel.hotelList.value)
+
+    }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        hotels.addAll(db.getFavoriteHotel())
         Column{
             hotels.forEach { hotel ->
                 Hotels(
                     hotel = hotel,
                     onItemClick = {
-                        onSelectedHotel(hotel.HotelId)
+                        onSelectedHotel(hotel.HotelId.toString())
                         onSelectedHotelName(hotel.HotelName)
                         onSelectedHotelDes(hotel.HotelDesciption)
                         onSelectedHotelAddress(hotel.HotelAddress)
@@ -81,7 +88,7 @@ fun favoritelayout(
 
 @Composable
 fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
-    val RoomDb = RoomDb(LocalContext.current)
+
     Row(
 
         modifier = Modifier

@@ -50,6 +50,7 @@ class HotelSetting : ComponentActivity() {
         startActivity(intent)
     }
 
+
     private fun navigateToCurrency() {
         val intent = Intent(this, CurrencyConverter::class.java)
         startActivity(intent)
@@ -65,11 +66,15 @@ class HotelSetting : ComponentActivity() {
 fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
     var showLogoutDialog by remember {mutableStateOf(false)}
     var showAboutDialog by remember { mutableStateOf(false)}
-   /* if (showLogoutDialog){
-        LogoutContent {
-            var onLogout = { showLogoutDialog = false }
-        }
-    }*/
+    if (showLogoutDialog) {
+        LogoutContent(
+            onLogout = {
+                showLogoutDialog = false
+                onLogout()
+            },
+            onCancel = { showLogoutDialog = false }
+        )
+    }
 
     if (showAboutDialog){
         AboutContent {
@@ -115,7 +120,7 @@ fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
                     )
             )
 
-            Text(
+           /* Text(
                 "Edit Profile",
                 color = white,
                 fontWeight = FontWeight.Bold,
@@ -125,7 +130,7 @@ fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
                         horizontal = 35.dp,
                         vertical = 30.dp
                     )
-            )
+            )*/
 
             Button(onClick = onLogout){
                 Text(
@@ -163,7 +168,7 @@ fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
                     )
             )
 
-            Text(
+           /* Text(
                 "Language",
                 color = white,
                 fontWeight = FontWeight.Bold,
@@ -173,7 +178,7 @@ fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
                         horizontal = 35.dp,
                         vertical = 30.dp
                     )
-            )
+            )*/
 
             Button(onClick = onCurrency) {
                 Text(
@@ -235,3 +240,8 @@ fun HotelSettingPreview() {
         HotelSettingContent(onLogout={}, onCurrency = {}, onAbout={})
     }
 }
+
+
+
+
+

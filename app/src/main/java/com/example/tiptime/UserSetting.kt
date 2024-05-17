@@ -49,7 +49,7 @@ class UserSetting : ComponentActivity() {
     }
 
     private fun navigateToCurrency() {
-        val intent = Intent(this, CurrencyConverter::class.java)
+        //val intent = Intent(this, CurrencyConverter::class.java)
         startActivity(intent)
     }
 

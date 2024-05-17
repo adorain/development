@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,17 +42,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tiptime.Data.Booking
 import com.example.tiptime.ui.theme.TipTimeTheme
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
@@ -65,24 +62,33 @@ fun bookingDetails(
     OnBookingStartDateChange : (String) -> Unit,
     OnBookingEndDateChange : (String) -> Unit,
     OnPaxChange : (String) -> Unit={},
-    HotelId : String ,
-    BookingStartDate : Date,
-    BookingEndDate :Date,
+    HotelId : Int ,
     Price : Double,
-    pax:Int,
     roomType:String,
-    viewModel: BookingViewModel = viewModel()
+    viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
 
     var TotalPrice by remember { mutableStateOf(0.00) }
     var showDialog by remember { mutableStateOf(false) }
     var showDialog2 by remember { mutableStateOf(false) }
-    var selectedStartDate by remember { mutableStateOf(BookingStartDate) }
-    var selectedEndDate by remember { mutableStateOf(BookingEndDate) }
     var showStartButtonText by remember { mutableStateOf("Select start Date") }
     var showEndButtonText by remember { mutableStateOf("Select end Date") }
     var showNoPicker by remember { mutableStateOf(false) }
-    do {
+    var pax by remember {
+        mutableStateOf(0)
+    }
+    var selectedEndDate by remember {
+        mutableStateOf(Date())
+    }
+    var selectedStartDate by remember {
+        mutableStateOf(Date())
+    }
+    var canClick by remember { mutableStateOf(false) }
+    var count by remember {
+        mutableStateOf(0)
+    }
+    var canNextButton by remember { mutableStateOf(false) }
+    //do {
 
 
         Column {
@@ -113,7 +119,7 @@ fun bookingDetails(
                     Text(text = "Hotel Id : ", fontSize = 21.sp)
                 }
                 Column {
-                    Text(text = HotelId, fontSize = 21.sp)
+                    Text(text = HotelId.toString(), fontSize = 21.sp)
                 }
             }
 
@@ -157,7 +163,8 @@ fun bookingDetails(
                                 shape = RectangleShape
                             ),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                            shape = RoundedCornerShape(0)
+                            shape = RoundedCornerShape(0),
+                            enabled = canClick
                         ) {
                             Text(showEndButtonText, color = Color.Black)
                         }
@@ -205,8 +212,8 @@ fun bookingDetails(
                 }
                 Column {
                     TotalPrice = calculatePrice(
-                        STARTDATE = BookingStartDate,
-                        ENDDATE = BookingEndDate,
+                        STARTDATE = selectedStartDate,
+                        ENDDATE = selectedEndDate,
                         PRICE = Price
                     )
                     Text(text = Price.toString(), fontSize = 21.sp)
@@ -234,9 +241,9 @@ fun bookingDetails(
                 }
                 OutlinedButton(
                     onClick = {
-                        viewModel.setStatus(HotelId,roomType, BookingStartDate, BookingEndDate)
-                        onNextButtonClicked()
-                    },
+                            viewModel.setStatus(HotelId, roomType, parseDate(showStartButtonText), parseDate(showEndButtonText))
+                            onNextButtonClicked()
+                    }, enabled = canNextButton,
                     modifier = Modifier.size(width = 100.dp, height = 50.dp)
                 ) {
                     Text(text = "Next")
@@ -248,10 +255,12 @@ fun bookingDetails(
         if (showDialog) {
             showDatePicker(
                 context = LocalContext.current,
-                date = selectedStartDate,
-                onDateSelected = { selectedDate ->
-                    selectedStartDate = selectedDate
-                    OnBookingStartDateChange(selectedDate.toString())
+                onDateSelected = {
+                    showStartButtonText = convertDate(it)
+                    selectedStartDate = parseDate(showStartButtonText)
+                    OnBookingStartDateChange(showStartButtonText)
+                    canClick = true
+                    count++
                 }
             )
             showDialog = false
@@ -259,16 +268,22 @@ fun bookingDetails(
 
 
 
+
         if (showDialog2) {
-            showDatePicker(
+            showDatePicker2(
                 context = LocalContext.current,
-                date = selectedEndDate,
-                onDateSelected = { selectedDate ->
-                    selectedEndDate = selectedDate
-                    OnBookingEndDateChange(selectedDate.toString())
-                }
+                onDateSelected = {
+                    showEndButtonText = convertDate(it)
+                    selectedEndDate = parseDate(showEndButtonText)
+                    OnBookingEndDateChange(showStartButtonText)
+                    count++
+                },
+                startDate = selectedStartDate
             )
             showDialog2 = false
+            selectedEndDate = selectedStartDate
+            showEndButtonText = showStartButtonText
+            OnBookingEndDateChange(showEndButtonText)
         }
 
 
@@ -278,10 +293,17 @@ fun bookingDetails(
                 minValue = 0,
                 maxValue = 20,
                 initialValue = 0,
-                onValueChange = { OnPaxChange(pax.toString()) },
+                onValueChange = {
+                    pax = it
+                    OnPaxChange(pax.toString())
+                                count++},
                 OnClose = { showNoPicker = false })
         }
 
+
+        if(count == 3){
+            canNextButton = true
+        }
 
         /*if (showDialog) {
         showDatePicker(context = LocalContext.current) { selectedDate ->
@@ -301,6 +323,7 @@ fun bookingDetails(
     }
 
      */
+        /*
         if (!checkPaxValidate(pax)) {
             Toast.makeText(
                 LocalContext.current,
@@ -333,13 +356,17 @@ fun bookingDetails(
                 ).show()
             }
         }
-    }while (!checkPaxValidate(pax)&&!checkEndDateValidate(selectedStartDate, selectedEndDate)&&!checkStartDateValidate(selectedStartDate))
+
+         */
+
+    //}while (!checkPaxValidate(pax)&&!checkEndDateValidate(selectedStartDate, selectedEndDate)&&!checkStartDateValidate(selectedStartDate))
 }
 
 @Composable
-fun calculatePrice(STARTDATE:Date,ENDDATE:Date,PRICE:Double):Double{
-    return PRICE*(STARTDATE.time - ENDDATE.time)
-
+fun calculatePrice(STARTDATE: Date, ENDDATE: Date, PRICE: Double): Double {
+    val diffInMillies = ENDDATE.time - STARTDATE.time
+    val diffInDays = (diffInMillies / (1000 * 60 * 60 * 24)).toDouble()
+    return diffInDays * PRICE
 }
 
 @Preview
@@ -347,31 +374,56 @@ fun calculatePrice(STARTDATE:Date,ENDDATE:Date,PRICE:Double):Double{
 fun BookingDetail() {
     
     TipTimeTheme {
-        landscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, OnBookingEndDateChange = {}, OnBookingStartDateChange = {}, OnPaxChange = {}, BookingStartDate = Date(), BookingEndDate = Date(), roomType = "",Price=0.00,pax = 0 , HotelId = "")
+        //landscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, OnBookingEndDateChange = {}, OnBookingStartDateChange = {}, OnPaxChange = {}, BookingStartDate = Date(), BookingEndDate = Date(), roomType = "",Price=0.00,pax = 0 , HotelId = "")
     }
 }
 
-fun showDatePicker(context: Context, date: Date, onDateSelected: (Date) -> Unit) {
+fun showDatePicker(context: Context, onDateSelected: (Date) -> Unit) {
+
     val calendar = Calendar.getInstance()
-    calendar.time = date
+    calendar.time = Date()
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
 
     val datePickerDialog = android.app.DatePickerDialog(
         context,
-        { _, year, month, dayOfMonth ->
+        { _:DatePicker, year:Int, month:Int, dayOfMonth:Int ->
             calendar.set(year, month, dayOfMonth)
-            val selectedDate = calendar.time
-            onDateSelected(selectedDate)
+
+            onDateSelected(calendar.time)
         },
         year,
         month,
         day
     )
-
+    datePickerDialog.datePicker.minDate = calendar.timeInMillis
     datePickerDialog.show()
 }
+
+fun showDatePicker2(context: Context, onDateSelected: (Date) -> Unit,startDate : Date) {
+
+    val calendar = Calendar.getInstance()
+    calendar.time = startDate
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = android.app.DatePickerDialog(
+        context,
+        { _:DatePicker, year:Int, month:Int, dayOfMonth:Int ->
+            calendar.set(year, month, dayOfMonth)
+
+            onDateSelected(calendar.time)
+        },
+        year,
+        month,
+        day
+    )
+    datePickerDialog.datePicker.minDate = calendar.timeInMillis
+    datePickerDialog.show()
+}
+
 
 @Composable
 fun showNumberPicker(
@@ -382,13 +434,14 @@ fun showNumberPicker(
     OnClose:()-> Unit,
 ) {
     var value by remember { mutableStateOf(initialValue) }
+    var canClick by remember{ mutableStateOf(false) }
     Dialog(onDismissRequest = OnClose) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(onClick = { if (value > minValue) value-- }) {
-                Icon(painterResource( R.drawable.down_icon), contentDescription = "Increase")
+                Icon(painterResource( R.drawable.up_icon_154668), contentDescription = "Increase")
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = value.toString())
@@ -396,15 +449,22 @@ fun showNumberPicker(
             IconButton(onClick = { if (value < maxValue) value++ }) {
                 Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
             }
-            Button(onClick = OnClose) {
-                onValueChange(value)
+            Button(onClick = OnClose, enabled = canClick) {
+                if(value != 0){
+                    onValueChange(value)
+                    canClick = true
+                }
+                else{
+                    canClick = false
+                }
                 Text(text = "Select")
             }
+
         }
     }
 
 }
-
+/*
 @Composable
 fun landscapeLayout(
     onNextButtonClicked:() -> Unit ,
@@ -560,9 +620,9 @@ fun landscapeLayout(
                 showDatePicker(
                     context = LocalContext.current,
                     date = selectedStartDate,
-                    onDateSelected = { selectedDate ->
-                        selectedStartDate = selectedDate
-                        OnBookingStartDateChange(selectedDate.toString())
+                    onDateSelected = {
+                        showStartButtonText = it.toString()
+                        OnBookingStartDateChange(showStartButtonText)
                     }
                 )
                 showDialog = false
@@ -636,3 +696,17 @@ fun checkPaxValidate(Pax:Int):Boolean{
     }
     return true
 }
+
+ */
+
+private fun convertDate(date: Date): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy")
+    return formatter.format(date)
+}
+
+fun parseDate(dateString: String): Date {
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+    return dateFormat.parse(dateString)
+}
+
+

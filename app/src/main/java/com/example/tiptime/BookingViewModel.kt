@@ -10,9 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
 import com.example.tiptime.Data.room
-import com.example.tiptime.SqlliteManagement.BookingDb
-import com.example.tiptime.SqlliteManagement.HotelDb
-import com.example.tiptime.SqlliteManagement.RoomDb
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.Stack
 
 
@@ -27,7 +26,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
     private val _uiState = MutableStateFlow(room())
     val uiState: StateFlow<room> = _uiState.asStateFlow()
-    var hotel_Id by mutableStateOf("")
+    var hotel_Id by mutableStateOf(0)
     var Price by mutableStateOf(0.00)
     var BookedStartDate by mutableStateOf(Date())
     var BookedEndDate by mutableStateOf(Date())
@@ -36,19 +35,22 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     var status by mutableStateOf(false)
+
     fun insertNewBooking(){
-        bookingRes.addNewBooking(
-            Booking(
+        viewModelScope.launch(Dispatchers.IO) {
+            bookingRes.addNewBooking(
+            booking = Booking(
                 Booked_id = uiBookingState.value.Booked_id,
                 HotelId = hotel_Id,
                 ROOMTYPE = roomtype,
-                BookedStartDate = BookedStartDate,
-                BookedEndDate = BookedEndDate,
+                BookedStartDate = BookedStartDate.toString(),
+                BookedEndDate = BookedEndDate.toString(),
                 Pax = Pax,
-                Status="Completed",
+                Status="Confirmed",
                 Price = Price
             )
-        )
+        ) }
+
 
 
     }
@@ -75,7 +77,9 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
      */
     fun calculatePrice() : Double{
-        val totalPrice = Price * (BookedStartDate.time - BookedEndDate.time)
+        val diffInMillies = BookedEndDate.time - BookedEndDate.time
+        val diffInDays = (diffInMillies / (1000 * 60 * 60 * 24)).toDouble()
+        val totalPrice = Price * diffInDays
         return totalPrice
     }
 
@@ -95,7 +99,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
         _uiBookingState.update {
             uiBookingState -> uiBookingState.copy(
-                BookedStartDate = BookedStartDate
+                BookedStartDate = BookedStartDate.toString()
             )
 
         }
@@ -106,7 +110,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         _uiBookingState.update {
                 uiBookingState ->
             uiBookingState.copy(
-                BookedEndDate = BookedEndDate
+                BookedEndDate = BookedEndDate.toString()
             )
 
         }
@@ -121,30 +125,49 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
         return Pax
     }
-    fun setHotelId(hotelId : String){
+    fun setHotelId(hotelId : Int){
         _uiBookingState.update {
             uiBookingState ->
             uiBookingState.copy(
-                HotelId = hotelId
+                HotelId = hotelId.toInt()
             )
         }
+        hotel_Id = hotelId.toInt()
     }
 
 
 
     fun updateBookingStartDate(bookedStartDate : String) {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        _uiBookingState.update {
+                uiBookingState ->
+            uiBookingState.copy(
+                BookedStartDate = bookedStartDate
+            )
+        }
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.CHINA)
         val date = dateFormat.parse(bookedStartDate)
         BookedStartDate = date
     }
 
     fun updateBookingEndDate(bookedEndDate: String) {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        _uiBookingState.update {
+                uiBookingState ->
+            uiBookingState.copy(
+                BookedEndDate = bookedEndDate
+            )
+        }
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.CHINA)
         val date = dateFormat.parse(bookedEndDate)
         BookedEndDate = date
     }
 
     fun updatePax(pax : String){
+        _uiBookingState.update {
+                uiBookingState ->
+            uiBookingState.copy(
+                Pax = pax.toInt()
+            )
+        }
         Pax = pax.toInt()
     }
 
@@ -164,9 +187,9 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
         return roomtype
     }
-    fun setStatus(hotelId: String,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
-        viewModelScope.launch {
-            status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate, BookingEndDate)
+    fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
+        viewModelScope.launch (Dispatchers.IO){
+            status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate.toString(), BookingEndDate.toString())
         }
     }
 

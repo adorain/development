@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
 import com.example.tiptime.Data.Hotel
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -27,6 +29,8 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     var HotelName by mutableStateOf("")
     var HotelAddress by mutableStateOf("")
     var roomType by mutableStateOf("")
+    var hotelList = MutableStateFlow(mutableListOf<Hotel>())
+
     fun setHomeName(hotelName : String){
         _uiState.update {
                 currentState->
@@ -59,7 +63,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         return hotelRes.getAvailableHotels(SearchText,STARTDATE,ENDDATE,Pax).isNotEmpty()
     }
 
-    fun updateHotelStatus(hotelId: String, newStatus: String){
+    fun updateHotelStatus(hotelId: Int, newStatus: String){
         hotelRes.updateHotelStatus(hotelId,newStatus)
     }
 
@@ -85,8 +89,20 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
 
 
 
-    fun getAllHotel():List<Hotel>{
-        return hotelRes.getAllHotel()
+    fun getAllHotel(){
+        viewModelScope.launch {
+            hotelRes.getAllHotel().collect { hotels ->
+                hotelList.value= hotels.toMutableList()
+            }
+        }
+    }
+
+    fun getFavorite(){
+        viewModelScope.launch {
+            hotelRes.getFavoriteHotels().collect{hotels->
+                hotelList.value = hotels.toMutableList()
+            }
+        }
     }
 
 }

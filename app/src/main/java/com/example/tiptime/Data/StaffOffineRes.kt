@@ -8,6 +8,3 @@ abstract class StaffOffineRes(private val staffDao: HotelUserDao) : UserRes {
     ): String = staffDao.getStaff(StaffId, StaffName).toString()
 
 }
-
-
-

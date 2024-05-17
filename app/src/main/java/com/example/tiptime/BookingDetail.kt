@@ -273,17 +273,15 @@ fun bookingDetails(
             showDatePicker2(
                 context = LocalContext.current,
                 onDateSelected = {
-                    showEndButtonText = convertDate(it)
-                    selectedEndDate = parseDate(showEndButtonText)
-                    OnBookingEndDateChange(showStartButtonText)
-                    count++
+                        showEndButtonText = convertDate(it)
+                        selectedEndDate = parseDate(showEndButtonText)
+                        OnBookingEndDateChange(showEndButtonText)
+                        count++
                 },
                 startDate = selectedStartDate
             )
             showDialog2 = false
-            selectedEndDate = selectedStartDate
-            showEndButtonText = showStartButtonText
-            OnBookingEndDateChange(showEndButtonText)
+
         }
 
 
@@ -295,9 +293,10 @@ fun bookingDetails(
                 initialValue = 0,
                 onValueChange = {
                     pax = it
-                    OnPaxChange(pax.toString())
-                                count++},
-                OnClose = { showNoPicker = false })
+                    OnPaxChange(pax.toString())},
+                OnClose = { showNoPicker = false
+                count++
+                })
         }
 
 
@@ -372,7 +371,7 @@ fun calculatePrice(STARTDATE: Date, ENDDATE: Date, PRICE: Double): Double {
 @Preview
 @Composable
 fun BookingDetail() {
-    
+
     TipTimeTheme {
         //landscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, OnBookingEndDateChange = {}, OnBookingStartDateChange = {}, OnPaxChange = {}, BookingStartDate = Date(), BookingEndDate = Date(), roomType = "",Price=0.00,pax = 0 , HotelId = "")
     }

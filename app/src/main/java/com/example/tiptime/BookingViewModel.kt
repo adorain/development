@@ -34,17 +34,19 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     var roomtype by mutableStateOf("")
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
-    var status by mutableStateOf(false)
+    var status by mutableStateOf(true)
 
     fun insertNewBooking(){
         viewModelScope.launch(Dispatchers.IO) {
+
+
             bookingRes.addNewBooking(
             booking = Booking(
                 Booked_id = uiBookingState.value.Booked_id,
                 HotelId = hotel_Id,
                 ROOMTYPE = roomtype,
-                BookedStartDate = BookedStartDate.toString(),
-                BookedEndDate = BookedEndDate.toString(),
+                BookedStartDate = parseDate(BookedStartDate),
+                BookedEndDate = parseDate(BookedEndDate),
                 Pax = Pax,
                 Status="Confirmed",
                 Price = Price
@@ -179,22 +181,33 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     }
 
     fun setRoomType():String{
-        _uiState.update{
+        _uiBookingState.update{
                 currentState->
             currentState.copy(
-                roomType = roomtype
+                ROOMTYPE = roomtype
             )
         }
         return roomtype
     }
     fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
         viewModelScope.launch (Dispatchers.IO){
-            status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate.toString(), BookingEndDate.toString())
+            if(bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) == 0){
+                status = true
+            }else if (bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) > 0){
+                status = false
+            }
+
+
         }
     }
 
     fun updateStatus():Boolean{
         return status
+    }
+
+    fun parseDate(date : Date):String{
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        return formatter.format(date)
     }
 
 }

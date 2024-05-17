@@ -10,6 +10,6 @@ interface BookingDao {
     @Insert
     suspend fun addNewBooking(booking: Booking)
 
-    @Query("SELECT * FROM Booking WHERE BookedStartDate <= :BookingStartDate AND BookedEndDate >= :BookingEndDate AND Status = 'Completed' AND ROOMTYPE = :roomType AND HotelId = :hotelId")
-    fun checkRoomStatus(hotelId: Int, roomType: String, BookingStartDate: String, BookingEndDate: String):Boolean
+    @Query("SELECT COUNT(*) FROM Booking WHERE HotelId = :hotelId AND ROOMTYPE = :roomType AND Status = 'Confirmed' AND (:BookingStartDate BETWEEN BookedStartDate AND BookedEndDate OR :BookingEndDate BETWEEN BookedStartDate AND BookedEndDate)")
+    fun checkRoomStatus(hotelId: Int, roomType: String, BookingStartDate: String, BookingEndDate: String):Int
 }

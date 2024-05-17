@@ -15,7 +15,7 @@ interface HotelRes {
 
     fun getHotelById(hotelName: String): Int
 
-    fun getFavoriteHotels(): List<Hotel>
+    fun getFavoriteHotels(): Flow<List<Hotel>>
     fun updateHotelStatus(hotelId: Int, newStatus: String)
 
     fun getAllHotel(): Flow<List<Hotel>>

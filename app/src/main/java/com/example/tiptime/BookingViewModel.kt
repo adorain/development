@@ -35,7 +35,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     var status by mutableStateOf(false)
-    private val _isFormValid = MutableStateFlow(false)
+
     fun insertNewBooking(){
         viewModelScope.launch(Dispatchers.IO) {
             bookingRes.addNewBooking(
@@ -46,7 +46,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
                 BookedStartDate = BookedStartDate.toString(),
                 BookedEndDate = BookedEndDate.toString(),
                 Pax = Pax,
-                Status="Completed",
+                Status="Confirmed",
                 Price = Price
             )
         ) }
@@ -77,7 +77,9 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
      */
     fun calculatePrice() : Double{
-        val totalPrice = Price * (BookedStartDate.time - BookedEndDate.time)
+        val diffInMillies = BookedEndDate.time - BookedEndDate.time
+        val diffInDays = (diffInMillies / (1000 * 60 * 60 * 24)).toDouble()
+        val totalPrice = Price * diffInDays
         return totalPrice
     }
 
@@ -186,7 +188,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         return roomtype
     }
     fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate.toString(), BookingEndDate.toString())
         }
     }

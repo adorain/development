@@ -268,6 +268,7 @@ fun bookingDetails(
 
 
 
+
         if (showDialog2) {
             showDatePicker2(
                 context = LocalContext.current,
@@ -280,6 +281,9 @@ fun bookingDetails(
                 startDate = selectedStartDate
             )
             showDialog2 = false
+            selectedEndDate = selectedStartDate
+            showEndButtonText = showStartButtonText
+            OnBookingEndDateChange(showEndButtonText)
         }
 
 
@@ -359,9 +363,10 @@ fun bookingDetails(
 }
 
 @Composable
-fun calculatePrice(STARTDATE:Date,ENDDATE:Date,PRICE:Double):Double{
-    return PRICE*(STARTDATE.time - ENDDATE.time)
-
+fun calculatePrice(STARTDATE: Date, ENDDATE: Date, PRICE: Double): Double {
+    val diffInMillies = ENDDATE.time - STARTDATE.time
+    val diffInDays = (diffInMillies / (1000 * 60 * 60 * 24)).toDouble()
+    return diffInDays * PRICE
 }
 
 @Preview
@@ -703,3 +708,5 @@ fun parseDate(dateString: String): Date {
     val dateFormat = SimpleDateFormat("dd/MM/yyyy")
     return dateFormat.parse(dateString)
 }
+
+

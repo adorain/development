@@ -218,6 +218,7 @@ fun booking (
                         count = 1
                     }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 10.dp,start = 200.dp))
 
+
                      */
                     Text(text = checkRoomPrice(hotelId = HotelId, roomType = "Double Room") .toString()// Update RoomType
                         , color = textColor2 , fontSize = 20.sp,modifier = Modifier

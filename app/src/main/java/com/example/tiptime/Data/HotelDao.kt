@@ -25,7 +25,7 @@ interface HotelDao {
     fun getAvailableHotels(hotelAddress: String, startDate: String, endDate: String, pax: Int): List<Hotel>
 
     @Query("SELECT * FROM hotel WHERE status = 'Favorite'")
-    fun getFavoriteHotels(): List<Hotel>
+    fun getFavoriteHotels(): Flow<List<Hotel>>
 
     @Query("UPDATE hotel SET status = :newStatus WHERE HotelId = :hotelId")
     fun updateHotelStatus(hotelId: Int, newStatus: String)

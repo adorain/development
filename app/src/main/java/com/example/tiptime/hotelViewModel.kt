@@ -97,4 +97,12 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         }
     }
 
+    fun getFavorite(){
+        viewModelScope.launch {
+            hotelRes.getFavoriteHotels().collect{hotels->
+                hotelList.value = hotels.toMutableList()
+            }
+        }
+    }
+
 }

@@ -32,19 +32,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tiptime.ui.theme.TipTimeTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class UserLogin : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lateinit var firebaseAuth: FirebaseAuth
+
         setContent {
-            UserLoginScreen(context = this)
+
+            UserLoginScreen(context = this, auth = firebaseAuth)
         }
     }
 }
 
+/*
 @Composable
 fun UserLoginScreen(context: Context) {
     var email by remember { mutableStateOf("") }
@@ -176,4 +183,154 @@ fun UserLoginTextField(
 @Composable
 fun UserLoginPreview() {
     UserLoginScreen(context = LocalContext.current)
+}
+*/
+@Composable
+fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var invalidEmail by remember { mutableStateOf(false) }
+    var invalidPassword by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.hotel_user_background),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 30.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Hotel Sign-in",
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.padding(vertical = 120.dp, horizontal =70.dp)
+                )
+                UserLoginTextField(
+                    hint = "E-mail Address",
+                    keyboardType = KeyboardType.Email,
+                    value = email,
+                    onValueChange = {
+                        email = it
+                        invalidEmail = false
+                    },
+                    isError = invalidEmail
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                UserLoginTextField(
+                    hint = "Password",
+                    keyboardType = KeyboardType.Password,
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        invalidPassword = false
+                    },
+                    isError = invalidPassword
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                if (showError) {
+                    Text(
+                        text = "Invalid email or password",
+                        color = Color.Red
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = {
+                        if (email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                            invalidEmail = true
+                        } else if (password.length < 6) {
+                            invalidPassword = true
+                        } else {
+                            signInWithEmailAndPasswordUser(context, auth, email, password) { isSuccess ->
+                                if (isSuccess) {
+                                    val intent = Intent(context, MainActivity::class.java)
+                                    context.startActivity(intent)
+                                    (context as ComponentActivity).finish()
+                                } else {
+                                    showError = true
+                                    errorMessage = "Authentication failed. Please check your credentials."
+                                }
+                            }
+                        }
+                    }
+                ) {
+                    Text(text = "Submit")
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = {
+                        val intent = Intent(context, NewHotel::class.java)
+                        context.startActivity(intent)
+                    }
+                ) {
+                    Text(text = "New User? Please Sign-up")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun UserLoginTextField(
+    hint: String,
+    keyboardType: KeyboardType,
+    value: String,
+    onValueChange: (String) -> Unit,
+    isError: Boolean,
+    visualTransformation: VisualTransformation = VisualTransformation.None
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        placeholder = { Text(text = hint) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        textStyle = TextStyle(color = Color.White),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        isError = isError,
+        visualTransformation = visualTransformation
+    )
+}
+
+fun signInWithEmailAndPasswordUser(
+    context: Context,
+    auth: FirebaseAuth,
+    email: String,
+    password: String,
+    onComplete: (Boolean) -> Unit // Callback to handle authentication result
+) {
+    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            onComplete(true) // Authentication succeeded
+        } else {
+            onComplete(false) // Authentication failed
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun UserLoginPreview() {
+    TipTimeTheme{
+    UserLoginScreen(context = LocalContext.current, auth = FirebaseAuth.getInstance())
+}
 }

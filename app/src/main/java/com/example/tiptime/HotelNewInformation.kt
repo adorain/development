@@ -12,15 +12,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +55,21 @@ class HotelNewInformation : ComponentActivity() {
 
 @Composable
 fun NewInformationContent(){
+    val context = LocalContext.current
+    var hotelemail by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var invalidEmail by remember { mutableStateOf(false) }
+    var invalidPassword by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+    var showFailureDialog by remember { mutableStateOf(false) }
+
+    if (showSuccessDialog) {
+        ShowSuccessHotelDialog { showSuccessDialog = false }
+    }
+    if (showFailureDialog) {
+        ShowFailureHotelDialog { showFailureDialog = false }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.hotel_user_background),
@@ -59,7 +80,6 @@ fun NewInformationContent(){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-               /* .background(color = navy_blue)*/
                 .padding(horizontal = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -101,7 +121,33 @@ fun NewInformationContent(){
 
 }
 
+@Composable
+fun ShowSuccessInfoDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { org.jdom.Text("Success") },
+        text = { org.jdom.Text("User created successfully.") },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                org.jdom.Text("OK")
+            }
+        }
+    )
+}
 
+@Composable
+fun ShowFailureInfoDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { org.jdom.Text("Failure") },
+        text = { org.jdom.Text("Failed to create user. Please try again.") },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                org.jdom.Text("OK")
+            }
+        }
+    )
+}
 
 
 @Composable

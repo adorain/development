@@ -84,6 +84,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database:21.0.0")
     implementation("com.google.firebase:firebase-database-ktx:21.0.0")
     implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.android.tools.compose:compose-preview-renderer:0.0.1-alpha01")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     testImplementation("junit:junit:4.13.2")
@@ -94,5 +97,19 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    implementation ("androidx.room:room-runtime:2.3.0")
+    implementation ("androidx.room:room-compiler:2.3.0")
+
+
+    implementation ("com.google.firebase:firebase-analytics-ktx:20.0.0")
+    implementation ("com.google.firebase:firebase-database-ktx:20.0.0")
+    implementation ("com.google.firebase:firebase-auth-ktx:20.0.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
 }
 

@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,16 +42,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tiptime.Data.Booking
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -87,6 +83,7 @@ fun bookingDetails(
     var selectedStartDate by remember {
         mutableStateOf(Date())
     }
+    val isFormValid by viewModel.isFormValid.collectAsState()
     //do {
 
 
@@ -239,8 +236,11 @@ fun bookingDetails(
                 }
                 OutlinedButton(
                     onClick = {
-                        viewModel.setStatus(HotelId,roomType, parseDate(selectedStartDate.toString()), parseDate(selectedEndDate.toString()))
-                        onNextButtonClicked()
+                        if (isFormValid) {
+                            viewModel.setStatus(HotelId, roomType, parseDate(showStartButtonText), parseDate(showEndButtonText))
+                            onNextButtonClicked()
+                        }
+
                     },
                     modifier = Modifier.size(width = 100.dp, height = 50.dp)
                 ) {
@@ -265,13 +265,14 @@ fun bookingDetails(
 
 
         if (showDialog2) {
-            showDatePicker(
+            showDatePicker2(
                 context = LocalContext.current,
                 onDateSelected = {
                     showEndButtonText = convertDate(it)
                     selectedEndDate = parseDate(showEndButtonText)
                     OnBookingEndDateChange(showStartButtonText)
-                }
+                },
+                startDate = selectedStartDate
             )
             showDialog2 = false
         }
@@ -381,9 +382,33 @@ fun showDatePicker(context: Context, onDateSelected: (Date) -> Unit) {
         month,
         day
     )
-
+    datePickerDialog.datePicker.minDate = calendar.timeInMillis
     datePickerDialog.show()
 }
+
+fun showDatePicker2(context: Context, onDateSelected: (Date) -> Unit,startDate : Date) {
+
+    val calendar = Calendar.getInstance()
+    calendar.time = startDate
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = android.app.DatePickerDialog(
+        context,
+        { _:DatePicker, year:Int, month:Int, dayOfMonth:Int ->
+            calendar.set(year, month, dayOfMonth)
+
+            onDateSelected(calendar.time)
+        },
+        year,
+        month,
+        day
+    )
+    datePickerDialog.datePicker.minDate = calendar.timeInMillis
+    datePickerDialog.show()
+}
+
 
 @Composable
 fun showNumberPicker(

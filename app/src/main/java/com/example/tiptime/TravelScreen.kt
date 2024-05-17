@@ -38,7 +38,7 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.summary.name,
+            startDestination = screen.booking.name,
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = screen.home.name){

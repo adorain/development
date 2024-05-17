@@ -35,6 +35,8 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     var status by mutableStateOf(false)
+    private val _isFormValid = MutableStateFlow(false)
+    val isFormValid: StateFlow<Boolean> = _isFormValid
     fun insertNewBooking(){
         viewModelScope.launch(Dispatchers.IO) {
             bookingRes.addNewBooking(
@@ -144,6 +146,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.CHINA)
         val date = dateFormat.parse(bookedStartDate)
         BookedStartDate = date
+        validateSelection()
     }
 
     fun updateBookingEndDate(bookedEndDate: String) {
@@ -156,6 +159,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.CHINA)
         val date = dateFormat.parse(bookedEndDate)
         BookedEndDate = date
+        validateSelection()
     }
 
     fun updatePax(pax : String){
@@ -166,6 +170,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
             )
         }
         Pax = pax.toInt()
+        validateSelection()
     }
 
     fun updatePrice(price : String){
@@ -192,6 +197,13 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
     fun updateStatus():Boolean{
         return status
+    }
+
+    private fun validateSelection() {
+        _isFormValid.value =
+                BookedStartDate != null &&
+                BookedEndDate != null &&
+                Pax > 0
     }
 
 }

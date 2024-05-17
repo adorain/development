@@ -3,9 +3,16 @@ package com.example.tiptime.Data
 
 import kotlinx.coroutines.flow.Flow
 
-class RoomRepository(private val roomDao: RoomDao, private val bookingDao: BookingDao) {
+class RoomRepository(private val roomDao: RoomDao, private val bookingDao: BookingDao,private val hotelDao:HotelDao) {
 
     suspend fun insertSampleData() {
+        val sampleHotels = listOf(
+            Hotel(HotelId = 1, HotelName = "Hotel One", HotelAddress = "Address One", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDesciption = "Description One", Pax = 2)
+            // Add more hotels if needed
+        )
+
+        hotelDao.insertHotels(sampleHotels)
+
         val sampleRooms = listOf(
             room(roomId = 1, roomType = "Single", hotel_id = 1, Status = "Available", price = 100.0),
             room(roomId = 2, roomType = "Single", hotel_id = 1, Status = "Occupied", price = 100.0),
@@ -16,7 +23,7 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
 
         val sampleBookings = listOf(
             Booking(Booked_id = 1, HotelId = 1, ROOMTYPE = "Single", BookedStartDate = "2024-05-15", BookedEndDate = "2024-05-20", Pax = 2, Status = "Confirmed", Price = 100.0),
-            Booking(Booked_id = 2, HotelId = 1, ROOMTYPE = "Double", BookedStartDate = "2024-05-16", BookedEndDate = "2024-05-22", Pax = 3, Status = "Confirmed", Price = 150.0)
+            Booking(Booked_id = 2, HotelId = 1, ROOMTYPE = "Double", BookedStartDate = "2024-05-16", BookedEndDate = "2024-05-22", Pax = 2, Status = "Confirmed", Price = 150.0)
         )
 
         roomDao.insertRooms(sampleRooms)

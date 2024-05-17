@@ -32,4 +32,7 @@ interface HotelDao {
 
     @Query("SELECT * FROM hotel")
     fun getAllHotels(): Flow<List<Hotel>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHotels(hotels: List<Hotel>)
 }

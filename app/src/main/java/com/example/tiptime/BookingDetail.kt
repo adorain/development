@@ -83,7 +83,11 @@ fun bookingDetails(
     var selectedStartDate by remember {
         mutableStateOf(Date())
     }
-    val isFormValid by viewModel.isFormValid.collectAsState()
+    var canClick by remember { mutableStateOf(false) }
+    var count by remember {
+        mutableStateOf(0)
+    }
+    var canNextButton by remember { mutableStateOf(false) }
     //do {
 
 
@@ -159,7 +163,8 @@ fun bookingDetails(
                                 shape = RectangleShape
                             ),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                            shape = RoundedCornerShape(0)
+                            shape = RoundedCornerShape(0),
+                            enabled = canClick
                         ) {
                             Text(showEndButtonText, color = Color.Black)
                         }
@@ -236,12 +241,9 @@ fun bookingDetails(
                 }
                 OutlinedButton(
                     onClick = {
-                        if (isFormValid) {
                             viewModel.setStatus(HotelId, roomType, parseDate(showStartButtonText), parseDate(showEndButtonText))
                             onNextButtonClicked()
-                        }
-
-                    },
+                    }, enabled = canNextButton,
                     modifier = Modifier.size(width = 100.dp, height = 50.dp)
                 ) {
                     Text(text = "Next")
@@ -257,6 +259,8 @@ fun bookingDetails(
                     showStartButtonText = convertDate(it)
                     selectedStartDate = parseDate(showStartButtonText)
                     OnBookingStartDateChange(showStartButtonText)
+                    canClick = true
+                    count++
                 }
             )
             showDialog = false
@@ -271,6 +275,7 @@ fun bookingDetails(
                     showEndButtonText = convertDate(it)
                     selectedEndDate = parseDate(showEndButtonText)
                     OnBookingEndDateChange(showStartButtonText)
+                    count++
                 },
                 startDate = selectedStartDate
             )
@@ -286,10 +291,15 @@ fun bookingDetails(
                 initialValue = 0,
                 onValueChange = {
                     pax = it
-                    OnPaxChange(pax.toString()) },
+                    OnPaxChange(pax.toString())
+                                count++},
                 OnClose = { showNoPicker = false })
         }
 
+
+        if(count == 3){
+            canNextButton = true
+        }
 
         /*if (showDialog) {
         showDatePicker(context = LocalContext.current) { selectedDate ->
@@ -419,6 +429,7 @@ fun showNumberPicker(
     OnClose:()-> Unit,
 ) {
     var value by remember { mutableStateOf(initialValue) }
+    var canClick by remember{ mutableStateOf(false) }
     Dialog(onDismissRequest = OnClose) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -433,10 +444,17 @@ fun showNumberPicker(
             IconButton(onClick = { if (value < maxValue) value++ }) {
                 Icon(painterResource( R.drawable.down_icon), contentDescription = "Decrease")
             }
-            Button(onClick = OnClose) {
-                onValueChange(value)
+            Button(onClick = OnClose, enabled = canClick) {
+                if(value != 0){
+                    onValueChange(value)
+                    canClick = true
+                }
+                else{
+                    canClick = false
+                }
                 Text(text = "Select")
             }
+
         }
     }
 

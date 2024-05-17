@@ -72,6 +72,10 @@ fun booking (
     var totalCount by remember{
         mutableStateOf(0)
     }
+
+    var canClick by remember {
+        mutableStateOf(false)
+    }
     /*if(userType == UserType.user){
 
     }else if(
@@ -142,10 +146,12 @@ fun booking (
                                 count1 = 0
                                 count2 = 0
                                 textColor = Color.Red
+                                canClick = true
                             } else if (count > 1) {
                                 count = 0
                                 RoomType = ""
                                 textColor = Color.Green
+                                canClick = false
                             }
                         })
 
@@ -184,11 +190,12 @@ fun booking (
                                     count = 0
                                     count2 = 0
                                     textColor1 = Color.Red
+                                    canClick = true
                                 } else if (count1 > 1) {
                                     count1 = 0
                                     RoomType = ""
                                     textColor1 = Color.Green
-
+                                    canClick = false
                                 }
                             })
 
@@ -223,10 +230,12 @@ fun booking (
                                     count = 0
                                     count1 = 0
                                     textColor2 = Color.Red
+                                    canClick = true
                                 } else if (count2 > 1) {
                                     count2 = 0
                                     RoomType = ""
                                     textColor2 = Color.Green
+                                    canClick = false
                                 }
 
                             })
@@ -260,7 +269,7 @@ fun booking (
                     .size(width = 100.dp, height = 50.dp)) {
                 Text(text = "Cancel")
             }
-            OutlinedButton(onClick = {onNextButtonClicked(RoomType)},modifier = Modifier.size(width = 100.dp, height = 50.dp)) {
+            OutlinedButton(onClick = {onNextButtonClicked(RoomType)},modifier = Modifier.size(width = 100.dp, height = 50.dp),enabled = canClick) {
                 Text(text = "Next")
             }
 
@@ -276,6 +285,7 @@ fun booking (
             textColor2 = Color.Green
             RoomType = ""
             totalCount = 0
+            canClick = false
         }
 
 

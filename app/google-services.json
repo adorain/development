@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "83444367195",
+    "project_id": "tip-time-2aa41",
+    "storage_bucket": "tip-time-2aa41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83444367195:android:76259331145e43b68fa47e",
+        "android_client_info": {
+          "package_name": "com.example.tiptime"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdsBHf5wzHu-RSR0jcC3TfsyJcVaz4oEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

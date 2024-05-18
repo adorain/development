@@ -18,5 +18,8 @@ interface HotelRes {
     fun getFavoriteHotels(): List<Hotel>
     fun updateHotelStatus(hotelId: Int, newStatus: String)
 
+    fun getAllHotelsBooked():List<Hotel>
     fun getAllHotel(): Flow<List<Hotel>>
+
+
 }

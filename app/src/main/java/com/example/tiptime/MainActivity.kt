@@ -16,7 +16,8 @@
 package com.example.tiptime
 
 
-import EditRoomsViewModelFactory
+import Booked
+import BookedFetch
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,31 +31,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tiptime.Data.ApplicationInventory
+import com.example.tiptime.Data.BookingOfflineRes
+import com.example.tiptime.Data.BookingRepository
+import com.example.tiptime.Data.HotelOfflineRes
+import com.example.tiptime.Data.HotelRepository
 import com.example.tiptime.ui.theme.TipTimeTheme
+import com.example.tiptime.viewmodel.BookedViewModel
 import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
-        // In your Activity or Application class
-        val viewModelFactory = EditRoomsViewModelFactory(applicationContext)
-        val viewModel: EditRoomsViewModel by viewModels { viewModelFactory }
+    private val roomViewModel: RoomViewModel by viewModels()
 
-        lifecycleScope.launch {
-            viewModel.repository.insertSampleData()
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         setContent {
             TipTimeTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    TipTimeTheme {
-                        EditRooms(viewModel = viewModel)
-                    }
-                }
+                val roomViewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)
+                EditBooking(
+                    viewModel = roomViewModel,
+                    hotelId = 1,
+                    initialHotelName = "Hotel XYZ",
+                    initialHotelAddress = "123 Main St",
+                    initialRoomTypes = listOf("Single Room", "Double Room", "King Room")
+                )
             }
         }
     }
@@ -68,7 +71,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipTimeLayoutPreview() {
     TipTimeTheme {
-        EditRooms()
+
     }
 }
 

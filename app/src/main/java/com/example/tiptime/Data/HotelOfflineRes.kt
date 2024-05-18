@@ -16,5 +16,7 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     override fun getHotelById(hotelName: String): Int = hotelDao.getHotelId(hotelName)
     override fun updateHotelStatus(hotelId: Int, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)
 
+    override fun getAllHotelsBooked() = hotelDao.getAllHotelsBooked()
+
     override fun getAllHotel(): Flow<List<Hotel>> = hotelDao.getAllHotels()
 }

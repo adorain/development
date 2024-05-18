@@ -16,5 +16,9 @@ interface RoomRes {
     fun getAvailableRoomsForDateRange(hotelId: Int, roomType: String, startDate: String, endDate: String): List<room>
 
     fun getBookingsForDateRange(hotelId: Int, roomType: String, startDate: String, endDate: String): List<Booking>
+
+    // New methods for updating hotel details and room types
+    suspend fun updateHotelDetails(hotelId: Int, hotelName: String, hotelAddress: String)
+    suspend fun updateRoomType(hotelId: Int, roomType: String)
     suspend fun updateRoom(room: room)
 }

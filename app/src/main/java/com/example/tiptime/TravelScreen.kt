@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -25,6 +26,8 @@ enum class screen{
 enum class UserType{
     user , staff
 }
+
+@Preview
 @Composable
 fun TravelApp(
     viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory),

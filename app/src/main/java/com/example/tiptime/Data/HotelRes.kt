@@ -8,7 +8,7 @@ import java.util.Date
 interface HotelRes {
     fun getAvailableHotels(hotelAddress: String, startDate: Date, endDate: Date, pax: Int): List<Hotel>
 
-    fun insertHotel(hotelName: String, hotelAddress: String, hotelDescription: String):List<Hotel>
+    fun insertHotel(hotelName: String, hotelAddress: String, hotelDescription: String): Flow<List<Hotel>>
     fun getHotelById(hotelName: String): Int
 
     fun getFavoriteHotels(): Flow<List<Hotel>>

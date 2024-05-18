@@ -1,4 +1,5 @@
 package com.example.tiptime
+
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -274,5 +275,6 @@ fun CurrencyConverterPreview() {
         CurrencyConverter()
     }
 }
+
 
 

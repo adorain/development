@@ -12,6 +12,12 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
         pax: Int
     ): List<Hotel> = hotelDao.getAvailableHotels(hotelAddress,startDate.toString(),endDate.toString(),pax)
 
+    override fun insertHotel(
+        hotelName: String,
+        hotelAddress: String,
+        hotelDescription: String
+    ): Flow<List<Hotel>> = hotelDao.insertHotel()
+
     override fun getFavoriteHotels()  = hotelDao.getFavoriteHotels()
     override fun getHotelById(hotelName: String) = hotelDao.getHotelId(hotelName)
     override fun updateHotelStatus(hotelId: Int, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)

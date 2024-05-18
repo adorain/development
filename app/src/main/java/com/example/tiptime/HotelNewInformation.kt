@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -212,20 +213,41 @@ fun NewInformationContent(onClickedButton: (hotelName: String, hotelAddress: Str
             modifier = Modifier.matchParentSize()
         )
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Hotel New Information",
+                text = "Hotel",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 modifier = Modifier
                     .padding(
-                        vertical = 120.dp,
-                        horizontal = 70.dp
+                        vertical = 35.dp,
+                        horizontal = 63.dp
+                    )
+            )
+            Text(
+                text = "New",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(
+                        vertical = 35.dp,
+                        horizontal = 63.dp
+                    )
+            )
+            Text(
+                text = "Information",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(
+                        vertical = 35.dp,
+                        horizontal = 63.dp
                     )
             )
             HotelNewInformationTextField(
@@ -255,29 +277,13 @@ fun NewInformationContent(onClickedButton: (hotelName: String, hotelAddress: Str
                 // Save data to database here
                 onClickedButton(hotelName, hotelAddress, hotelDescription)
             }) {
-                Text(text = "Next")
+                Text(text = "Submit")
             }
         }
     }
 }
 
 
-/*
-fun onClickedButton(
-    hotelName: String,
-    hotelAddress: String,
-    hotelDescription: String,
-    repository: HotelRes
-) {
-    val hotel = Hotel(
-        HotelName = hotelName,
-        HotelAddress = hotelAddress,
-        HotelDescription = hotelDescription
-    )
-
-    repository.insertHotel(hotel)
-}
-*/
 
 @Composable
 fun ShowSuccessInfoDialog(onDismiss: () -> Unit) {

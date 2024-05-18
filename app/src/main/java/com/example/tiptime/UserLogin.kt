@@ -220,7 +220,7 @@ fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 120.dp, horizontal =70.dp)
+                    modifier = Modifier.padding(vertical = 35.dp, horizontal =63.dp)
                 )
                 UserLoginTextField(
                     hint = "E-mail Address",

@@ -31,10 +31,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.tiptime.ui.theme.TipTimeTheme
+import com.example.tiptime.ui.theme.shadow
+import com.example.tiptime.ui.theme.white
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -334,10 +338,9 @@ fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: 
     var name by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
     ) {
         Image(
             painter = painterResource(id = R.drawable.hotel_user_background),
@@ -345,54 +348,82 @@ fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: 
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxWidth()
         )
-        TextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Hotel Name") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
-            value = phoneNumber,
-            onValueChange = { phoneNumber = it },
-            label = { Text("Phone Number") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                "Sign up",
+                color = white,
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
+                modifier = Modifier
+                    .padding(
+                        horizontal = 35.dp,
+                        vertical = 63.dp
+                    )
+            )
 
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Staff Name",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+            TextField(
+                value = phoneNumber,
+                onValueChange = { phoneNumber = it },
+                label = { Text("Phone Number",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = {
-            onClickedButton(name, phoneNumber, email, password)
-        }) {
-            Text(text = "Submit")
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(onClick = {
+                onClickedButton(name, phoneNumber, email, password)
+
+            }) {
+                Text(text = "Submit")
+            }
         }
     }
 }

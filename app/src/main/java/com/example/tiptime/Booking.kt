@@ -46,6 +46,7 @@ fun booking (
     HotelAddress:String,
     HotelName: String,
     HotelId : Int,
+    onPriceSet:(Double) -> Unit
     //status: String
 
 
@@ -76,6 +77,9 @@ fun booking (
     var canClick by remember {
         mutableStateOf(false)
     }
+    var price by remember { mutableStateOf(0.00) }
+    var price1 by remember { mutableStateOf(0.00) }
+    var price2 by remember { mutableStateOf(0.00) }
     /*if(userType == UserType.user){
 
     }else if(
@@ -136,12 +140,14 @@ fun booking (
                         }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 105.dp,start = 185.dp))
 
                      */
-                    Text(text = checkRoomPrice(hotelId = HotelId, roomType = "King Room").toString(), color = textColor , fontSize = 20.sp,modifier = Modifier
+                    price = checkRoomPrice(hotelId = HotelId, roomType = "Single Room")
+                    Text(text = price.toString(), color = textColor , fontSize = 20.sp,modifier = Modifier
                         .padding(top = 105.dp, start = 185.dp)
                         .clickable {
                             count++
                             totalCount += count
                             if (count == 1) {
+                                onPriceSet(price)
                                 RoomType = "Single Room"
                                 count1 = 0
                                 count2 = 0
@@ -153,6 +159,7 @@ fun booking (
                                 textColor = Color.Green
                                 canClick = false
                             }
+
                         })
 
 
@@ -179,13 +186,15 @@ fun booking (
                         }), color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 205.dp, start = 178.dp))
 
                      */
-                    Text(text = checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString()
+                    price1 = checkRoomPrice(hotelId = HotelId, roomType = "Double Room")
+                    Text(text = price1.toString()//checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString()
                         , color = textColor1 , fontSize = 20.sp,modifier = Modifier
                             .padding(top = 205.dp, start = 178.dp)
                             .clickable {
                                 count1++
                                 totalCount += count1
                                 if (count1 == 1) {
+                                    onPriceSet(price1)
                                     RoomType = "Double Room"
                                     count = 0
                                     count2 = 0
@@ -197,6 +206,7 @@ fun booking (
                                     textColor1 = Color.Green
                                     canClick = false
                                 }
+
                             })
 
 
@@ -220,13 +230,15 @@ fun booking (
 
 
                      */
-                    Text(text = checkRoomPrice(hotelId = HotelId, roomType = "Double Room") .toString()// Update RoomType
+                    price2 = checkRoomPrice(hotelId = HotelId, roomType = "King Room")
+                    Text(text = price2 .toString()// Update RoomType
                         , color = textColor2 , fontSize = 20.sp,modifier = Modifier
                             .padding(top = 10.dp, start = 200.dp)
                             .clickable {
                                 count2++
                                 totalCount += count2
                                 if (count2 == 1) {
+                                    onPriceSet(price2)
                                     RoomType = "King Room"
                                     count = 0
                                     count1 = 0
@@ -306,7 +318,7 @@ fun booking (
 fun Bookings() {
 
     TipTimeTheme {
-        booking(HotelAddress = "", HotelName = "", HotelId = 0, onNextButtonClicked = {}, onCancelButtonClicked = {})
+        booking(HotelAddress = "", HotelName = "", HotelId = 0, onNextButtonClicked = {}, onCancelButtonClicked = {}, onPriceSet = {})
         //LanscapeLayout(onCancelButtonClicked = {}, onNextButtonClicked = {}, HotelId = "Hiiii", HotelAddress = "Heee", HotelName = "WWWWWW", status = "")
     }
 }

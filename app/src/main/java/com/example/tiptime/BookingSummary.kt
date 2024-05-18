@@ -1,6 +1,7 @@
 package com.example.tiptime
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,7 @@ import javax.sql.DataSource
 fun bookingSummary(
     onNextButtonClicked:() -> Unit = {},
     onCancelButtonClicked : () -> Unit = {},
-    HotelId : String = " ",
+    HotelId : Int,
     BookingStartDate : String,
     BookingEndDate :String,
     Price : Double,
@@ -47,17 +48,25 @@ fun bookingSummary(
     roomType:String,
     viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
-    var status by remember {
-        mutableStateOf(viewModel.updateStatus())
-    }
-    var text by remember{ mutableStateOf("Pay") }
+    val status = viewModel.status
+    val count = viewModel.count
+    var text by remember { mutableStateOf("Pay") }
     var canClick by remember { mutableStateOf(!status) }
 
+    LaunchedEffect(count) {
+        Log.d("",count.toString())
 
-    LaunchedEffect(status) {
-        text = if (status) "Unavailable" else "Pay"
-        canClick = !status
+        if (count > 0) {
+            text = "Unavailable"
+            canClick = false
+        } else{
+            text = "Pay"
+            canClick = true
+        }
+
     }
+
+
 
     Column {
         Row(
@@ -86,7 +95,7 @@ fun bookingSummary(
                 Text(text = "Hotel Id : ", fontSize = 21.sp)
             }
             Column {
-                Text(text = HotelId, fontSize = 21.sp)
+                Text(text = HotelId.toString(), fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -183,7 +192,7 @@ fun BookingSummary() {
             BookingStartDate = "Date()",
             BookingEndDate = "Date()",
             Price = 0.00,
-            HotelId = "",
+            HotelId = 0,
             pax = 0,
             roomType = "",
             )

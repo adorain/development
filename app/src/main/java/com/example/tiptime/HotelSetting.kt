@@ -57,7 +57,7 @@ class HotelSetting : ComponentActivity() {
 
 
     private fun navigateToCurrency() {
-        val intent = Intent(this, CurrencyConverter::class.java)
+        val intent = intent
         startActivity(intent)
     }
 

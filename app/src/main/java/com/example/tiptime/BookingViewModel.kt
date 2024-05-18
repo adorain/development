@@ -1,7 +1,6 @@
 package com.example.tiptime
 
 
-import android.net.http.UrlRequest.Status
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.Stack
 
 
 class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
@@ -35,18 +33,21 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     var status by mutableStateOf(false)
+    var count by mutableStateOf(0)
 
     fun insertNewBooking(){
         viewModelScope.launch(Dispatchers.IO) {
+
+
             bookingRes.addNewBooking(
             booking = Booking(
                 Booked_id = uiBookingState.value.Booked_id,
                 HotelId = hotel_Id,
                 ROOMTYPE = roomtype,
-                BookedStartDate = BookedStartDate.toString(),
-                BookedEndDate = BookedEndDate.toString(),
+                BookedStartDate = parseDate(BookedStartDate),
+                BookedEndDate = parseDate(BookedEndDate),
                 Pax = Pax,
-                Status="Confirmed",
+                Status ="Confirmed",
                 Price = Price
             )
         ) }
@@ -87,7 +88,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         _uiBookingState.update {
             currentState ->
             currentState.copy(
-                Price = Price.toDouble()
+                Price = Price
             )
         }
         return Price
@@ -171,25 +172,38 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         Pax = pax.toInt()
     }
 
-    fun updatePrice(price : String){
-        Price = price.toDouble()
-    }
+
     fun updateRoomType(RoomType:String){
         roomtype = RoomType
     }
 
+    fun updateRoomPrice(roomPrice:Double){
+        Price = roomPrice
+    }
     fun setRoomType():String{
-        _uiState.update{
+        _uiBookingState.update{
                 currentState->
             currentState.copy(
-                roomType = roomtype
+                ROOMTYPE = roomtype
             )
         }
         return roomtype
     }
     fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
         viewModelScope.launch (Dispatchers.IO){
-            status = bookingRes.checkRoomStatus(hotelId, roomType, BookingStartDate.toString(), BookingEndDate.toString())
+            /*if(bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) == 0){
+                status = true
+            }else if (bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) > 0){
+                status = false
+            }
+
+             */
+            bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate))
+                .collect { statusCount ->
+                    count = statusCount
+                }
+
+
         }
     }
 
@@ -197,4 +211,42 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         return status
     }
 
+    fun parseDate(date : Date):String{
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        return formatter.format(date)
+    }
+
+    fun addNewBooking(booking: Booking) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+
+            bookingRes.addNewBooking(
+                booking = Booking(
+                    Booked_id = uiBookingState.value.Booked_id,
+                    HotelId = hotel_Id,
+                    ROOMTYPE = roomtype,
+                    BookedStartDate = parseDate(BookedStartDate),
+                    BookedEndDate = parseDate(BookedEndDate),
+                    Pax = Pax,
+                    Status = "unpaid",
+                    Price = Price
+                )
+            )
+        }
+    }
+    fun getReservationsForDate(selectedDate: Date): StateFlow<List<Booking>> {
+        val reservations = MutableStateFlow<List<Booking>>(emptyList())
+        viewModelScope.launch {
+            val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.US).format(selectedDate)
+            val result = bookingRes.getReservationsForDate(dateString)
+            reservations.value = result
+        }
+        return reservations.asStateFlow()
+    }
+
+    fun deleteBooking(booking: Booking) {
+        viewModelScope.launch {
+            bookingRes.deleteBooking(booking)
+        }
+    }
 }

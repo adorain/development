@@ -1,5 +1,5 @@
 package com.example.tiptime
-
+/*
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -230,7 +230,7 @@ fun NewHotelPreview() {
         NewHotelContent()
     }
 }
-*/
+
 class NewHotel : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -435,3 +435,4 @@ fun NewHotelPreview() {
         NewHotelContent(onClickedButton = { _, _, _, _ -> })
     }
 }
+

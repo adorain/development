@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -25,6 +26,8 @@ enum class screen{
 enum class UserType{
     user , staff
 }
+
+@Preview
 @Composable
 fun TravelApp(
     viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory),
@@ -38,7 +41,7 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.detail.name,
+            startDestination = screen.booking.name,
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = screen.home.name){
@@ -69,6 +72,7 @@ fun TravelApp(
                     HotelName = uiHotelState.HotelName,
                     HotelId = uiHotelState.HotelId,
                     HotelAddress = uiHotelState.HotelAddress,
+                    onPriceSet = {viewModel.updateRoomPrice(it)}
                     //status = viewRoomViewModel.checkRoomStatus()
 
                 )
@@ -96,13 +100,14 @@ fun TravelApp(
                     BookingEndDate = uiState.BookedEndDate,
                     Price = uiState.Price,
                     pax = uiState.Pax,
-                    roomType = uiState.ROOMTYPE
+                    roomType = uiState.ROOMTYPE,
+                    HotelId = uiState.HotelId
                 )
             }
             composable( route = screen.payment.name){
                 PaymentLayout(
                     onClickedButton = {
-                        navController.navigate(screen.home.name)
+                        navController.navigate(screen.detail.name)
                         viewModel.insertNewBooking()
                     }
                 )

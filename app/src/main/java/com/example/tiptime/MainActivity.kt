@@ -15,6 +15,7 @@
  */
 package com.example.tiptime
 
+import HotelReservation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
                         //val hotel :List<Hotel> = listOf()
                         ///HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
                         //booking(HotelAddress = "", HotelName = "", HotelId = "")
-                        TravelApp()
+                        HotelMainScreen()
                     }
                 }
             }

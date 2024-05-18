@@ -71,6 +71,7 @@ fun EditRooms(viewModel: EditRoomsViewModel = viewModel(factory = EditRoomsViewM
 
 
 
+
     val cusPadding = PaddingValues(
         start = 8.dp,
         top = 1.dp,
@@ -231,10 +232,8 @@ fun EditRooms(viewModel: EditRoomsViewModel = viewModel(factory = EditRoomsViewM
         showDatePickerForBooking(context = context, date = Date()) { selectedDate ->
             // Update start date and button text
             showDialog = false
-            showStartButtonText = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate)
+            showStartButtonText = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate)
             viewModel.updateStartDate(selectedDate)
-            // Fetch rooms when the start date changes
-            viewModel.fetchRoomsForDateRangeAndType(1, selectedItem, viewModel.selectedStartDate, viewModel.selectedEndDate)
         }
     }
 
@@ -242,10 +241,8 @@ fun EditRooms(viewModel: EditRoomsViewModel = viewModel(factory = EditRoomsViewM
         showDatePickerForBooking(context = context, date = Date()) { selectedDate ->
             // Update end date and button text
             showDialog2 = false
-            showEndButtonText = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate)
+            showEndButtonText = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate)
             viewModel.updateEndDate(selectedDate)
-            // Fetch rooms when the end date changes
-            viewModel.fetchRoomsForDateRangeAndType(1, selectedItem, viewModel.selectedStartDate, viewModel.selectedEndDate)
         }
     }
 }

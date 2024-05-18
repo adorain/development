@@ -32,5 +32,20 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
     suspend fun updateRoomStatus(room: room) {
         roomDao.updateRoom(room)
     }
+
+    suspend fun getRoomAvailability(hotelId: Int, roomType: String, startDate: String, endDate: String): RoomAvailability {
+        val allRooms = roomDao.getAllRoomsForType(hotelId, roomType)
+        val bookings = roomDao.getBookingsForDateRange(hotelId, roomType, startDate, endDate)
+        val underMaintenanceRooms = allRooms.count { it.Status == "Under Maintenance" }
+        val occupiedRooms = bookings.count()
+        val availableRooms = allRooms.size - occupiedRooms - underMaintenanceRooms
+        return RoomAvailability(availableRooms, occupiedRooms, underMaintenanceRooms)
+    }
 }
+
+data class RoomAvailability(
+    val availableRooms: Int,
+    val occupiedRooms: Int,
+    val underMaintenanceRooms: Int
+)
 // End of file

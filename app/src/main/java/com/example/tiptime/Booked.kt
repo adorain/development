@@ -1,139 +1,66 @@
-package com.example.tiptime
-
-
-import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.example.tiptime.SqlliteManagement.BookingDb
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tiptime.BookedViewModelFactory
+import com.example.tiptime.R
 import com.example.tiptime.ui.theme.TipTimeTheme
-import java.text.DateFormat
 import java.time.LocalDate
-import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-
-@Composable
-fun Booked(
-    hotelName: String,
-    dateRange: String,
-    pax: String,
-    roomType: String,
-    fees: String,
-    onDeleteBooking: () -> Unit,
-    onReview: () -> Unit,
-    isReviewButton: Boolean
-) {
-    Column (modifier=Modifier.fillMaxSize()
-        .padding(top = 30.dp)){
-        Box(
-            modifier = Modifier.border(2.dp, Color.Black, RoundedCornerShape(8.dp))
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(R.drawable.muda),
-                    contentDescription = null,
-                    modifier = Modifier.size(180.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(hotelName, fontSize = 30.sp)
-                    Text(dateRange)
-                    Text(pax)
-                    Text(roomType)
-                    Text(fees)
-
-                    if (isReviewButton) {
-                        Button(
-                            onClick = onReview,
-                            modifier = Modifier.size(100.dp, 40.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                            shape = RoundedCornerShape(0)
-                        ) {
-                            Text("Review")
-                        }
-
-                    } else {
-                        Button(
-                            onClick = onDeleteBooking,
-                            modifier = Modifier.size(100.dp, 40.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-                            shape = RoundedCornerShape(0)
-                        ) {
-                            Text("Cancel")
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-}
-
-/*
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BookedFetch(context: Context, navController: NavController) {
-    val bookingDb = BookingDb(context)
-    val bookings = bookingDb.getAllBookings()
+fun Booked(
+    viewModel: BookedViewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current))
+) {
+    val context = LocalContext.current
+    val bookings by viewModel.bookings.collectAsState()
 
-    Column(Modifier.fillMaxSize()) {
-        bookings.forEach { booking ->
-            val hotelName = "Hotel Name: ${booking.HotelId}"
-            val startDate = DateFormat.getDateInstance().format(booking.BookedStartDate)
-            val endDate = DateFormat.getDateInstance().format(booking.BookedEndDate)
-            val dateRange = "Date: $startDate - $endDate"
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Your Bookings", fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
+
+        bookings.forEach { (booking, hotel) ->
+            val hotelName = "Hotel Name: ${hotel.HotelName}"
+            val dateRange = "Date: ${booking.BookedStartDate} - ${booking.BookedEndDate}"
             val pax = "Pax: ${booking.Pax}"
             val roomType = "Room: ${booking.ROOMTYPE}"
-            val fees = "Fees: ${booking.Price}"
+            val totalPrice = viewModel.calculateTotalPrice(booking)
+            val fees = "Fees: $totalPrice"
 
             val currentDate = LocalDate.now()
-            val endLocalDate = booking.BookedEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            val isReviewButton = currentDate.isAfter(endLocalDate)
+            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val endLocalDate = LocalDate.parse(booking.BookedEndDate, dateFormatter)
+            val isReviewButton = currentDate.isAfter(endLocalDate) || booking.Status == "Canceled"
 
-            Booked(
+            BookingItem(
                 hotelName = hotelName,
                 dateRange = dateRange,
                 pax = pax,
                 roomType = roomType,
                 fees = fees,
-                onDeleteBooking = {
-                    val isSuccess = bookingDb.deleteBookingById(booking.Booked_id.toString())
-                    if (isSuccess) {
-                        Toast.makeText(context, "Booking canceled successfully", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Failed to cancel booking", Toast.LENGTH_SHORT).show()
-                    }
+                onCancelClick = {
+                    viewModel.cancelBooking(booking.Booked_id)
+                    Toast.makeText(context, "Booking Cancelled", Toast.LENGTH_SHORT).show()
                 },
-                onReview = {
+                onReviewClick = {
                     // Handle navigation to review screen
-                    /* navController.navigate(Screen.Review.route)
-
-                     */
+                    Toast.makeText(context, "Navigate to Review", Toast.LENGTH_SHORT).show()
                 },
                 isReviewButton = isReviewButton
             )
@@ -143,24 +70,74 @@ fun BookedFetch(context: Context, navController: NavController) {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun BookingItem(
+    hotelName: String,
+    dateRange: String,
+    pax: String,
+    roomType: String,
+    fees: String,
+    onCancelClick: () -> Unit,
+    onReviewClick: () -> Unit,
+    isReviewButton: Boolean
+) {
+    Box(
+        modifier = Modifier.border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.muda),
+                contentDescription = null,
+                modifier = Modifier.size(180.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(hotelName, fontSize = 30.sp)
+                Text(dateRange)
+                Text(pax)
+                Text(roomType)
+                Text(fees)
 
- */
+                if (isReviewButton) {
+                    Button(
+                        onClick = onReviewClick,
+                        modifier = Modifier.size(100.dp, 40.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        shape = RoundedCornerShape(0)
+                    ) {
+                        Text("Review")
+                    }
 
+                } else {
+                    Button(
+                        onClick = onCancelClick,
+                        modifier = Modifier.size(100.dp, 40.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                        shape = RoundedCornerShape(0)
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            }
+        }
+    }
+}
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun BookedDetails(){
+fun BookedDetailsPreview() {
     TipTimeTheme {
-        Booked(
+        BookingItem(
             hotelName = "Hotel ABC",
             dateRange = "Date: Jan 1 - Jan 5",
             pax = "Pax: 2",
             roomType = "Room: Suite",
             fees = "Fees: $200",
-            onDeleteBooking = {},
-            onReview = {},
-            isReviewButton= false
+            onCancelClick = {},
+            onReviewClick = {},
+            isReviewButton = false
         )
     }
 }
-

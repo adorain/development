@@ -15,7 +15,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
 import kotlinx.coroutines.withContext
+
+
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -34,10 +37,17 @@ class hotelViewModel(
     var HotelName by mutableStateOf("")
     var HotelAddress by mutableStateOf("")
     var roomType by mutableStateOf("")
+
     var bookings by mutableStateOf(listOf<Booking>())
 
-    fun setHomeName(hotelName: String) {
-        _uiState.update { currentState ->
+    
+
+    var hotelList = MutableStateFlow(mutableListOf<Hotel>())
+
+    fun setHomeName(hotelName : String){
+        _uiState.update {
+                currentState->
+
             currentState.copy(
                 HotelName = hotelName
             )
@@ -64,8 +74,10 @@ class hotelViewModel(
         return hotelRes.getAvailableHotels(SearchText, STARTDATE, ENDDATE, Pax).isNotEmpty()
     }
 
+
     fun updateHotelStatus(hotelId: String, newStatus: String) {
         hotelRes.updateHotelStatus(hotelId, newStatus)
+
     }
 
     fun updateSearchText(searchText: String) {
@@ -88,8 +100,22 @@ class hotelViewModel(
         this.pax = Pax.toInt()
     }
 
-    fun getAllHotel(): List<Hotel> {
-        return hotelRes.getAllHotel()
+
+    fun getAllHotel(){
+        viewModelScope.launch {
+            hotelRes.getAllHotel().collect { hotels ->
+                hotelList.value= hotels.toMutableList()
+            }
+        }
+    }
+
+    fun getFavorite(){
+        viewModelScope.launch {
+            hotelRes.getFavoriteHotels().collect{hotels->
+                hotelList.value = hotels.toMutableList()
+            }
+        }
+
     }
 
     fun getBookingsForDate(date: Date, hotelId: String) {

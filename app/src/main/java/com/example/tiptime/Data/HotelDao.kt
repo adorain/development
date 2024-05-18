@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 @Dao
@@ -12,7 +13,7 @@ interface HotelDao {
     suspend fun insertHotel(hotel: Hotel)
 
     @Query("SELECT * FROM hotel WHERE HotelName = :hotelName LIMIT 1")
-    fun getHotelId(hotelName: String): String
+    fun getHotelId(hotelName: String): Int
 
 
     @Query("SELECT * FROM hotel WHERE HotelAddress LIKE '%' || :hotelAddress || '%' " +
@@ -21,14 +22,14 @@ interface HotelDao {
             "WHERE hotel.HotelId = booking.HotelId " +
             "AND booking.BookedStartDate < :endDate " +
             "AND booking.BookedEndDate > :startDate)")
-    fun getAvailableHotels(hotelAddress: String, startDate: Date, endDate: Date, pax: Int): List<Hotel>
+    fun getAvailableHotels(hotelAddress: String, startDate: String, endDate: String, pax: Int): List<Hotel>
 
     @Query("SELECT * FROM hotel WHERE status = 'Favorite'")
-    fun getFavoriteHotels(): List<Hotel>
+    fun getFavoriteHotels(): Flow<List<Hotel>>
 
     @Query("UPDATE hotel SET status = :newStatus WHERE HotelId = :hotelId")
-    fun updateHotelStatus(hotelId: String, newStatus: String)
+    fun updateHotelStatus(hotelId: Int, newStatus: String)
 
     @Query("SELECT * FROM hotel")
-    fun getAllHotels():List<Hotel>
+    fun getAllHotels(): Flow<List<Hotel>>
 }

@@ -37,7 +37,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.tiptime.Data.PaymentMethod
 import com.example.tiptime.Model.Pmethod
 import com.example.tiptime.Data.Booking
-import com.example.tiptime.SqlliteManagement.BookingDb
 import com.example.tiptime.ui.theme.TipTimeTheme
 import kotlinx.coroutines.delay
 

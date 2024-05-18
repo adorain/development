@@ -91,4 +91,5 @@ val ocean_blue = Color(0xff016064)
 val matte_puple = Color(0xff392a48)
 val navy_blue = Color(0xff000080)
 val shadow = Color(0xff373737)
+val red = Color(0xffff0000)
 

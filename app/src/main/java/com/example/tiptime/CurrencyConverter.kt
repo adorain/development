@@ -1,13 +1,21 @@
 package com.example.tiptime
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Spinner
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+/*import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+
+ */
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import com.example.tiptime.ui.theme.TipTimeTheme
 
@@ -18,9 +26,9 @@ class CurrencyConverter : AppCompatActivity(), AdapterView.OnItemSelectedListene
     private lateinit var currency1: EditText
     private lateinit var currency2: EditText
 
-    var currencies = arrayOf<String?>(
+    var currencies = arrayOf(
         "Malaysian Ringgit",
-        "Thai Batt",
+        "Thai Baht",
         "PRC Rmb",
         "Indo Rupiah",
         "Japanese Yen",
@@ -34,106 +42,191 @@ class CurrencyConverter : AppCompatActivity(), AdapterView.OnItemSelectedListene
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.currency_convert)
 
-        spinner1 = findViewById(R.id.spinner1)
-        spinner2 = findViewById(R.id.spinner2)
+        // Create root ConstraintLayout
+        val rootLayout = ConstraintLayout(this).apply {
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            )
+        }
 
-        currency1 = findViewById(R.id.currency1)
-        currency2 = findViewById(R.id.currency2)
+        // Create first LinearLayout
+        val linearLayout1 = LinearLayout(this).apply {
+            id = View.generateViewId()
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(16, 16, 16, 0)
+            }
+            background = ContextCompat.getDrawable(this@CurrencyConverter, R.drawable.textframe)
+            setPadding(4,4,4,4)
+            weightSum = 10f
+        }
+
+        currency1 = EditText(this).apply {
+            id = View.generateViewId()
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                4.5f
+            ).apply {
+                marginEnd = 10
+            }
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
+
+        val separator1 = TextView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                2,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                setMargins(4, 4, 4, 4)
+            }
+            setBackgroundColor(Color.parseColor("#454545"))
+        }
+
+        spinner1 = Spinner(this).apply {
+            id = View.generateViewId()
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                5.5f
+            )
+        }
+
+        linearLayout1.addView(currency1)
+        linearLayout1.addView(separator1)
+        linearLayout1.addView(spinner1)
+
+        // Create second LinearLayout
+        val linearLayout2 = LinearLayout(this).apply {
+            id = View.generateViewId()
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(16, 16, 16, 0)
+            }
+            background = ContextCompat.getDrawable(this@CurrencyConverter, R.drawable.textframe)
+            setPadding(4,4,4,4)
+            weightSum = 10f
+        }
+
+        currency2 = EditText(this).apply {
+            id = View.generateViewId()
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                4.5f
+            ).apply {
+                marginEnd = 10
+            }
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
+
+        val separator2 = TextView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                2,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                setMargins(4, 4, 4, 4)
+            }
+            setBackgroundColor(Color.parseColor("#454545"))
+        }
+
+        spinner2 = Spinner(this).apply {
+            id = View.generateViewId()
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                5.5f
+            )
+        }
+
+        linearLayout2.addView(currency2)
+        linearLayout2.addView(separator2)
+        linearLayout2.addView(spinner2)
+
+        // Add views to root layout
+        rootLayout.addView(linearLayout1)
+        rootLayout.addView(linearLayout2)
+
+        setContentView(rootLayout)
+
+        val constraintSet = ConstraintSet().apply {
+            clone(rootLayout)
+
+            connect(linearLayout1.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+            connect(linearLayout1.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+            connect(linearLayout1.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+
+            connect(linearLayout2.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+            connect(linearLayout2.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+            connect(linearLayout2.id, ConstraintSet.TOP, linearLayout1.id, ConstraintSet.BOTTOM)
+        }
+
+        constraintSet.applyTo(rootLayout)
+
+        // Set up the spinners and edit texts
+        setUpSpinnersAndEditTexts()
+    }
+
+    private fun setUpSpinnersAndEditTexts() {
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            currencies
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        spinner1.adapter = adapter
+        spinner2.adapter = adapter
 
         spinner1.onItemSelectedListener = this
         spinner2.onItemSelectedListener = this
 
-        val ad: ArrayAdapter<*> = ArrayAdapter<Any?>(
-            this,
-            android.R.layout.simple_spinner_item,
-            currencies
-        )
-        val ad2: ArrayAdapter<*> = ArrayAdapter<Any?>(
-            this,
-            android.R.layout.simple_spinner_item,
-            currencies
-        )
-
-        // set simple layout resource file
-        // for each item of spinner
-        ad.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-        ad2.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        // Set the ArrayAdapter (ad) data on the
-        // Spinner which binds data to spinner
-        spinner1.adapter = ad
-        spinner2.adapter = ad2
-
-
         currency1.doOnTextChanged { _, _, _, _ ->
-
             if (currency1.isFocused) {
-                val amt =
-                    if (currency1.text.isEmpty()) 0.0 else currency1.text.toString().toDouble()
+                val amt = if (currency1.text.isEmpty()) 0.0 else currency1.text.toString().toDouble()
                 val convertedCurrency = convertCurrency(
                     amt,
                     spinner1.selectedItem.toString(),
                     spinner2.selectedItem.toString()
                 )
-
                 currency2.setText(convertedCurrency.toString())
             }
         }
 
         currency2.doOnTextChanged { _, _, _, _ ->
-
             if (currency2.isFocused) {
-                val amt =
-                    if (currency2.text.isEmpty()) 0.0 else currency2.text.toString().toDouble()
+                val amt = if (currency2.text.isEmpty()) 0.0 else currency2.text.toString().toDouble()
                 val convertedCurrency = convertCurrency(
                     amt,
                     spinner2.selectedItem.toString(),
                     spinner1.selectedItem.toString()
                 )
-
                 currency1.setText(convertedCurrency.toString())
             }
         }
-
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (parent!!.id) {
-            R.id.spinner1 -> {
-                val amt =
-                    if (currency1.text.isEmpty()) 0.0 else currency1.text.toString().toDouble()
-                val convertedCurrency = convertCurrency(
-                    amt,
-                    spinner1.selectedItem.toString(),
-                    spinner2.selectedItem.toString()
-                )
-                currency2.setText(convertedCurrency.toString())
-
-            }
-
-            R.id.spinner2 -> {
-                val amt =
-                    if (currency2.text.isEmpty()) 0.0 else currency2.text.toString().toDouble()
-                val convertedCurrency = convertCurrency(
-                    amt,
-                    spinner2.selectedItem.toString(),
-                    spinner1.selectedItem.toString()
-                )
-                currency1.setText(convertedCurrency.toString())
-
-            }
-
-        }
+        val amt = if (currency1.text.isEmpty()) 0.0 else currency1.text.toString().toDouble()
+        val convertedCurrency = convertCurrency(
+            amt,
+            spinner1.selectedItem.toString(),
+            spinner2.selectedItem.toString()
+        )
+        currency2.setText(convertedCurrency.toString())
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
+        // Do nothing
     }
 
     fun convertCurrency(amt: Double, firstCurrency: String, secondCurrency: String): Double {
@@ -141,11 +234,10 @@ class CurrencyConverter : AppCompatActivity(), AdapterView.OnItemSelectedListene
         return convertRinggitToOtherCurrency(myRinggit, secondCurrency)
     }
 
-    //exchange rate as 10/5/2024
     private fun convertRinggitToOtherCurrency(myRinggit: Double, secondCurrency: String): Double {
         return myRinggit * when (secondCurrency) {
             "Malaysian Ringgit" -> 1.0
-            "Thai Batt" -> 7.75
+            "Thai Baht" -> 7.75
             "PRC Rmb" -> 1.52
             "Indo Rupiah" -> 3392.22
             "Japanese Yen" -> 32.87
@@ -162,7 +254,7 @@ class CurrencyConverter : AppCompatActivity(), AdapterView.OnItemSelectedListene
     private fun convertOtherToRinggit(amt: Double, firstCurrency: String): Double {
         return amt * when (firstCurrency) {
             "Malaysian Ringgit" -> 1.0
-            "Thai Batt" -> 0.1290
+            "Thai Baht" -> 0.1290
             "PRC Rmb" -> 0.6558
             "Indo Rupiah" -> 0.000295
             "Japanese Yen" -> 0.0304
@@ -175,7 +267,6 @@ class CurrencyConverter : AppCompatActivity(), AdapterView.OnItemSelectedListene
             else -> 0.0
         }
     }
-
 }
 
 @Preview
@@ -185,3 +276,5 @@ fun CurrencyConverterPreview() {
         CurrencyConverter()
     }
 }
+
+

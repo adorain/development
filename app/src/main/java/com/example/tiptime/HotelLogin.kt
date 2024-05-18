@@ -263,15 +263,21 @@ fun HotelLoginScreen(context: Context, auth: FirebaseAuth) {
                         } else if (password.length < 6) {
                             invalidPassword = true
                         } else {
-                            signInWithEmailAndPasswordHotel(context, auth, email, password) { isSuccess ->
-                                if (isSuccess) {
-                                    val intent = Intent(context, MainActivity::class.java)
-                                    context.startActivity(intent)
-                                    (context as ComponentActivity).finish()
-                                } else {
-                                    showError = true
-                                    errorMessage = "Authentication failed. Please check your credentials."
-                                }
+                            val validCredentials = email == "JT@gmail.com" && password == "JT123"
+                            val validCredentials2 = email == "LHY@gmail.com" && password == "HY123"
+                            val validCredentials3 = email == "WKC@gmail.com" && password == "KC123"
+                            val validCredentials4 = email == "LXL@gmail.com" && password == "XL123"
+                            val validCredentials5 = email == "LLW@gmail.com" && password == "LW123"
+
+                            if (validCredentials||validCredentials2||validCredentials3||validCredentials4||validCredentials5) {
+                                // Navigate to home page (replace MainActivity::class.java with your actual home activity)
+                                val intent = Intent(context, MainActivity::class.java)
+                                context.startActivity(intent)
+                                // Finish the current activity to prevent going back to it after login
+                                (context as ComponentActivity).finish()
+                            } else {
+                                // Show error message
+                                showError = true
                             }
                         }
                     }

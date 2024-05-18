@@ -1,39 +1,65 @@
-package com.example.tiptime.viewmodel
-
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.tiptime.Data.Booking
-import com.example.tiptime.Data.BookingRes
+import com.example.tiptime.Data.BookingRepository
 import com.example.tiptime.Data.Hotel
-import com.example.tiptime.Data.HotelRes
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.concurrent.TimeUnit
+import com.example.tiptime.Data.HotelRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class BookedViewModel(
-    private val bookingRes: BookingRes,
-    private val hotelRes: HotelRes
+    private val bookingRepository: BookingRepository,
+    private val hotelRepository: HotelRepository
 ) : ViewModel() {
 
-    val bookings: Flow<List<Booking>> = flow {
-        emit(bookingRes.getAllBookings())
+    private val _bookings = MutableStateFlow<List<Pair<Booking, Hotel>>>(emptyList())
+    val bookings: StateFlow<List<Pair<Booking, Hotel>>> get() = _bookings
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+    init {
+        fetchBookings()
+        insertSampleData() // Insert sample data when the ViewModel is created
     }
 
-    val hotels: Flow<List<Hotel>> = flow {
-        emit(hotelRes.getAllHotelsBooked())
+    private fun fetchBookings() {
+        viewModelScope.launch {
+            val bookings = bookingRepository.getAllBookings()
+            val hotels = hotelRepository.getAllHotels()
+
+            val bookingDetails = bookings.mapNotNull { booking ->
+                val hotel = hotels.find { it.HotelId == booking.HotelId }
+                hotel?.let { Pair(booking, it) }
+            }
+            _bookings.value = bookingDetails
+        }
     }
 
+    private fun insertSampleData() {
+        viewModelScope.launch {
+            bookingRepository.insertSampleData()
+            fetchBookings() // Refresh the bookings after inserting sample data
+        }
+    }
 
-    fun calculateDays(startDate: String, endDate: String): Long {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val start = dateFormat.parse(startDate)
-        val end = dateFormat.parse(endDate)
-        val diff = end.time - start.time
-        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+    fun cancelBooking(bookingId: Int) {
+        viewModelScope.launch {
+            bookingRepository.updateBookingStatus(bookingId, "Canceled")
+            fetchBookings() // Refresh the bookings list
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun calculateTotalPrice(booking: Booking): Double {
+        val startDate = LocalDate.parse(booking.BookedStartDate, dateFormatter)
+        val endDate = LocalDate.parse(booking.BookedEndDate, dateFormatter)
+        val diffInDays = endDate.toEpochDay() - startDate.toEpochDay()
+        return booking.Price * diffInDays
     }
 }

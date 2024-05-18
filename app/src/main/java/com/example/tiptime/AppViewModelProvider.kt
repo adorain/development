@@ -23,8 +23,6 @@ object AppViewModelProvider{
         initializer {
             RoomViewModel(inventoryApplication().container.roomRes)
         }
-
-
     }
 }
 

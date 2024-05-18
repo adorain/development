@@ -1,4 +1,3 @@
-import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -20,51 +18,49 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import com.example.tiptime.BookedViewModelFactory
 import com.example.tiptime.R
 import com.example.tiptime.ui.theme.TipTimeTheme
-import com.example.tiptime.viewmodel.BookedViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BookedFetch(
-    viewModel: BookedViewModel,
-    context: Context,
-    /*navController: NavController
-
-     */
+fun Booked(
+    viewModel: BookedViewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current))
 ) {
-    val bookings by viewModel.bookings.collectAsState(initial = emptyList())
-    val hotels by viewModel.hotels.collectAsState(initial = emptyList())
+    val context = LocalContext.current
+    val bookings by viewModel.bookings.collectAsState()
 
-    Column(Modifier.fillMaxSize()) {
-        bookings.forEach { booking ->
-            val hotelName = hotels.find { it.HotelId == booking.HotelId }?.HotelName ?: "Unknown Hotel"
-            val startDate = booking.BookedStartDate
-            val endDate = booking.BookedEndDate
-            val dateRange = "Date: $startDate - $endDate"
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Your Bookings", fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
+
+        bookings.forEach { (booking, hotel) ->
+            val hotelName = "Hotel Name: ${hotel.HotelName}"
+            val dateRange = "Date: ${booking.BookedStartDate} - ${booking.BookedEndDate}"
             val pax = "Pax: ${booking.Pax}"
             val roomType = "Room: ${booking.ROOMTYPE}"
-            val days = viewModel.calculateDays(startDate, endDate)
-            val fees = "Fees: ${booking.Price * days}"
+            val totalPrice = viewModel.calculateTotalPrice(booking)
+            val fees = "Fees: $totalPrice"
 
             val currentDate = LocalDate.now()
-            val endLocalDate = LocalDate.parse(endDate)
-            val isReviewButton = currentDate.isAfter(endLocalDate)
+            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val endLocalDate = LocalDate.parse(booking.BookedEndDate, dateFormatter)
+            val isReviewButton = currentDate.isAfter(endLocalDate) || booking.Status == "Canceled"
 
-            Booked(
+            BookingItem(
                 hotelName = hotelName,
                 dateRange = dateRange,
                 pax = pax,
                 roomType = roomType,
                 fees = fees,
-                onDeleteBooking = {
-                    // Handle delete booking
+                onCancelClick = {
+                    viewModel.cancelBooking(booking.Booked_id)
+                    Toast.makeText(context, "Booking Cancelled", Toast.LENGTH_SHORT).show()
                 },
-                onReview = {
+                onReviewClick = {
                     // Handle navigation to review screen
+                    Toast.makeText(context, "Navigate to Review", Toast.LENGTH_SHORT).show()
                 },
                 isReviewButton = isReviewButton
             )
@@ -73,40 +69,16 @@ fun BookedFetch(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Booked(
+fun BookingItem(
     hotelName: String,
     dateRange: String,
     pax: String,
     roomType: String,
     fees: String,
-    onDeleteBooking: () -> Unit,
-    onReview: () -> Unit,
-    isReviewButton: Boolean
-) {
-    Column(modifier = Modifier.fillMaxSize().padding(top = 30.dp)) {
-        BookingBox(
-            hotelName = hotelName,
-            dateRange = dateRange,
-            pax = pax,
-            roomType = roomType,
-            fees = fees,
-            onDeleteBooking = onDeleteBooking,
-            onReview = onReview,
-            isReviewButton = isReviewButton
-        )
-    }
-}
-
-@Composable
-fun BookingBox(
-    hotelName: String,
-    dateRange: String,
-    pax: String,
-    roomType: String,
-    fees: String,
-    onDeleteBooking: () -> Unit,
-    onReview: () -> Unit,
+    onCancelClick: () -> Unit,
+    onReviewClick: () -> Unit,
     isReviewButton: Boolean
 ) {
     Box(
@@ -128,7 +100,7 @@ fun BookingBox(
 
                 if (isReviewButton) {
                     Button(
-                        onClick = onReview,
+                        onClick = onReviewClick,
                         modifier = Modifier.size(100.dp, 40.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                         shape = RoundedCornerShape(0)
@@ -138,7 +110,7 @@ fun BookingBox(
 
                 } else {
                     Button(
-                        onClick = onDeleteBooking,
+                        onClick = onCancelClick,
                         modifier = Modifier.size(100.dp, 40.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
                         shape = RoundedCornerShape(0)
@@ -151,18 +123,19 @@ fun BookingBox(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun BookedDetailsPreview() {
     TipTimeTheme {
-        Booked(
+        BookingItem(
             hotelName = "Hotel ABC",
             dateRange = "Date: Jan 1 - Jan 5",
             pax = "Pax: 2",
             roomType = "Room: Suite",
             fees = "Fees: $200",
-            onDeleteBooking = {},
-            onReview = {},
+            onCancelClick = {},
+            onReviewClick = {},
             isReviewButton = false
         )
     }

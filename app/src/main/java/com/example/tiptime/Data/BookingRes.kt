@@ -1,9 +1,10 @@
 package com.example.tiptime.Data
 
-interface BookingRes {
+import java.util.Date
+
+
+interface BookingRes{
     suspend fun addNewBooking(booking: Booking)
-    suspend fun getAllBookings(): List<Booking>
-    suspend fun updateBookingStatus(bookingId: Int, status: String): Int
-    fun checkRoomStatus(hotelId: Int, roomType: String, BookingStartDate: String, BookingEndDate: String): Boolean
-    suspend fun insertBookings(bookings: List<Booking>)
+
+    fun checkRoomStatus(hotelId: Int, roomType: String, BookingStartDate : String, BookingEndDate : String):Boolean
 }

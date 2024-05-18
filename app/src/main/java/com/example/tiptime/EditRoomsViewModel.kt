@@ -41,6 +41,7 @@ class EditRoomsViewModel(val repository: RoomRepository) : ViewModel() {
         fetchAllRooms()
     }
 
+
     private fun fetchAllRooms() {
         viewModelScope.launch {
             repository.getAllRooms().collect { fetchedRooms ->

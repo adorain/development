@@ -133,6 +133,7 @@ fun EditBooking(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun EditBookingPreview() {

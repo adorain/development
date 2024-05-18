@@ -56,6 +56,7 @@ interface RoomDao {
     @Query("SELECT * FROM room WHERE hotel_id = :hotelId AND roomType = :roomType")
     suspend fun getRoom(hotelId: Int, roomType: String): room
 
+
     @Update
     suspend fun updateRoom(room: room)
 

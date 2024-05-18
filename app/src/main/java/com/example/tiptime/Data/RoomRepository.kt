@@ -115,6 +115,7 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
 
     fun getAllRooms(): Flow<List<room>> = roomDao.getAllRooms()
 
+
     suspend fun getRoomAvailability(
         hotelId: Int,
         roomType: String,

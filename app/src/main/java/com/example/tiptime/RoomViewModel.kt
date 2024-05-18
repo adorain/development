@@ -41,4 +41,5 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
             }
         }
     }
+
 }

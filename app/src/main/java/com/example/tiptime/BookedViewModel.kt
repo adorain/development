@@ -23,6 +23,7 @@ class BookedViewModel(
     @RequiresApi(Build.VERSION_CODES.O)
     private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
+
     init {
         fetchBookings()
         insertSampleData() // Insert sample data when the ViewModel is created

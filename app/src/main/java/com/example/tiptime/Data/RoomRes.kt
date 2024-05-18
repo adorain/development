@@ -13,6 +13,7 @@ interface RoomRes {
     fun getAllRoomsByType(hotelId: Int, roomType: String): List<room>
 
 
+
     fun getAvailableRoomsForDateRange(hotelId: Int, roomType: String, startDate: String, endDate: String): List<room>
 
     fun getBookingsForDateRange(hotelId: Int, roomType: String, startDate: String, endDate: String): List<Booking>

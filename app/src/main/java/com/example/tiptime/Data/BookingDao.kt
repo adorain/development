@@ -20,6 +20,7 @@ interface BookingDao {
     @Query("SELECT * FROM Booking WHERE BookedStartDate <= :BookingStartDate AND BookedEndDate >= :BookingEndDate AND Status = 'Completed' AND ROOMTYPE = :roomType AND HotelId = :hotelId")
     fun checkRoomStatus(hotelId: Int, roomType: String, BookingStartDate: String, BookingEndDate: String):Boolean
 
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookings(rooms: List<Booking>)
 

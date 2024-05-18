@@ -6,19 +6,24 @@ import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRepository
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.Data.HotelRepository
+import com.example.tiptime.Data.RoomRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class BookedViewModel(
-    private val bookingRepository: BookingRepository,
-    private val hotelRepository: HotelRepository
+    private val roomRepository: RoomRepository
 ) : ViewModel() {
 
     private val _bookings = MutableStateFlow<List<Pair<Booking, Hotel>>>(emptyList())
     val bookings: StateFlow<List<Pair<Booking, Hotel>>> get() = _bookings
+
+    private val _hotelName = MutableStateFlow("")
+    val hotelName: StateFlow<String> get() = _hotelName
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -26,13 +31,12 @@ class BookedViewModel(
 
     init {
         fetchBookings()
-        insertSampleData() // Insert sample data when the ViewModel is created
     }
 
     private fun fetchBookings() {
         viewModelScope.launch {
-            val bookings = bookingRepository.getAllBookings()
-            val hotels = hotelRepository.getAllHotelsBooked()
+            val bookings = roomRepository.getAllBookings()
+            val hotels = withContext(Dispatchers.IO) { roomRepository.getAllHotelsBooked() }
 
             val bookingDetails = bookings.mapNotNull { booking ->
                 val hotel = hotels.find { it.HotelId == booking.HotelId }
@@ -42,17 +46,20 @@ class BookedViewModel(
         }
     }
 
-    private fun insertSampleData() {
-        viewModelScope.launch {
-            bookingRepository.insertSampleData()
-            fetchBookings() // Refresh the bookings after inserting sample data
-        }
-    }
+
+
 
     fun cancelBooking(bookingId: Int) {
         viewModelScope.launch {
-            bookingRepository.updateBookingStatus(bookingId, "Canceled")
-            fetchBookings() // Refresh the bookings list
+            roomRepository.updateBookingStatus(bookingId, "Canceled")
+        }
+    }
+
+    fun fetchHotelName(hotelId: Int) {
+        viewModelScope.launch {
+            _hotelName.value = withContext(Dispatchers.IO) {
+                roomRepository.getHotelName(hotelId)
+            }
         }
     }
 

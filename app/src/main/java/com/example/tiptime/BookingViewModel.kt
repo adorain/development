@@ -1,7 +1,6 @@
 package com.example.tiptime
 
 
-import android.net.http.UrlRequest.Status
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.Stack
 
 
 class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
@@ -49,7 +47,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
                 BookedStartDate = parseDate(BookedStartDate),
                 BookedEndDate = parseDate(BookedEndDate),
                 Pax = Pax,
-                Status="Confirmed",
+                Status ="Confirmed",
                 Price = Price
             )
         ) }
@@ -218,4 +216,37 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         return formatter.format(date)
     }
 
+    fun addNewBooking(booking: Booking) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+
+            bookingRes.addNewBooking(
+                booking = Booking(
+                    Booked_id = uiBookingState.value.Booked_id,
+                    HotelId = hotel_Id,
+                    ROOMTYPE = roomtype,
+                    BookedStartDate = parseDate(BookedStartDate),
+                    BookedEndDate = parseDate(BookedEndDate),
+                    Pax = Pax,
+                    Status = "unpaid",
+                    Price = Price
+                )
+            )
+        }
+    }
+    fun getReservationsForDate(selectedDate: Date): StateFlow<List<Booking>> {
+        val reservations = MutableStateFlow<List<Booking>>(emptyList())
+        viewModelScope.launch {
+            val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.US).format(selectedDate)
+            val result = bookingRes.getReservationsForDate(dateString)
+            reservations.value = result
+        }
+        return reservations.asStateFlow()
+    }
+
+    fun deleteBooking(booking: Booking) {
+        viewModelScope.launch {
+            bookingRes.deleteBooking(booking)
+        }
+    }
 }

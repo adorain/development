@@ -1,57 +1,69 @@
+package com.example.tiptime
+
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.tiptime.Data.Booking
-import com.example.tiptime.hotelViewModel
-import kotlinx.coroutines.launch
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReservationCheckScreen(
-    selectedStartDate: Date,
-    selectedEndDate: Date,
-    hotelName: String,
-    viewModel: hotelViewModel = viewModel()
-) {
-    var reservations by remember { mutableStateOf(listOf<Booking>()) }
-    val coroutineScope = rememberCoroutineScope()
-
-    // Fetch reservations when the screen is loaded
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            reservations = viewModel.getBookingsForDate(hotelName, selectedStartDate, selectedEndDate)
-        }
-    }
+fun ReservationCheckScreen(navController: NavController, selectedDate: Date, bookingViewModel: BookingViewModel) {
+    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+    val dateString = sdf.format(selectedDate)
+    val reservations by bookingViewModel.getReservationsForDate(selectedDate).collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
-            HotelTopBar(
-                currentScreen = "Reservations"
+            TopAppBar(
+                title = { Text("Reservations for $dateString") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
         },
         content = { innerPadding ->
-            Column(modifier = Modifier.padding(innerPadding)) {
-                if (reservations.isEmpty()) {
-                    Text("No reservations found for the selected date.")
-                } else {
-                    LazyColumn {
-                        items(reservations) { booking ->
-                            Text(text = "Booking ID: ${booking.Booked_id}")
-                            Text(text = "Hotel ID: ${booking.HotelId}")
-                            Text(text = "Room Type: ${booking.ROOMTYPE}")
-                            Text(text = "Start Date: ${booking.BookedStartDate}")
-                            Text(text = "End Date: ${booking.BookedEndDate}")
-                            Text(text = "Status: ${booking.Status}")
-                        }
-                    }
+            Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
+                reservations.forEach { reservation ->
+                    ReservationItem(reservation = reservation, bookingViewModel = bookingViewModel)
                 }
             }
         }
     )
+}
+
+@Composable
+fun ReservationItem(reservation: Booking, bookingViewModel: BookingViewModel) {
+    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = "Room Type: ${reservation.ROOMTYPE}")
+            Text(text = "Start Date: ${reservation.BookedStartDate}")
+            Text(text = "End Date: ${reservation.BookedEndDate}")
+            Text(text = "Pax: ${reservation.Pax}")
+            Text(text = "Price: ${reservation.Price}")
+
+            IconButton(
+                onClick = {
+                    bookingViewModel.deleteBooking(reservation)
+                },
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "Delete")
+            }
+        }
+    }
 }

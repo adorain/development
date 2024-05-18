@@ -19,11 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.tiptime.ui.theme.TipTimeTheme
 
 @Composable
 fun EditBooking(
-    viewModel: RoomViewModel,
+    viewModel: EditBookingViewModel= viewModel(factory = EditBookingViewModelFactory(LocalContext.current)),
     hotelId: Int,
     initialHotelName: String,
     initialHotelAddress: String,
@@ -137,10 +138,10 @@ fun EditBooking(
 @Preview(showBackground = true)
 @Composable
 fun EditBookingPreview() {
-    val viewModel: RoomViewModel = viewModel() // Assuming you have a ViewModelProvider.Factory set up
+    val viewModel: EditBookingViewModel = viewModel() // Assuming you have a ViewModelProvider.Factory set up
     TipTimeTheme {
         EditBooking(
-            viewModel = viewModel,
+            EditBookingViewModelFactory(LocalContext.current).create(EditBookingViewModel::class.java),
             hotelId = 1,
             initialHotelName = "Hotel XYZ",
             initialHotelAddress = "123 Main St",

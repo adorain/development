@@ -77,7 +77,13 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         }
     }
 
+    suspend fun updateHotelDetails(hotelId: Int,hotelName:String,hotelAddress:String){
+        roomDao.updateHotelDetails(hotelId, hotelName, hotelAddress)
+    }
 
+    suspend fun updateRoomType(hotelId: Int, roomType: String){
+        roomDao.updateRoomType(hotelId, roomType)
+    }
 }
 
 data class RoomAvailability(

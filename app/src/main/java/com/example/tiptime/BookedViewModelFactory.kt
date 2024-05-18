@@ -1,23 +1,17 @@
-package com.example.tiptime
-
-import BookedViewModel
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tiptime.Data.ApplicationInventory
-import com.example.tiptime.Data.BookingRepository
-import com.example.tiptime.Data.HotelRepository
+import com.example.tiptime.Data.BookingRes
+import com.example.tiptime.Data.HotelRes
+import com.example.tiptime.viewmodel.BookedViewModel
 
-class BookedViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+class BookingViewModelFactory(
+    private val bookingRes: BookingRes,
+    private val hotelRes: HotelRes
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BookedViewModel::class.java)) {
-            val database = ApplicationInventory.getDatabase(context)
-            val bookingDao = database.bookingDao()
-            val hotelDao = database.hotelDao()
-            val bookingRepository = BookingRepository(bookingDao)
-            val hotelRepository = HotelRepository(hotelDao)
             @Suppress("UNCHECKED_CAST")
-            return BookedViewModel(bookingRepository, hotelRepository) as T
+            return BookedViewModel(bookingRes, hotelRes) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

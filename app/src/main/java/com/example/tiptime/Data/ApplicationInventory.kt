@@ -20,6 +20,8 @@ abstract class ApplicationInventory: RoomDatabase() {
         @Volatile
         private var Instance: ApplicationInventory? = null
 
+
+
         fun getDatabase(context: Context): ApplicationInventory {
             // if the Instance is not null, return it, otherwise create a new database instance.
             return Instance ?: synchronized(this) {

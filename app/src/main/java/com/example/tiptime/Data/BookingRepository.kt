@@ -2,6 +2,10 @@ package com.example.tiptime.Data
 
 class BookingRepository(private val bookingDao: BookingDao) {
 
+    suspend fun insertBookings(bookings: List<Booking>) {
+        bookingDao.insertBookings(bookings)
+    }
+
     suspend fun getAllBookings(): List<Booking> {
         return bookingDao.getAllBookings()
     }

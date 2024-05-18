@@ -1,5 +1,5 @@
 package com.example.tiptime
-
+/*
 import android.content.Context
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -183,4 +183,6 @@ fun NumberField(
 fun ReviewPreview() {
     ReviewScreen(context = LocalContext.current)
 }
+
+ */
 

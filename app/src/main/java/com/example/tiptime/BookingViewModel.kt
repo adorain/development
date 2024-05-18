@@ -34,7 +34,8 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     var roomtype by mutableStateOf("")
     private val _uiBookingState = MutableStateFlow(Booking())
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
-    var status by mutableStateOf(true)
+    var status by mutableStateOf(false)
+    var count by mutableStateOf(0)
 
     fun insertNewBooking(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -89,7 +90,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         _uiBookingState.update {
             currentState ->
             currentState.copy(
-                Price = Price.toDouble()
+                Price = Price
             )
         }
         return Price
@@ -173,13 +174,14 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         Pax = pax.toInt()
     }
 
-    fun updatePrice(price : String){
-        Price = price.toDouble()
-    }
+
     fun updateRoomType(RoomType:String){
         roomtype = RoomType
     }
 
+    fun updateRoomPrice(roomPrice:Double){
+        Price = roomPrice
+    }
     fun setRoomType():String{
         _uiBookingState.update{
                 currentState->
@@ -191,11 +193,17 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     }
     fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
         viewModelScope.launch (Dispatchers.IO){
-            if(bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) == 0){
+            /*if(bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) == 0){
                 status = true
             }else if (bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) > 0){
                 status = false
             }
+
+             */
+            bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate))
+                .collect { statusCount ->
+                    count = statusCount
+                }
 
 
         }

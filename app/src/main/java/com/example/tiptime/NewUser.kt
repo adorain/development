@@ -1,5 +1,5 @@
 package com.example.tiptime
-
+/*
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -220,3 +220,5 @@ fun NewUserPreview() {
         NewUserContent()
     }
 }
+
+ */

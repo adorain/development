@@ -69,6 +69,7 @@ fun TravelApp(
                     HotelName = uiHotelState.HotelName,
                     HotelId = uiHotelState.HotelId,
                     HotelAddress = uiHotelState.HotelAddress,
+                    onPriceSet = {viewModel.updateRoomPrice(it)}
                     //status = viewRoomViewModel.checkRoomStatus()
 
                 )

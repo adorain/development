@@ -117,7 +117,6 @@ fun addBooking(
     )
 }
 
-
 @Composable
 fun ReservationCheckScreen(navController: NavController, selectedDate: Date) {
     val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)

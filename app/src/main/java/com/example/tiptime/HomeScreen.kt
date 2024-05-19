@@ -62,7 +62,7 @@ import java.util.Date
 @Composable
 fun HomeScreen(
     //userType: UserType,
-    onSelectedHotel:(String)->Unit,
+    onSelectedHotel:(Int)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
@@ -110,7 +110,7 @@ fun HomeScreen(
     var selectedEndDate by remember {
         mutableStateOf("Check out Date")
     }
-    val hotelList by viewModel.bookings.collectAsState(initial = emptyList())
+    val hotelList by viewModel.bookings.collectAsState()
 
     /*if(userType == UserType.user){
 
@@ -119,9 +119,7 @@ fun HomeScreen(
 
      */
 
-    LaunchedEffect(Unit) {
-        viewModel.getAllHotel()
-    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -281,13 +279,17 @@ fun HomeScreen(
         }
 
          */
+        LaunchedEffect(Unit) {
+            allHotelList.clear()
+            allHotelList.addAll(hotelList)
+        }
         LazyColumn(modifier = Modifier) {
 
             items(hotelList) { hotels ->
                 HotelItem(
                     hotel = hotels,
                     onItemClick = {
-                        onSelectedHotel(hotels.HotelId.toString())
+                        onSelectedHotel(hotels.HotelId)
                         onSelectedHotelName(hotels.HotelName)
                         onSelectedHotelDes(hotels.HotelDescription)
                         onSelectedHotelAddress(hotels.HotelAddress)
@@ -297,7 +299,7 @@ fun HomeScreen(
         }
 
 
-        // Display list of hotels
+        /*// Display list of hotels
         allHotelList.forEach { hotel ->
 
             HotelItem(
@@ -311,6 +313,8 @@ fun HomeScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
+
+         */
 
 
     }
@@ -369,6 +373,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
         Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
             modifier = Modifier.clickable {
                 isChangeColor = true
+
             }
             )
     }
@@ -409,29 +414,22 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             }
 
             Spacer(modifier = Modifier.height(30.dp))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.weight(1f)){
-                    Text(text = "Rating:")
-                }
-                Column(modifier = Modifier.weight(1f)){
-                    Text(text = viewModelRoom.setPriceRange(hotel.HotelId))
-                }
-            }
+
 
         }
 
-        /*
+
         if(isChangeColor){
             color = Color.Red
             status = "Favorite"
-            viewModelhotel.updateHotelStatus(hotel.HotelId,status)
+            viewModelhotel.markHotelAsFavourite(hotel.HotelId,"Favourite")
         }else{
             color = Color.White
             status = ""
-            viewModelhotel.updateHotelStatus(hotel.HotelId,"")
+            viewModelhotel.markHotelAsFavourite(hotel.HotelId,"")
         }
 
-         */
+
     }
 }
 

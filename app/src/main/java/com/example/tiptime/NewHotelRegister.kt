@@ -4,24 +4,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.tiptime.Data.Staff
+import androidx.lifecycle.viewModelScope
+import com.example.tiptime.Data.Hotel
+import com.example.tiptime.Data.HotelDao
+import com.example.tiptime.Data.HotelRes
+import com.example.tiptime.Data.HotelUserDao
+import com.example.tiptime.Data.StaffRes
 import com.example.tiptime.Data.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class NewHotelRegister : ViewModel(){
-    private val _uiState = MutableStateFlow(Staff())
-    val uiState: StateFlow<Staff> = _uiState.asStateFlow()
+class NewHotelRegister(private val hotelDao: HotelDao) : ViewModel(){
+    private val _uiState = MutableStateFlow(Hotel())
+    val uiState: StateFlow<Hotel> = _uiState.asStateFlow()
     var staffPassword by mutableStateOf("")
     var staffEmail by mutableStateOf("")
     var staffId by mutableStateOf("")
     var staffName by mutableStateOf("")
     var staffPhoneNumber by mutableStateOf("")
     var staffGender by mutableStateOf(' ')
-    private val _uiRegisterState = MutableStateFlow(Staff())
-    val uiRegisterState: StateFlow<Staff> = _uiRegisterState.asStateFlow()
+    private val _uiRegisterState = MutableStateFlow(Hotel())
+    val uiRegisterState: StateFlow<Hotel> = _uiRegisterState.asStateFlow()
 
     fun insertNewU_User(STAFFPassword: String, STAFFEmail: String, STAFFId: String, STAFFName: String,
                         STAFFPhoneNumber: String, STAFFGender: Char) {
@@ -64,6 +70,8 @@ class NewHotelRegister : ViewModel(){
         staffEmail = StaffEmail
     }
 
+
+
     fun setStaffPhoneNumber() : String{
         _uiRegisterState.update {
                 uiRegisterState ->
@@ -105,19 +113,27 @@ class NewHotelRegister : ViewModel(){
     fun updateStaffId(StaffId : String){
         staffId = StaffId
     }
-
-    fun setStaffGender() : Char{
-        _uiRegisterState.update {
-                uiRegisterState ->
-            uiRegisterState.copy(
-                StaffGender = staffGender
-            )
+    /*
+        fun setStaffGender() : Char{
+            _uiRegisterState.update {
+                    uiRegisterState ->
+                uiRegisterState.copy(
+                    StaffGender = staffGender
+                )
+            }
+            return staffGender
         }
-        return staffGender
-    }
 
+
+     */
     fun updateUserGender(StaffGender : Char){
         staffGender = StaffGender
+    }
+
+    fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String, newStaffPassword: String) {
+        viewModelScope.launch {
+            hotelDao.updateStaff(newStaffName, newStaffPhoneNumber, newStaffEmail, newStaffPassword)
+        }
     }
 
 }

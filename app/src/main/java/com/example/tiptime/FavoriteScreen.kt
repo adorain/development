@@ -61,7 +61,7 @@ fun favoritelayout(
                     onItemClick = {
                         onSelectedHotel(hotel.HotelId.toString())
                         onSelectedHotelName(hotel.HotelName)
-                        onSelectedHotelDes(hotel.HotelDesciption)
+                        onSelectedHotelDes(hotel.HotelDescription)
                         onSelectedHotelAddress(hotel.HotelAddress)
                     },
                     PriceRange = PriceRange
@@ -122,7 +122,7 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = hotel.HotelDesciption)
+                Text(text = hotel.HotelDescription)
             }
 
 

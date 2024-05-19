@@ -149,18 +149,11 @@ fun TravelApp(
                 UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
                 }
             }
-            composable(screen.test.name){
-                buuttoon (
-                    onNextButton = {
-                        viewModelhotel.getFavHotel()
-                        navController.navigate(screen.fav.name)
-                    }
-                )
-            }
 
 
         }
     }
+}
 
     private fun cancelOrderAndNavigateToStart(
         navController: NavController
@@ -180,7 +173,7 @@ fun TravelApp(
     ) {
         navController.popBackStack(screen.detail.name, inclusive = false)
     }
-}
+
 
 
 

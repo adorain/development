@@ -44,6 +44,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 
+//import org.jdom.Text
+
+
+
 
 /*
 class NewUser : ComponentActivity() {

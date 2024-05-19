@@ -49,22 +49,20 @@ fun bookingSummary(
     viewModel: BookingViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     val status = viewModel.status
-    val count = viewModel.count
-    var text by remember { mutableStateOf("Pay") }
+
+    var text by remember { mutableStateOf("Check") }
     var canClick by remember { mutableStateOf(!status) }
+    Log.d("",viewModel.count.toString())
+            if (viewModel.count > 0) {
+                text = "Unavailable"
+                canClick = false
+            } else if (viewModel.count == 0) {
+                text = "Pay"
+                canClick = true
+            }
 
-    LaunchedEffect(count) {
-        Log.d("",count.toString())
 
-        if (count > 0) {
-            text = "Unavailable"
-            canClick = false
-        } else{
-            text = "Pay"
-            canClick = true
-        }
 
-    }
 
 
 

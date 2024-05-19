@@ -48,7 +48,7 @@ fun favoritelayout(
     LaunchedEffect(Unit) {
         viewModel.getFavorite()
         hotels.clear()
-        hotels.addAll(viewModel.hotelList.value)
+        //hotels.addAll(viewModel.hotelList)
 
     }
     Column(

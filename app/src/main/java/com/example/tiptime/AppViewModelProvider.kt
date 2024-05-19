@@ -11,8 +11,9 @@ object AppViewModelProvider{
     val factory = viewModelFactory{
         initializer {
             hotelViewModel(
-                inventoryApplication().container.hotelRes,
-                /*inventoryApplication().container.bookingRes*/
+
+                inventoryApplication().container.hotelRes
+
             )
         }
 

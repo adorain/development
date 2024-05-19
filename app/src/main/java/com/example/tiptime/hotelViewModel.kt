@@ -1,5 +1,6 @@
 package com.example.tiptime
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +11,7 @@ import com.example.tiptime.Data.BookingRes
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.Data.HotelRes
 import com.example.tiptime.Data.room
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +32,10 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     var HotelAddress by mutableStateOf("")
     var HotelDescription by mutableStateOf("")
     var roomType by mutableStateOf("")
-    var hotelList = MutableStateFlow(mutableListOf<Hotel>())
+    private var _hotelList = MutableStateFlow<List<Hotel>>(emptyList())
+    val bookings: StateFlow<List<Hotel>> get() = _hotelList
+
+
 
     fun setHomeName(hotelName : String){
         _uiState.update {
@@ -65,7 +70,10 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     }
 
     fun updateHotelStatus(hotelId: Int, newStatus: String){
-        hotelRes.updateHotelStatus(hotelId,newStatus)
+        viewModelScope.launch {
+            hotelRes.updateHotelStatus(hotelId,newStatus)
+        }
+
     }
 
     fun updateSearchText(searchText:String){
@@ -91,9 +99,10 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
 
 
     fun getAllHotel(){
-        viewModelScope.launch {
+        viewModelScope.launch (){
             hotelRes.getAllHotel().collect { hotels ->
-                hotelList.value= hotels.toMutableList()
+                _hotelList.value= hotels
+                Log.d("",_hotelList.value.size.toString())
             }
         }
     }
@@ -101,9 +110,31 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     fun getFavorite(){
         viewModelScope.launch {
             hotelRes.getFavoriteHotels().collect{hotels->
-                hotelList.value = hotels.toMutableList()
+                _hotelList.value= hotels
             }
         }
     }
+
+    fun insertNewHotel(){
+        viewModelScope.launch {
+            hotelRes.insertNewHotel(
+                Hotel(
+                    0,
+                    "SD",
+                    "UB",
+                    "Lillli",
+                    "KL",
+                    "Description",
+                    5,
+                    "Yap",
+                    " "
+
+                )
+            )
+        }
+
+
+    }
+
 
 }

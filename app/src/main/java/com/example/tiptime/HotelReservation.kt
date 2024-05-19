@@ -1,5 +1,6 @@
 import android.app.DatePickerDialog
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -16,9 +17,10 @@ import com.example.tiptime.hotelViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HotelReservation(navController: NavController, hotelViewModel: hotelViewModel, bookingViewModel: BookingViewModel) {
+fun HotelReservation(navController: NavController, hotelViewModel: hotelViewModel, bookingViewModel: BookingViewModel,onNextButton:() -> Unit) {
     val context = LocalContext.current
     var selectedDate by remember { mutableStateOf(Date()) }
     val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
@@ -39,7 +41,9 @@ fun HotelReservation(navController: NavController, hotelViewModel: hotelViewMode
                     100.0
                 )
             }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Reservation")
+                Icon(Icons.Filled.Add, contentDescription = "Add Reservation", modifier = Modifier.clickable{
+                    onNextButton()
+                })
             }
         },
         floatingActionButtonPosition = FabPosition.End,
@@ -71,6 +75,7 @@ fun HotelReservation(navController: NavController, hotelViewModel: hotelViewMode
                     Text("Check Reservations")
                 }
             }
+
         }
     )
 }

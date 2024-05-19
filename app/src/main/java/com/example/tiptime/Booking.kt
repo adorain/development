@@ -80,6 +80,9 @@ fun booking (
     var price by remember { mutableStateOf(0.00) }
     var price1 by remember { mutableStateOf(0.00) }
     var price2 by remember { mutableStateOf(0.00) }
+    var price3 by remember {
+        mutableStateOf(0.00)
+    }
     /*if(userType == UserType.user){
 
     }else if(
@@ -142,12 +145,12 @@ fun booking (
                      */
                     price = checkRoomPrice(hotelId = HotelId, roomType = "Single Room")
                     Text(text = price.toString(), color = textColor , fontSize = 20.sp,modifier = Modifier
-                        .padding(top = 105.dp, start = 185.dp)
+                        .padding(top = 120.dp, start = 175.dp)
                         .clickable {
                             count++
                             totalCount += count
                             if (count == 1) {
-                                onPriceSet(price)
+                                price3 = price
                                 RoomType = "Single Room"
                                 count1 = 0
                                 count2 = 0
@@ -158,6 +161,7 @@ fun booking (
                                 RoomType = ""
                                 textColor = Color.Green
                                 canClick = false
+                                price3 = 0.00
                             }
 
                         })
@@ -174,7 +178,7 @@ fun booking (
             )
             Row {
                 Column {
-                    Text(text = "Single Room", color = Color.Black, fontSize = 20.sp,modifier = Modifier.padding(top = 130.dp))
+                    Text(text = "Single Room", color = Color.Black, fontSize = 20.sp,modifier = Modifier.padding(top = 120.dp))
                 }
                 Column(
 
@@ -189,12 +193,12 @@ fun booking (
                     price1 = checkRoomPrice(hotelId = HotelId, roomType = "Double Room")
                     Text(text = price1.toString()//checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString()
                         , color = textColor1 , fontSize = 20.sp,modifier = Modifier
-                            .padding(top = 205.dp, start = 178.dp)
+                            .padding(top = 210.dp, start = 165.dp)
                             .clickable {
                                 count1++
                                 totalCount += count1
                                 if (count1 == 1) {
-                                    onPriceSet(price1)
+                                    price3 = price1
                                     RoomType = "Double Room"
                                     count = 0
                                     count2 = 0
@@ -204,6 +208,7 @@ fun booking (
                                     count1 = 0
                                     RoomType = ""
                                     textColor1 = Color.Green
+                                    price3 = 0.00
                                     canClick = false
                                 }
 
@@ -213,12 +218,12 @@ fun booking (
                 }
             }
             HorizontalDivider(
-                modifier = Modifier.padding(start = 2.dp , top = 190.dp),
+                modifier = Modifier.padding(start = 2.dp , top = 180.dp),
                 thickness = 3.dp
             )
             Row {
                 Column {
-                    Text(text = "Double Room", color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 230.dp))
+                    Text(text = "Double Room", color = Color.Black , fontSize = 20.sp,modifier = Modifier.padding(top = 210.dp))
                 }
                 Column(
 
@@ -233,12 +238,12 @@ fun booking (
                     price2 = checkRoomPrice(hotelId = HotelId, roomType = "King Room")
                     Text(text = price2 .toString()// Update RoomType
                         , color = textColor2 , fontSize = 20.sp,modifier = Modifier
-                            .padding(top = 10.dp, start = 200.dp)
+                            .padding(top = 30.dp, start = 155.dp)
                             .clickable {
                                 count2++
                                 totalCount += count2
                                 if (count2 == 1) {
-                                    onPriceSet(price2)
+                                    price3 = price2
                                     RoomType = "King Room"
                                     count = 0
                                     count1 = 0
@@ -248,17 +253,18 @@ fun booking (
                                     count2 = 0
                                     RoomType = ""
                                     textColor2 = Color.Green
+                                    price3 = 0.00
                                     canClick = false
                                 }
 
                             })
-                    
+
 
 
                 }
             }
             HorizontalDivider(
-                modifier = Modifier.padding(start = 2.dp , top = 290.dp),
+                modifier = Modifier.padding(start = 2.dp , top = 260.dp),
                 thickness = 3.dp
             )
 
@@ -282,7 +288,10 @@ fun booking (
                     .size(width = 100.dp, height = 50.dp)) {
                 Text(text = "Cancel")
             }
-            OutlinedButton(onClick = {onNextButtonClicked(RoomType)},modifier = Modifier.size(width = 100.dp, height = 50.dp),enabled = canClick) {
+            OutlinedButton(onClick = {
+                onNextButtonClicked(RoomType)
+                onPriceSet(price3)
+                                     },modifier = Modifier.size(width = 100.dp, height = 50.dp),enabled = canClick) {
                 Text(text = "Next")
             }
 
@@ -523,11 +532,10 @@ fun LanscapeLayout(
 
 @Composable
 fun checkRoomPrice(hotelId : Int, roomType:String, roomViewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)):Double{
-    val uiState by roomViewModel.uiState.collectAsState()
     var price by remember {
         mutableStateOf(0.00)
     }
     roomViewModel.checkRoomPrice(hotelId , roomType)
-    price = uiState.price
+    price = roomViewModel.price
     return price
 }

@@ -32,6 +32,7 @@ interface HotelDao {
     @Query("SELECT * FROM hotel")
     fun getAllHotels(): Flow<List<Hotel>>
 
+
     @Query("SELECT * FROM hotel")
     fun insertHotel() : Flow<List<Hotel>>
 
@@ -41,5 +42,6 @@ interface HotelDao {
     @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber,StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
     fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String,
                     newStaffPassword: String)
+
 
 }

@@ -1,13 +1,16 @@
 package com.example.tiptime
 
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
+import com.example.tiptime.Data.Hotel
 import com.example.tiptime.Data.room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -34,6 +38,13 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     val uiBookingState : StateFlow<Booking> = _uiBookingState.asStateFlow()
     var status by mutableStateOf(false)
     var count by mutableStateOf(0)
+    private var allBooking : List<Booking> = listOf()
+    var tempStart by mutableStateOf("")
+    var tempEnd by mutableStateOf("")
+    private var _bookingList = MutableStateFlow<List<Booking>>(emptyList())
+    val bookingList :StateFlow<List<Booking>> get() = _bookingList.asStateFlow()
+    var totalPrice by mutableStateOf(0.00)
+
 
     fun insertNewBooking(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -77,11 +88,11 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     }
 
      */
-    fun calculatePrice() : Double{
-        val diffInMillies = BookedEndDate.time - BookedEndDate.time
+    fun calculatePrice() {
+        val diffInMillies = BookedEndDate.time - BookedStartDate.time
         val diffInDays = (diffInMillies / (1000 * 60 * 60 * 24)).toDouble()
-        val totalPrice = Price * diffInDays
-        return totalPrice
+        Log.d("",diffInDays.toString())
+        totalPrice = Price * diffInDays
     }
 
     fun setPrice() : Double{
@@ -130,10 +141,10 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         _uiBookingState.update {
             uiBookingState ->
             uiBookingState.copy(
-                HotelId = hotelId.toInt()
+                HotelId = hotelId
             )
         }
-        hotel_Id = hotelId.toInt()
+        hotel_Id = hotelId
     }
 
 
@@ -189,6 +200,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
         return roomtype
     }
+
     fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
         viewModelScope.launch (Dispatchers.IO){
             /*if(bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) == 0){
@@ -204,7 +216,13 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
                 }*/
 
 
+
+            if(hotel_Id ==booking.HotelId && roomtype==booking.ROOMTYPE)
+                if((BookedStartDate >= convertDate(tempStart)&& BookedEndDate<= convertDate(tempEnd))|| (BookedEndDate >= convertDate(tempStart) && BookedEndDate <= convertDate(tempEnd))){
+                count++
+            }
         }
+
     }
 
     fun updateStatus():Boolean{
@@ -248,5 +266,34 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         viewModelScope.launch {
             bookingRes.deleteBooking(booking)
         }
+    }
+
+
+    fun AllBooking(){
+        if (allBooking.isEmpty()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                bookingRes.allBookingWithChecking().collect { bookings ->
+                    allBooking = bookings
+                    _bookingList.value = bookings
+                    Log.d("", _bookingList.value.size.toString())
+                }
+            }
+        } else {
+            // If allBooking has already been initialized, update _bookingList directly
+            _bookingList.value = allBooking
+            Log.d("", _bookingList.value.size.toString())
+        }
+
+    }
+
+
+
+
+
+
+
+    fun convertDate(dateString: String): Date {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy",Locale.getDefault())
+        return dateFormat.parse(dateString)
     }
 }

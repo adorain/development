@@ -16,6 +16,9 @@ interface HotelRes {
 
     fun getAllHotel(): Flow<List<Hotel>>
 
+    suspend fun insertNewHotel(hotel: Hotel)
+
+
     /*fun insertNewHotelInfo(hotelName: String, hotelAddress: String, hotelDescription:String): List<Hotel>
     fun insertNewReview(comment: String, rating:Int): List<Hotel>*/
 

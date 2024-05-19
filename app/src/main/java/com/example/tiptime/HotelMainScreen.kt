@@ -19,6 +19,8 @@ import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+
+
 @Preview
 @Composable
 fun HotelMainScreen(
@@ -43,7 +45,7 @@ fun HotelMainScreen(
                 HotelReport(viewModelHotel)
             }
             composable(route = HotelBottomBar.Reservation.route) {
-                HotelReservation(navController, viewModelHotel, viewModel)
+                HotelReservation(navController, viewModelHotel, viewModel, onNextButton = {navController.navigate(screen.booking.name)})
             }
             composable(route = HotelBottomBar.Room.route) {
 //                RoomModify(viewRoomViewModel)

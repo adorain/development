@@ -5,9 +5,10 @@ import java.util.Date
 
 
 interface RoomRes {
-    fun checkRoomPrice(hotelId: Int, roomType: String): Flow<Double?>
+    suspend fun insertRoom(room: room)
+    fun checkRoomPrice(hotelId: Int): Flow<List<room>>
     fun findRoomType(hotelId: Int): String
-    fun getPriceRange(hotelId: Int): String
+    fun getPriceRange(hotelId: Int): Flow<String>
 
 
 }

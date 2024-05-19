@@ -20,11 +20,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.ui.theme.TipTimeTheme
@@ -44,7 +46,11 @@ class MainActivity : ComponentActivity() {
                         //val hotel :List<Hotel> = listOf()
                         ///HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
                         //booking(HotelAddress = "", HotelName = "", HotelId = "")
-                        HotelMainScreen()
+                        //HotelMainScreen()
+                        TravelApp()
+                        //val viewModel : hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
+                        //viewModel.insertNewHotel()
+
                     }
                 }
             }

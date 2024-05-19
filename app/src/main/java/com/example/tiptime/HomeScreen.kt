@@ -1,6 +1,8 @@
 package com.example.tiptime
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.NumberPicker
 import androidx.compose.foundation.Image
@@ -20,6 +22,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,6 +39,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +58,7 @@ import java.util.Date
 
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun HomeScreen(
     //userType: UserType,
@@ -91,7 +97,7 @@ fun HomeScreen(
         mutableStateOf(false)
     }
 
-    val hotelList = remember{ mutableStateListOf<Hotel>() }
+
     val filteredHotelList = remember {
         mutableStateListOf<Hotel>()
     }
@@ -104,6 +110,7 @@ fun HomeScreen(
     var selectedEndDate by remember {
         mutableStateOf("Check out Date")
     }
+    val hotelList by viewModel.bookings.collectAsState(initial = emptyList())
 
     /*if(userType == UserType.user){
 
@@ -111,6 +118,10 @@ fun HomeScreen(
     else if(userType == UserType.staff){}
 
      */
+
+    LaunchedEffect(Unit) {
+        viewModel.getAllHotel()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -141,7 +152,7 @@ fun HomeScreen(
                     label = { Text(text = "Search")}
                 )
                 Icon(
-                    painter = painterResource(R.drawable.money),
+                    painter = painterResource(R.drawable.search_icon),
                     contentDescription =null,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
@@ -232,14 +243,18 @@ fun HomeScreen(
             Text(text = "Clear",)
         }
         Spacer(modifier = Modifier.height(10.dp))
-        LaunchedEffect(Unit) {
-            viewModel.getAllHotel()
-            hotelList.clear()
-            hotelList.addAll(viewModel.hotelList.value)
+
+
+            /*hotelList.clear()
+            hotelList.addAll(viewModel.hotelList)
+            Log.d("HomeScreen", "Fetched hotels: ${viewModel.hotelList.size}")
             allHotelList.clear()
-            allHotelList = hotelList
-        }
-        LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
+            allHotelList.addAll(hotelList)
+
+             */
+
+
+        /*LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
             filteredHotelList.clear()
             //filteredHotelList.addAll(availableHotel)
             filteredHotelList.addAll(
@@ -258,21 +273,26 @@ fun HomeScreen(
 
         }
 
-                        // Display list of hotels
-        allHotelList.forEach { hotel ->
+         */
+        LazyColumn(modifier = Modifier) {
 
-                HotelItem(
-                    hotel = hotel,
-                    onItemClick = {
-                        onSelectedHotel(hotel.HotelId.toString())
-                        onSelectedHotelName(hotel.HotelName)
-                        onSelectedHotelDes(hotel.HotelDesciption)
-                        onSelectedHotelAddress(hotel.HotelAddress)
-                    }
-                )
+            items(viewModel.bookings.value){
+                    hotels -> HotelItem(
+                hotel = hotels,
+                onItemClick = {
+                    onSelectedHotel(hotels.HotelId.toString())
+                    onSelectedHotelName(hotels.HotelName)
+                    onSelectedHotelDes(hotels.HotelDesciption)
+                    onSelectedHotelAddress(hotels.HotelAddress)
+                }
+            )
                 Spacer(modifier = Modifier.height(8.dp))
+            }
+
 
         }
+
+
     }
 
 
@@ -318,8 +338,8 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
     var color by remember {
         mutableStateOf(Color.White)
     }
-    val viewModelhotel: hotelViewModel = viewModel()
-    val viewModelRoom : RoomViewModel = viewModel()
+    val viewModelhotel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
+    val viewModelRoom : RoomViewModel = viewModel(factory = AppViewModelProvider.factory)
     var status by remember{ mutableStateOf("") }
     Row {
         Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
@@ -376,7 +396,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
 
         }
 
-
+        /*
         if(isChangeColor){
             color = Color.Red
             status = "Favorite"
@@ -386,6 +406,8 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             status = ""
             viewModelhotel.updateHotelStatus(hotel.HotelId,"")
         }
+
+         */
     }
 }
 

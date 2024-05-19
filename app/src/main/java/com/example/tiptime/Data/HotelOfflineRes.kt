@@ -25,4 +25,7 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     override fun updateHotelStatus(hotelId: Int, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)
 
     override fun getAllHotel() = hotelDao.getAllHotels()
+
+    override suspend fun insertNewHotel(hotel: Hotel)  = hotelDao.insertHotel(hotel)
+
 }

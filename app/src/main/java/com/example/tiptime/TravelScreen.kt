@@ -82,13 +82,16 @@ fun TravelApp(
 
                     onCancelButtonClicked = { cancelBacktoBookingScreen(navController) },
                     onNextButtonClicked = {
+                        viewModel.AllBooking()
+                        viewModel.calculatePrice()
                         navController.navigate(screen.summary.name)
+
                     },
                     OnBookingStartDateChange ={viewModel.updateBookingStartDate(it)} ,
                     OnBookingEndDateChange = {viewModel.updateBookingEndDate(it)},
                     OnPaxChange ={viewModel.updatePax(it)} ,
-                    HotelId = uiState.HotelId,
-                    Price = viewModel.calculatePrice(),
+                    HotelId = viewModel.hotel_Id,
+                    Price = viewModel.Price,
                     roomType = viewModel.setRoomType(),
                 )
             }
@@ -98,7 +101,7 @@ fun TravelApp(
                     onCancelButtonClicked = { cancelBacktoDetailsScreen(navController) },
                     BookingStartDate = uiState.BookedStartDate,
                     BookingEndDate = uiState.BookedEndDate,
-                    Price = uiState.Price,
+                    Price = viewModel.totalPrice,
                     pax = uiState.Pax,
                     roomType = uiState.ROOMTYPE,
                     HotelId = uiState.HotelId

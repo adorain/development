@@ -15,4 +15,7 @@ interface HotelRes {
     fun updateHotelStatus(hotelId: Int, newStatus: String)
 
     fun getAllHotel(): Flow<List<Hotel>>
+    suspend fun insertNewHotel(hotel: Hotel)
+
+
 }

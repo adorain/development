@@ -9,4 +9,6 @@ class BookingOfflineRes(private val bookingDao: BookingDao):BookingRes {
     override fun getReservationsForDate(date: String): List<Booking> = bookingDao.getBookingsForDate(date)
 
     override fun deleteBooking(booking: Booking) = bookingDao.deleteBooking(booking)
+    override fun allBookingWithChecking() = bookingDao.allBookingWithChecking()
+
 }

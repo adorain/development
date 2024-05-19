@@ -32,4 +32,5 @@ interface HotelDao {
 
     @Query("SELECT * FROM hotel")
     fun getAllHotels(): Flow<List<Hotel>>
+
 }

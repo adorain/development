@@ -2,6 +2,7 @@ package com.example.tiptime
 
 
 import android.content.Context
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -88,7 +89,7 @@ fun bookingDetails(
         mutableStateOf(0)
     }
     var canNextButton by remember { mutableStateOf(false) }
-    //do {
+
 
 
         Column {
@@ -208,14 +209,9 @@ fun bookingDetails(
             Row {
                 Column {
 
-                    Text(text = "Total Price : ", fontSize = 21.sp)
+                    Text(text = "Price : ", fontSize = 21.sp)
                 }
                 Column {
-                    TotalPrice = calculatePrice(
-                        STARTDATE = selectedStartDate,
-                        ENDDATE = selectedEndDate,
-                        PRICE = Price
-                    )
                     Text(text = Price.toString(), fontSize = 21.sp)
                 }
             }
@@ -241,7 +237,6 @@ fun bookingDetails(
                 }
                 OutlinedButton(
                     onClick = {
-                            viewModel.setStatus(HotelId, roomType, parseDate(showStartButtonText), parseDate(showEndButtonText))
                             onNextButtonClicked()
                     }, enabled = canNextButton,
                     modifier = Modifier.size(width = 100.dp, height = 50.dp)
@@ -267,6 +262,11 @@ fun bookingDetails(
         }
 
 
+        if(selectedStartDate.time > selectedEndDate.time){
+            selectedEndDate.time = selectedStartDate.time
+            showEndButtonText = convertDate(selectedEndDate)
+            OnBookingEndDateChange(showEndButtonText)
+        }
 
 
         if (showDialog2) {
@@ -304,69 +304,19 @@ fun bookingDetails(
             canNextButton = true
         }
 
-        /*if (showDialog) {
-        showDatePicker(context = LocalContext.current) { selectedDate ->
-            OnBookingStartDateChange(selectedDate.toString())
-            showDialog = false // Dismiss the dialog after selecting a date
-        }
-    }
 
 
-
-
-    if (showDialog2) {
-        showDatePicker(context = LocalContext.current) { selectedDate ->
-            OnBookingEndDateChange(selectedDate.toString())
-            showDialog2 = false // Dismiss the dialog after selecting a date
-        }
-    }
-
-     */
-        /*
-        if (!checkPaxValidate(pax)) {
-            Toast.makeText(
-                LocalContext.current,
-                "Please select a pax",
-                Toast.LENGTH_LONG
-            ).show()
-
-
-            if (!checkEndDateValidate(selectedStartDate, selectedEndDate)) {
-                Toast.makeText(
-                    LocalContext.current,
-                    "EndDate cannot be earlier than startDate",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-            if (!checkStartDateValidate(selectedStartDate)) {
-                Toast.makeText(
-                    LocalContext.current,
-                    "Please select a date",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-            if(!checkPaxValidate(pax)&&!checkEndDateValidate(selectedStartDate, selectedEndDate)&&!checkStartDateValidate(selectedStartDate)){
-                Toast.makeText(
-                    LocalContext.current,
-                    "Please select fill with correct format",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
-         */
-
-    //}while (!checkPaxValidate(pax)&&!checkEndDateValidate(selectedStartDate, selectedEndDate)&&!checkStartDateValidate(selectedStartDate))
 }
 
-@Composable
+/*@Composable
 fun calculatePrice(STARTDATE: Date, ENDDATE: Date, PRICE: Double): Double {
     val diffInMillies = ENDDATE.time - STARTDATE.time
     val diffInDays = (diffInMillies / (1000 * 60 * 60 * 24)).toDouble()
+    Log.d("",(diffInDays*PRICE).toString())
     return diffInDays * PRICE
 }
+
+ */
 
 @Preview
 @Composable

@@ -12,13 +12,13 @@ interface RoomDao {
     @Insert
     suspend fun addNewRoom(room: room)
 
-    @Query("SELECT price FROM room WHERE hotel_id = :hotelId AND roomType = :roomType LIMIT 1")
-    fun checkRoomPrice(hotelId: Int, roomType: String): Flow<Double?>
+    @Query("SELECT * FROM room WHERE hotel_id = :hotelId")
+    fun checkRoomPrice(hotelId: Int): Flow<List<room>>
 
     @Query("SELECT roomType FROM room WHERE hotel_id = :hotelId LIMIT 1")
     fun findRoomType(hotelId: Int): String
 
     @Query("SELECT MIN(price) || ' - ' || MAX(price) FROM room WHERE hotel_id = :hotelId")
-    fun getPriceRange(hotelId: Int): String
+    fun getPriceRange(hotelId: Int): Flow<String>
 
 }

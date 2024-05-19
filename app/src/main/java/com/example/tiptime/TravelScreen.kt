@@ -124,7 +124,7 @@ fun TravelApp(
             composable(route = screen.payment.name) {
                 PaymentLayout(
                     onClickedButton = {
-                        navController.navigate(screen.detail.name)
+                        navController.navigate(screen.home.name)
                         viewModel.insertNewBooking()
                     }
                 )
@@ -146,8 +146,8 @@ fun TravelApp(
                 )
             }
             composable(route = TravelBottomBar.Settings.route) {
-                UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
-                }
+                //UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
+                //}
             }
 
 

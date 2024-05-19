@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.ui.theme.TipTimeTheme
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Date
@@ -48,11 +49,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     TipTimeTheme {
+                        lateinit var firebaseAuth: FirebaseAuth
                         //val hotel :List<Hotel> = listOf()
                         ///HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
                         //booking(HotelAddress = "", HotelName = "", HotelId = "")
                         //HotelMainScreen()
-                        TravelApp()
+                        UserLoginScreen(context = this, auth = firebaseAuth)
                         //val viewModel : hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
                         //viewModel.insertNewHotel()
 

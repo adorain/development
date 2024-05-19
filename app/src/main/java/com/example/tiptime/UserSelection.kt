@@ -84,8 +84,8 @@ fun UserSelectionContent(context: Context) {
             }
             Spacer(modifier = Modifier.height(60.dp))
             UserSelectionButton("Hotel User") {
-                 val intent = Intent(context, HotelLogin::class.java)
-                context.startActivity(intent)
+                /* val intent = Intent(context, HotelLogin::class.java)
+                context.startActivity(intent)*/
 
             }
 
@@ -118,3 +118,5 @@ fun UserSelectionPreview() {
         UserSelectionContent(context = LocalContext.current)
     }
 }
+
+

@@ -41,17 +41,17 @@ class UserSetting : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    UserSettingContent(onLogout = { navigateToLogout() },
+                    UserSettingContent(onLogout = { /*navigateToLogout() */},
                         onCurrency = { navigateToCurrency() },
                         onAbout = {navigateToAbout()})
                 }
             }
         }
     }
-    private fun navigateToLogout() {
+    /*private fun navigateToLogout() {
         val intent = Intent(this, Logout::class.java)
         startActivity(intent)
-    }
+    }*/
 
     private fun navigateToCurrency() {
         //val intent = Intent(this, CurrencyConverter::class.java)
@@ -68,7 +68,7 @@ class UserSetting : ComponentActivity() {
 fun UserSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
-    if (showLogoutDialog) {
+    /*if (showLogoutDialog) {
         LogoutContent(
             onLogout = {
                 showLogoutDialog = false
@@ -76,7 +76,7 @@ fun UserSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
             },
             onCancel = { showLogoutDialog = false }
         )
-    }
+    }*/
 
     if (showAboutDialog){
         AboutContent {

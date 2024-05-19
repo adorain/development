@@ -77,7 +77,8 @@ fun BookingItem(
 
 ) {
     Box(
-        modifier = Modifier.border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+        modifier = Modifier.border(2.dp, Color.Black, RoundedCornerShape(8.dp)
+        )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(

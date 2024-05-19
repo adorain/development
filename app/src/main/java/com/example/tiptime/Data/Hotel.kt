@@ -1,9 +1,6 @@
 package com.example.tiptime.Data
 
-import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "Hotel")
@@ -16,12 +13,18 @@ data class Hotel(
     val UserId : String="",
 
     val HotelName : String="",
+    val StaffName : String="",
 
     val HotelAddress : String="",
-    val HotelDesciption : String = "",
+    val HotelDescription : String = "",
+    val Rating : Int =0,
     val Pax : Int  = 0,
     val Type : String="",
 
-    val Status: String=""
+    val Status: String="",
+
+    val StaffPhoneNumber: String = "",
+    val StaffEmail:String = "",
+    val StaffPassword:String=" "
 
 )

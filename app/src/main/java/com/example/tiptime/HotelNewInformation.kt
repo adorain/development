@@ -216,19 +216,9 @@ fun NewInformationContent(onClickedButton: (hotelName: String, hotelAddress: Str
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
             Text(
-                text = "Hotel",
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(
-                        vertical = 35.dp,
-                        horizontal = 63.dp
-                    )
-            )
-            Text(
-                text = "New",
+                text = "Hotel New",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,

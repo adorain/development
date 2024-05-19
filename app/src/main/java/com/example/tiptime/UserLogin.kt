@@ -1,5 +1,5 @@
 package com.example.tiptime
-/*
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -220,7 +220,7 @@ fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 35.dp, horizontal =63.dp)
+                    modifier = Modifier.padding(vertical = 35.dp, horizontal = 63.dp)
                 )
                 UserLoginTextField(
                     hint = "E-mail Address",
@@ -264,8 +264,8 @@ fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
                             val validCredentials4 = email == "LXL@gmail.com" && password == "XL123"
                             val validCredentials5 = email == "LLW@gmail.com" && password == "LW123"
 
-                            if (validCredentials||validCredentials2||validCredentials3||validCredentials4||validCredentials5) {
-                                // Navigate to home page (replace MainActivity::class.java with your actual home activity)
+                            if (validCredentials || validCredentials2 || validCredentials3 || validCredentials4 || validCredentials5) {
+                                // Navigate to home page
                                 val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
                                 // Finish the current activity to prevent going back to it after login
@@ -283,7 +283,7 @@ fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
-                        val intent = Intent(context, NewHotel::class.java)
+                        val intent = Intent(context, NewUser::class.java)
                         context.startActivity(intent)
                     }
                 ) {
@@ -341,4 +341,3 @@ fun UserLoginPreview() {
 }
 }
 
- */

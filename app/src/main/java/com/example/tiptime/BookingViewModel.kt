@@ -198,10 +198,10 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
             }
 
              */
-            bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate))
+           /* bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate))
                 .collect { statusCount ->
                     count = statusCount
-                }
+                }*/
 
 
         }

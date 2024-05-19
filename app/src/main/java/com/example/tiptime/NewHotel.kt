@@ -1,5 +1,5 @@
 package com.example.tiptime
-/*
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -43,7 +43,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import org.jdom.Text
 
 /*
 class NewHotel : ComponentActivity() {
@@ -230,7 +229,7 @@ fun NewHotelPreview() {
         NewHotelContent()
     }
 }
-
+*/
 class NewHotel : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -266,16 +265,17 @@ class NewHotel : ComponentActivity() {
         }
     }
 
-    private fun createHotel(name: String, phoneNumber: String, email: String, password: String, onError: (String) -> Unit) {
-        if (validateInput(name, phoneNumber, email, password, onError)) {
-            auth.createUserWithEmailAndPassword(email, password)
+    private fun createHotel(hname: String, hphoneNumber: String, hemail: String, hpassword: String, onError: (String) -> Unit) {
+        if (validateInput(hname, hphoneNumber, hemail, hpassword, onError)) {
+            auth.createUserWithEmailAndPassword(hemail, hpassword)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Save user to Firestore
                         val user = hashMapOf(
-                            "name" to name,
-                            "phoneNumber" to phoneNumber,
-                            "email" to email
+                            "password" to hpassword,
+                            "name" to hname,
+                            "phoneNumber" to hphoneNumber,
+                            "email" to hemail
                         )
                         db.collection("users").add(user)
                             .addOnSuccessListener {
@@ -294,21 +294,21 @@ class NewHotel : ComponentActivity() {
         }
     }
 
-    private fun validateInput(name: String, phoneNumber: String, email: String, password: String, onError: (String) -> Unit): Boolean {
+    private fun validateInput(hname: String, hphoneNumber: String, hemail: String, hpassword: String, onError: (String) -> Unit): Boolean {
         return when {
-            name.isBlank() || name.length > 45 -> {
+            hname.isBlank() || hname.length > 45 -> {
                 onError("Invalid name. Please enter a valid name.")
                 false
             }
-            phoneNumber.isBlank() || phoneNumber.length != 12 -> {
+            hphoneNumber.isBlank() || hphoneNumber.length != 12 -> {
                 onError("Invalid phone number. Please enter a valid phone number.")
                 false
             }
-            email.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+            hemail.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(hemail).matches() -> {
                 onError("Invalid email address. Please enter a valid email.")
                 false
             }
-            password.isBlank() || password.length < 6 -> {
+            hpassword.isBlank() || hpassword.length < 6 -> {
                 onError("Password must be at least 6 characters.")
                 false
             }
@@ -332,11 +332,11 @@ fun ErrorDialog2(message: String, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: String, password: String) -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
+fun NewHotelContent(onClickedButton: (hname: String, hphoneNumber: String, hemail: String, hpassword: String) -> Unit) {
+    var hemail by remember { mutableStateOf("") }
+    var hpassword by remember { mutableStateOf("") }
+    var hname by remember { mutableStateOf("") }
+    var hphoneNumber by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -367,8 +367,8 @@ fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: 
             )
 
             TextField(
-                value = name,
-                onValueChange = { name = it },
+                value = hname,
+                onValueChange = { hname = it },
                 label = { Text("Staff Name",
                     color = shadow,
                     fontWeight = FontWeight.Bold,) },
@@ -380,8 +380,8 @@ fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: 
             Spacer(modifier = Modifier.height(20.dp))
 
             TextField(
-                value = phoneNumber,
-                onValueChange = { phoneNumber = it },
+                value = hphoneNumber,
+                onValueChange = { hphoneNumber = it },
                 label = { Text("Phone Number",
                     color = shadow,
                     fontWeight = FontWeight.Bold,) },
@@ -393,8 +393,8 @@ fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: 
             Spacer(modifier = Modifier.height(20.dp))
 
             TextField(
-                value = email,
-                onValueChange = { email = it },
+                value = hemail,
+                onValueChange = { hemail = it },
                 label = { Text("Email",
                     color = shadow,
                     fontWeight = FontWeight.Bold,) },
@@ -406,8 +406,8 @@ fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: 
             Spacer(modifier = Modifier.height(20.dp))
 
             TextField(
-                value = password,
-                onValueChange = { password = it },
+                value = hpassword,
+                onValueChange = { hpassword = it },
                 label = { Text("Password",
                     color = shadow,
                     fontWeight = FontWeight.Bold,) },
@@ -419,7 +419,7 @@ fun NewHotelContent(onClickedButton: (name: String, phoneNumber: String, email: 
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(onClick = {
-                onClickedButton(name, phoneNumber, email, password)
+                onClickedButton(hname, hphoneNumber, hemail, hpassword)
 
             }) {
                 Text(text = "Submit")

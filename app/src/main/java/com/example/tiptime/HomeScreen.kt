@@ -283,7 +283,7 @@ fun HomeScreen(
          */
         LazyColumn(modifier = Modifier) {
 
-            items(viewModel.bookings.value) { hotels ->
+            items(hotelList) { hotels ->
                 HotelItem(
                     hotel = hotels,
                     onItemClick = {

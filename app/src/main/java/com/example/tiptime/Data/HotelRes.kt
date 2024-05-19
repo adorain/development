@@ -20,11 +20,13 @@ interface HotelRes {
     fun insertNewReview(comment: String, rating:Int): List<Hotel>*/
 
     fun updateDescription(hotelId: Int, newDescription: String, newRating: Int)
+
     fun updateStaff(
         newStaffName: String,
         newStaffPhoneNumber: String,
         newStaffEmail: String,
         newStaffPassword: String
     )
+
 
 }

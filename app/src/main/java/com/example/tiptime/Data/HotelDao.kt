@@ -38,5 +38,8 @@ interface HotelDao {
     @Query("UPDATE Hotel SET HotelDescription = :newDescription, Rating = :newRating WHERE HotelId = :hotelId")
     fun updateDescription(hotelId: Int, newDescription: String, newRating: Int)
 
+    @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber,StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
+    fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String,
+                    newStaffPassword: String)
 
 }

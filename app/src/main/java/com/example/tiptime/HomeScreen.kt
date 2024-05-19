@@ -266,7 +266,7 @@ fun HomeScreen(
                     onItemClick = {
                         onSelectedHotel(hotel.HotelId.toString())
                         onSelectedHotelName(hotel.HotelName)
-                        onSelectedHotelDes(hotel.HotelDesciption)
+                        onSelectedHotelDes(hotel.HotelDescription)
                         onSelectedHotelAddress(hotel.HotelAddress)
                     }
                 )
@@ -361,7 +361,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = hotel.HotelDesciption)
+                Text(text = hotel.HotelDescription)
             }
 
             Spacer(modifier = Modifier.height(30.dp))

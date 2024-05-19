@@ -11,14 +11,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -36,7 +41,7 @@ import com.example.tiptime.Data.Hotel
 
 @Composable
 fun favoritelayout(
-    onSelectedHotel:(String)->Unit,
+    onSelectedHotel:(Int)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
@@ -46,20 +51,21 @@ fun favoritelayout(
 
     val hotels = remember { mutableStateListOf<Hotel>() }
     LaunchedEffect(Unit) {
-        viewModel.getFavorite()
+
         hotels.clear()
-        //hotels.addAll(viewModel.hotelList)
+        hotels.addAll(viewModel.favHotel.value)
 
     }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column{
-            hotels.forEach { hotel ->
+        LazyColumn{
+            items(hotels){
+                hotel ->
                 Hotels(
                     hotel = hotel,
                     onItemClick = {
-                        onSelectedHotel(hotel.HotelId.toString())
+                        onSelectedHotel(hotel.HotelId)
                         onSelectedHotelName(hotel.HotelName)
                         onSelectedHotelDes(hotel.HotelDescription)
                         onSelectedHotelAddress(hotel.HotelAddress)
@@ -89,6 +95,21 @@ fun favoritelayout(
 @Composable
 fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
 
+    var isChangeColor by remember { mutableStateOf(false) }
+    var color by remember {
+        mutableStateOf(Color.White)
+    }
+    val viewModelhotel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
+    val viewModelRoom: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)
+    var status by remember { mutableStateOf("") }
+    Row {
+        Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
+            modifier = Modifier.clickable {
+                isChangeColor = true
+                viewModelhotel.markHotelAsFavourite(hotel.HotelId, hotel.Status)
+            }
+        )
+    }
     Row(
 
         modifier = Modifier
@@ -102,7 +123,7 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
                 .height(100.dp)
         ) {
             Image(
-                painterResource(R.drawable.nitro_wallpaper_02_3840x2400) ,
+                painterResource(R.drawable.nitro_wallpaper_02_3840x2400),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
@@ -110,7 +131,7 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
 
         }
 
-        Column{
+        Column {
 
             Row(
                 modifier = Modifier.fillMaxWidth()
@@ -125,20 +146,19 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
                 Text(text = hotel.HotelDescription)
             }
 
-
-
             Spacer(modifier = Modifier.height(30.dp))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.weight(1f)){
-                    Text(text = "Rating:")
-                }
-                Column(modifier = Modifier.weight(1f)){
-                    Text(text = PriceRange)
-                }
+
+            if(isChangeColor){
+                color = Color.Red
+                status = "Favorite"
+                viewModelhotel.markHotelAsFavourite(hotel.HotelId,"Favourite")
+            }else{
+                color = Color.White
+                status = ""
+                viewModelhotel.markHotelAsFavourite(hotel.HotelId,"")
             }
 
         }
-
 
     }
 }

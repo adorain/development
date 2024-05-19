@@ -34,6 +34,8 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     var roomType by mutableStateOf("")
     private var _hotelList = MutableStateFlow<List<Hotel>>(emptyList())
     val bookings: StateFlow<List<Hotel>> get() = _hotelList
+    private var _favHotel = MutableStateFlow<List<Hotel>>(emptyList())
+    val favHotel: StateFlow<List<Hotel>> get() = favHotel
 
 
 
@@ -136,5 +138,17 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
 
     }
 
+
+    fun markHotelAsFavourite(hotelId: Int,Status:String) {
+        viewModelScope.launch {
+            hotelRes.updateHotelStatusToFavourite(hotelId, Status)
+        }
+    }
+
+    fun getFavHotel(){
+        viewModelScope.launch {
+            hotelRes.getFavoriteHotels()
+        }
+    }
 
 }

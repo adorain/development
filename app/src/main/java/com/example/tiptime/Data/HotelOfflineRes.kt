@@ -37,4 +37,5 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
         newStaffPassword: String
     ) =hotelDao.updateStaff(newStaffName, newStaffPhoneNumber, newStaffEmail, newStaffPassword)
 
+    override fun updateHotelStatusToFavourite(hotelId: Int,Status:String) = updateHotelStatus(hotelId,Status)
 }

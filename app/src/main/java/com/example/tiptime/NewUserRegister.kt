@@ -4,13 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.tiptime.Data.NormalUserDao
 import com.example.tiptime.Data.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class NewUserRegister : ViewModel(){
+class NewUserRegister(private val normalUserDao: NormalUserDao) : ViewModel(){
     private val _uiState = MutableStateFlow(User())
     val uiState: StateFlow<User> = _uiState.asStateFlow()
     var userPassword by mutableStateOf("")
@@ -105,7 +108,7 @@ class NewUserRegister : ViewModel(){
         userId = UserId
     }
 
-    fun setUserGender() : Char{
+    /*fun setUserGender() : Char{
         _uiRegisterState.update {
                 uiRegisterState ->
             uiRegisterState.copy(
@@ -117,6 +120,12 @@ class NewUserRegister : ViewModel(){
 
     fun updateUserGender(UserGender : Char){
         userGender = UserGender
+    }*/
+
+    fun updateUser(newUserName: String, newUserPhoneNumber: String, newUserEmail: String, newUserPassword: String) {
+        viewModelScope.launch {
+            normalUserDao.updateUser(newUserName, newUserPhoneNumber, newUserEmail, newUserPassword)
+        }
     }
 
 }

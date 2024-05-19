@@ -11,8 +11,9 @@ abstract class ApplicationInventory: RoomDatabase() {
         abstract fun hotelDao() : HotelDao
         abstract fun bookingDao():BookingDao
         abstract fun roomDao():RoomDao
+    abstract fun normalUserDao(): NormalUserDao
 
-        companion object {
+    companion object {
             @Volatile
             private var Instance: ApplicationInventory? = null
 

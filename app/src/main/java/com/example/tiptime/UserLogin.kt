@@ -32,7 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -216,11 +218,12 @@ fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Hotel Sign-in",
+                    text = "User Sign-in",
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 35.dp, horizontal = 63.dp)
+                    modifier = Modifier.padding(vertical = 35.dp, horizontal = 63.dp),
+                    textAlign = TextAlign.Center
                 )
                 UserLoginTextField(
                     hint = "E-mail Address",
@@ -241,7 +244,8 @@ fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
                         password = it
                         invalidPassword = false
                     },
-                    isError = invalidPassword
+                    isError = invalidPassword ,
+                    visualTransformation = PasswordVisualTransformation()
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 if (showError) {

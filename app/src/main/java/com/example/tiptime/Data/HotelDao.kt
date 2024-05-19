@@ -42,6 +42,9 @@ interface HotelDao {
     @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber,StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
     fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String,
                     newStaffPassword: String)
+    @Query("UPDATE Hotel SET Status = :Status WHERE HotelId = :hotelId")
+    fun updateHotelStatusToFavourite(hotelId: Int,Status:String)
+
 
     @Query("SELECT * FROM hotel WHERE HotelId = :hotelId")
     suspend fun getHotelById(hotelId: Int): Hotel

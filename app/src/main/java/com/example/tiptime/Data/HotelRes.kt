@@ -18,6 +18,7 @@ interface HotelRes {
 
     suspend fun insertNewHotel(hotel: Hotel)
 
+    fun updateHotelStatusToFavourite(hotelId: Int,Status:String)
 
     /*fun insertNewHotelInfo(hotelName: String, hotelAddress: String, hotelDescription:String): List<Hotel>
     fun insertNewReview(comment: String, rating:Int): List<Hotel>*/

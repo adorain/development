@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
                         //val viewModel : hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
                         //viewModel.insertNewHotel()
 
+
                     }
                 }
             }

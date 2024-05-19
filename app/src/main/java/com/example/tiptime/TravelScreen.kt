@@ -23,7 +23,7 @@ import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Date
 
 enum class screen{
-    home , booking , detail, summary,payment
+    home , booking , detail, summary,payment,test
 }
 
 enum class UserType{
@@ -53,7 +53,7 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.home.name,
+            startDestination = screen.test.name,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = screen.home.name) {
@@ -129,6 +129,7 @@ fun TravelApp(
                     }
                 )
             }
+
             composable(route = TravelBottomBar.Favourite.route) {
 
                 favoritelayout(
@@ -148,6 +149,15 @@ fun TravelApp(
                 UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
                 }
             }
+            composable(screen.test.name){
+                buuttoon (
+                    onNextButton = {
+                        viewModelhotel.getAllHotel()
+                        navController.navigate(screen.home.name)
+                    }
+                )
+            }
+
         }
     }
 

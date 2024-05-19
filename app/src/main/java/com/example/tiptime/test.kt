@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
-/*
+
 @Composable
 fun NumberPicker(
     minValue: Int,
@@ -86,7 +86,17 @@ fun NumberPickerExample() {
     }
 }
 
+@Composable
+fun buuttoon(onNextButton:() -> Unit){
+    Column {
+        Button(onClick = {onNextButton()}) {
+            Text("Click me")
+        }
+    }
+
+}
 
 
- */
+
+
 

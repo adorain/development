@@ -124,7 +124,7 @@ fun TravelApp(
             composable(route = screen.payment.name) {
                 PaymentLayout(
                     onClickedButton = {
-                        navController.navigate(screen.detail.name)
+                        navController.navigate(screen.home.name)
                         viewModel.insertNewBooking()
                     }
                 )

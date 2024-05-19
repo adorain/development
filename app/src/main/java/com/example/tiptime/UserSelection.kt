@@ -80,13 +80,13 @@ fun UserSelectionContent(context: Context) {
             UserSelectionButton("Normal User") {
                 val intent = Intent(context, UserLogin::class.java)
                 context.startActivity(intent)
-                /*import from UserLogin.kt */
+
             }
             Spacer(modifier = Modifier.height(60.dp))
             UserSelectionButton("Hotel User") {
                  val intent = Intent(context, HotelLogin::class.java)
                 context.startActivity(intent)
-                /*import from HotelLogin.kt */
+
             }
 
 

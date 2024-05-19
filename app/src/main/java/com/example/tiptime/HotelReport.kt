@@ -57,8 +57,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HotelTopBar(
-    currentScreen: String,
+fun TopAppBar(
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
@@ -67,17 +66,17 @@ fun HotelTopBar(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Icon Row
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Icon(
-                        painter = painterResource(id = R.drawable.jt_logo),
-                        contentDescription = "Icon",
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                }
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Spacer(modifier = Modifier.weight(1f))
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.jt_logo),
+//                        contentDescription = "Icon",
+//                        modifier = Modifier.size(16.dp)
+//                    )
+//                    Spacer(modifier = Modifier.weight(1f))
+//                }
 
                 // Text Row
                 Row(
@@ -85,7 +84,7 @@ fun HotelTopBar(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        text = currentScreen
+                        text = "TravelGo"
                     )
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -98,107 +97,7 @@ fun HotelTopBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HotelBottomBar(
-    currentScreen: String,
-    modifier: Modifier = Modifier,
-    onSectionSelected: (Int) -> Unit
-) {
-    BottomAppBar(
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            // Section 1
-            IconButton(
-                onClick = { onSectionSelected(1) },
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                content = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.home),
-                            contentDescription = "Section 1",
-                            modifier = Modifier.size(42.dp)
-                        )
-                        Text(
-                            text = "Home",
-                            fontSize = 15.sp
-                        )
-                    }
-                }
-            )
 
-            // Section 2
-            IconButton(
-                onClick = { onSectionSelected(2) },
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                content = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.reservation),
-                            contentDescription = "Section 2",
-                            modifier = Modifier.size(42.dp)
-                        )
-                        Text(
-                            text = "Reservation",
-                            fontSize = 15.sp
-                        )
-                    }
-                }
-            )
-
-            // Section 3
-            IconButton(
-                onClick = { onSectionSelected(3) },
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                content = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.room),
-                            contentDescription = "Section 3",
-                            modifier = Modifier.size(42.dp)
-                        )
-                        Text(
-                            text = "Room",
-                            fontSize = 15.sp
-                        )
-                    }
-                }
-            )
-
-            // Section 4
-            IconButton(
-                onClick = { onSectionSelected(4) },
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                content = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.settings),
-                            contentDescription = "Section 4",
-                            modifier = Modifier.size(42.dp)
-                        )
-                        Text(text = "Settings",
-                            fontSize = 15.sp)
-                    }
-                }
-            )
-        }
-    }
-}
-
-
-//hotelDb: HotelDb
 @Composable
 fun HotelReport(viewModelHotel: hotelViewModel) {
     val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
@@ -230,7 +129,7 @@ fun HotelReport(viewModelHotel: hotelViewModel) {
             }
         }
 
-        // Display the statistics table
+
         StatisticsTable(viewModelHotel)
     }
 }
@@ -264,64 +163,7 @@ fun StatisticsTable(viewModelHotel: hotelViewModel) {
 
 data class RoomStatistics(val roomType: String, val earnings: Int, val numOfRooms: Int)
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HotelReservationScreen(navController: NavController, hotelViewModel: hotelViewModel, bookingViewModel: BookingViewModel) {
-    val context = LocalContext.current
-    var selectedDate by remember { mutableStateOf(Date()) }
-    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
 
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Hotel Reservation") })
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                addBooking(
-                    bookingViewModel,
-                    1,
-                    "Standard",
-                    sdf.format(selectedDate),
-                    sdf.format(Date(selectedDate.time + 86400000)),
-                    1,
-                    100.0
-                )
-            }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Reservation")
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        content = { innerPadding ->
-            Column(modifier = Modifier.padding(innerPadding).padding(16.dp)) {
-                Text(text = sdf.format(Date()), modifier = Modifier.padding(bottom = 8.dp))
-
-                Button(
-                    onClick = {
-                        showDatePicker(context, selectedDate) { date ->
-                            selectedDate = date
-                            hotelViewModel.updateStartDate(sdf.format(date))
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Select Date: ${sdf.format(selectedDate)}")
-                }
-
-                Button(
-                    onClick = {
-                        val dateString = sdf.format(selectedDate)
-                        navController.navigate("reservationCheck/$dateString")
-                    },
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text("Check Reservations")
-                }
-            }
-        }
-    )
-}
 
 
 

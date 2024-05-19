@@ -43,5 +43,16 @@ interface HotelDao {
     fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String,
                     newStaffPassword: String)
 
+    @Query("SELECT * FROM hotel WHERE HotelId = :hotelId")
+    suspend fun getHotelById(hotelId: Int): Hotel
+
+    @Query("SELECT * FROM Hotel WHERE HotelId = :hotelId")
+    suspend fun getHotelDetails(hotelId: Int): Hotel
+
+    @Query("SELECT * FROM hotel")
+    fun getAllHotelsBooked(): List<Hotel>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHotels(hotels: List<Hotel>)
 
 }

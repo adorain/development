@@ -3,6 +3,7 @@ package com.example.tiptime.Data
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
@@ -24,5 +25,12 @@ interface BookingDao {
     @Query("SELECT * FROM Booking WHERE Status = 'Confirmed'")
     fun allBookingWithChecking():Flow<List<Booking>>
 
+    @Query("SELECT * FROM Booking")
+    suspend fun getAllBookings(): List<Booking>
 
+    @Query("UPDATE Booking SET Status = :status WHERE Booked_id = :bookingId")
+    suspend fun updateBookingStatus(bookingId: Int, status: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBookings(rooms: List<Booking>)
 }

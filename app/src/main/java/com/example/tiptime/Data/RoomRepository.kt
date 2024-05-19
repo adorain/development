@@ -7,37 +7,6 @@ import kotlinx.coroutines.withContext
 
 class RoomRepository(private val roomDao: RoomDao, private val bookingDao: BookingDao,private val hotelDao: HotelDao) {
 
-    suspend fun insertSampleData() {
-        val sampleHotels = listOf(
-            Hotel(HotelId = 1, HotelName = "Hotel One", HotelAddress = "Address One", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDescription = "Description One"),
-            Hotel(HotelId = 2, HotelName = "Hotel Two", HotelAddress = "Address Two", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDescription = "Description One"),
-            Hotel(HotelId = 3, HotelName = "Hotel Three", HotelAddress = "Address Three", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDescription = "Description One")
-
-        )
-
-        val sampleRooms = listOf(
-            room(roomId = 1, roomType = "Single", hotel_id = 1, Status = "Available", price = 100.0),
-            room(roomId = 2, roomType = "Single", hotel_id = 1, Status = "Occupied", price = 100.0),
-            room(roomId = 9, roomType = "Single", hotel_id = 1, Status = "Under Maintenance", price = 100.0),
-            room(roomId = 3, roomType = "Double", hotel_id = 1, Status = "Under Maintenance", price = 150.0),
-            room(roomId = 4, roomType = "Double", hotel_id = 1, Status = "Available", price = 150.0),
-            room(roomId = 6, roomType = "Double", hotel_id = 1, Status = "Occupied", price = 150.0),
-            room(roomId = 5, roomType = "King", hotel_id = 1, Status = "Available", price = 200.0),
-            room(roomId = 7, roomType = "King", hotel_id = 1, Status = "Occupied", price = 200.0),
-            room(roomId = 8, roomType = "King", hotel_id = 1, Status = "Under Maintenance", price = 200.0)
-        )
-
-        val sampleBookings = listOf(
-            Booking(Booked_id = 1, HotelId = 1, ROOMTYPE = "Single", BookedStartDate = "15/05/2024", BookedEndDate = "20/05/2024", Pax = 2, Status = "Confirmed", Price = 100.0),
-            Booking(Booked_id = 2, HotelId = 2, ROOMTYPE = "Double", BookedStartDate = "16/05/2024", BookedEndDate = "22/05/2024", Pax = 2, Status = "Confirmed", Price = 150.0),
-            Booking(Booked_id = 4, HotelId = 3,ROOMTYPE = "King", BookedStartDate = "23/05/2024", BookedEndDate = "24/05/2024",Pax = 2,Status = "Confirmed",Price = 200.0),
-            Booking(Booked_id = 3, HotelId = 1, ROOMTYPE = "Double", BookedStartDate = "17/05/2024", BookedEndDate = "23/05/2024", Pax = 2, Status = "Confirmed", Price = 150.0),
-        )
-
-        hotelDao.insertHotels(sampleHotels)
-        roomDao.insertRooms(sampleRooms)
-        bookingDao.insertBookings(sampleBookings)
-    }
 
     fun getAllRooms(): Flow<List<room>> = roomDao.getAllRooms()
 

@@ -36,7 +36,8 @@ import com.example.tiptime.Data.Hotel
 
 @Composable
 fun favoritelayout(
-    onSelectedHotel:(String)->Unit,
+    onNextButton:() -> Unit,
+    onSelectedHotel:(Int)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
@@ -59,9 +60,9 @@ fun favoritelayout(
                 Hotels(
                     hotel = hotel,
                     onItemClick = {
-                        onSelectedHotel(hotel.HotelId.toString())
+                        onSelectedHotel(hotel.HotelId)
                         onSelectedHotelName(hotel.HotelName)
-                        onSelectedHotelDes(hotel.HotelDesciption)
+                        onSelectedHotelDes(hotel.HotelDescription)
                         onSelectedHotelAddress(hotel.HotelAddress)
                     },
                     PriceRange = PriceRange
@@ -72,7 +73,7 @@ fun favoritelayout(
         Column(
             modifier = Modifier.padding(20.dp)
         ) {
-            Button(onClick = { /*TODO*/ },modifier = Modifier
+            Button(onClick = { onNextButton() },modifier = Modifier
                 .width(100.dp)
                 .height(100.dp)
                 .border(2.dp, Color.Black),
@@ -122,7 +123,7 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = hotel.HotelDesciption)
+                Text(text = hotel.HotelDescription)
             }
 
 

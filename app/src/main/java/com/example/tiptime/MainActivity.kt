@@ -26,10 +26,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.ui.theme.TipTimeTheme
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Date
 
@@ -37,6 +39,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+
+
         setContent {
             TipTimeTheme {
                 Surface(

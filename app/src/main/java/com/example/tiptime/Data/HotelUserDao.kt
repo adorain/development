@@ -23,7 +23,7 @@ interface HotelUserDao {
 
     @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber,StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
     fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String,
-                          newStaffPassword: String)
+                    newStaffPassword: String)
 
 
 }

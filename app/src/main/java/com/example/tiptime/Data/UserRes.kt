@@ -1,7 +1,5 @@
 package com.example.tiptime.Data
 
 interface UserRes {
-    fun updateUser(newUserName: String, newUserPhoneNumber: String, newUserEmail: String,
-                    newUserPassword: String)
-
+    suspend fun updateUser(newUserName: String, newUserPhoneNumber: String, newUserEmail: String, newUserPassword: String, userId: String)
 }

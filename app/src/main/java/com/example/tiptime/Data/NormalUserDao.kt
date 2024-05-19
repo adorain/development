@@ -8,17 +8,19 @@ import androidx.room.Update
 
 @Dao
 interface NormalUserDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun normalUser(user: User)
 
-    @Query("SELECT * FROM user WHERE UserName = :userName AND UserId = :userId LIMIT 1")
-    fun getUser(userName: String, userId: String):String
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertUser(user: User)
+
+    @Query("SELECT * FROM users WHERE userName = :userName AND userId = :userId LIMIT 1")
+    suspend fun getUser(userName: String, userId: String): User?
 
     @Update
-    suspend fun update(user: User)
+    suspend fun updateUser(user: User)
 
-    @Query("UPDATE User SET UserName = :newUserName, UserPhoneNumber = :newUserPhoneNumber,UserEmail = :newUserEmail, UserPassword = :newUserPassword")
-    fun updateUser(newUserName: String, newUserPhoneNumber: String, newUserEmail: String,
-                          newUserPassword: String)
+    @Query("UPDATE users SET userName = :newUserName, userPhoneNumber = :newUserPhoneNumber, userEmail = :newUserEmail, userPassword = :newUserPassword WHERE userId = :userId")
+    suspend fun updateUserDetails(userId: String, newUserName: String, newUserPhoneNumber: String, newUserEmail: String, newUserPassword: String)
 
 }
+
+

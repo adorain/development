@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tiptime.Data.ApplicationInventory
 import com.example.tiptime.ui.theme.TipTimeTheme
 import com.example.tiptime.ui.theme.shadow
 import com.example.tiptime.ui.theme.white
@@ -233,11 +235,15 @@ fun NewUserPreview() {
 class NewUser : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var viewModel: NewUserRegister
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
         db = FirebaseFirestore.getInstance()
+
+        val normalUserDao = ApplicationInventory.getDatabase(applicationContext).normalUserDao()
+        viewModel = NewUserRegister(normalUserDao)
 
         setContent {
             TipTimeTheme {
@@ -254,18 +260,28 @@ class NewUser : ComponentActivity() {
                         }
                     }
 
-                    NewUserContent(onClickedButton = { uname, uphoneNumber, uemail, upassword ->
-                        createUser(uname, uphoneNumber, uemail, upassword, onError = { message ->
-                            errorMessage = message
-                            showErrorDialog = true
-                        })
-                    })
+                    NewUserContent(
+                        viewModel = viewModel,
+                        onClickedButton = { name, phoneNumber, email, password ->
+                            createUser(name, phoneNumber, email, password, onError = { message ->
+                                errorMessage = message
+                                showErrorDialog = true
+                            }, viewModel)
+                        }
+                    )
                 }
             }
         }
     }
 
-    private fun createUser(uname: String, uphoneNumber: String, uemail: String, upassword: String, onError: (String) -> Unit) {
+    private fun createUser(
+        uname: String,
+        uphoneNumber: String,
+        uemail: String,
+        upassword: String,
+        onError: (String) -> Unit,
+        viewModel: NewUserRegister
+    ) {
         if (validateInput(uname, uphoneNumber, uemail, upassword, onError)) {
             auth.createUserWithEmailAndPassword(uemail, upassword)
                 .addOnCompleteListener(this) { task ->
@@ -279,6 +295,7 @@ class NewUser : ComponentActivity() {
                         )
                         db.collection("users").add(user)
                             .addOnSuccessListener {
+                                viewModel.updateUser(uname, uphoneNumber, uemail, upassword)
                                 // Navigate to home page
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
@@ -332,7 +349,7 @@ fun ErrorDialog(message: String, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun NewUserContent(onClickedButton: (uname: String, uphoneNumber: String, uemail: String, upassword: String) -> Unit) {
+fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, uphoneNumber: String, uemail: String, upassword: String) -> Unit) {
     var uemail by remember { mutableStateOf("") }
     var upassword by remember { mutableStateOf("") }
     var uname by remember { mutableStateOf("") }
@@ -430,8 +447,12 @@ fun NewUserContent(onClickedButton: (uname: String, uphoneNumber: String, uemail
 @Preview(showBackground = true)
 @Composable
 fun NewUserPreview() {
+    val context = LocalContext.current
+    val normalUserDao = ApplicationInventory.getDatabase(context).normalUserDao()
+    val viewModel = NewUserRegister(normalUserDao)
+
     TipTimeTheme {
-        NewUserContent(onClickedButton = { _, _, _, _ -> })
+        NewUserContent(viewModel = viewModel, onClickedButton = { _, _, _, _ -> })
     }
 }
 

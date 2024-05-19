@@ -15,4 +15,16 @@ interface HotelRes {
     fun updateHotelStatus(hotelId: Int, newStatus: String)
 
     fun getAllHotel(): Flow<List<Hotel>>
+
+    /*fun insertNewHotelInfo(hotelName: String, hotelAddress: String, hotelDescription:String): List<Hotel>
+    fun insertNewReview(comment: String, rating:Int): List<Hotel>*/
+
+    fun updateDescription(hotelId: Int, newDescription: String, newRating: Int)
+    fun updateStaff(
+        newStaffName: String,
+        newStaffPhoneNumber: String,
+        newStaffEmail: String,
+        newStaffPassword: String
+    )
+
 }

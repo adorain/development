@@ -12,7 +12,7 @@ object AppViewModelProvider{
         initializer {
             hotelViewModel(
                 inventoryApplication().container.hotelRes,
-                inventoryApplication().container.bookingRes
+                /*inventoryApplication().container.bookingRes*/
             )
         }
 

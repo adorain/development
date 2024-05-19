@@ -86,6 +86,7 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
+    implementation("com.google.android.ads:mediation-test-suite:3.0.0")
 
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
@@ -100,29 +101,28 @@ dependencies {
 
 
 
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
-    implementation ("androidx.room:room-runtime:2.3.0")
-    implementation ("androidx.room:room-compiler:2.3.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+    implementation("androidx.room:room-runtime:2.3.0")
+    implementation("androidx.room:room-compiler:2.3.0")
 
 
-    implementation ("com.google.firebase:firebase-analytics-ktx:20.0.0")
-    implementation ("com.google.firebase:firebase-database-ktx:20.0.0")
-    implementation ( "com.firebaseui:firebase-ui-firestore:8.0.2")
-    implementation ("com.google.firebase:firebase-auth-ktx:20.0.0")
+    implementation("com.google.firebase:firebase-analytics-ktx:20.0.0")
+    implementation("com.google.firebase:firebase-database-ktx:20.0.0")
+    implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
+    implementation("com.google.firebase:firebase-auth-ktx:20.0.0")
 
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
 
 
-
-
-    /*val room_version = "2.6.1"
+    val room_version = "2.6.1"
 
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")*/
+    implementation("androidx.room:room-ktx:$room_version")
+}
 
     // To use Kotlin annotation processing tool (kapt)
 

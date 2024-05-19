@@ -3,7 +3,7 @@ package com.example.tiptime.Data
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
-class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
+abstract class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     override fun getAvailableHotels(
         hotelAddress: String,
         startDate: Date,
@@ -23,4 +23,6 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     override fun updateHotelStatus(hotelId: Int, newStatus: String) = hotelDao.updateHotelStatus(hotelId,newStatus)
 
     override fun getAllHotel() = hotelDao.getAllHotels()
+
+    override fun updateDescription(hotelId: Int, newDescription: String, newRating: Int) = hotelDao.updateDescription(hotelId, newDescription, newRating)
 }

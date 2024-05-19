@@ -1,5 +1,5 @@
 package com.example.tiptime
-/*
+
 import android.content.Context
 import android.widget.RatingBar
 import androidx.activity.ComponentActivity
@@ -360,5 +360,5 @@ fun ReviewPreview() {
     ReviewScreen(context = LocalContext.current)
 }
 
- */
+
 

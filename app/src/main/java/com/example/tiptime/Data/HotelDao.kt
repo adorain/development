@@ -46,4 +46,7 @@ interface HotelDao {
     @Query("SELECT * FROM hotel")
     fun getAllHotelsBooked(): List<Hotel>
 
+    @Query("SELECT * FROM Hotel WHERE HotelId = :hotelId")
+    suspend fun getHotelDetails(hotelId: Int): Hotel
+
 }

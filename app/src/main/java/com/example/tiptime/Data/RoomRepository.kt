@@ -9,9 +9,9 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
 
     suspend fun insertSampleData() {
         val sampleHotels = listOf(
-            Hotel(HotelId = 1, HotelName = "Hotel One", HotelAddress = "Address One", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDesciption = "Description One"),
-            Hotel(HotelId = 2, HotelName = "Hotel Two", HotelAddress = "Address Two", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDesciption = "Description One"),
-            Hotel(HotelId = 3, HotelName = "Hotel Three", HotelAddress = "Address Three", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDesciption = "Description One")
+            Hotel(HotelId = 1, HotelName = "Hotel One", HotelAddress = "Address One", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDescription = "Description One"),
+            Hotel(HotelId = 2, HotelName = "Hotel Two", HotelAddress = "Address Two", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDescription = "Description One"),
+            Hotel(HotelId = 3, HotelName = "Hotel Three", HotelAddress = "Address Three", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDescription = "Description One")
 
         )
 
@@ -62,6 +62,16 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         return hotelDao.getHotelById(hotelId).HotelName
     }
 
+
+
+    suspend fun getHotelDetails(hotelId: Int): Pair<Hotel, List<String>> {
+        val hotel = hotelDao.getHotelDetails(hotelId)
+        val roomTypes = roomDao.getRoomTypes(hotelId)
+        return Pair(hotel, roomTypes)
+    }
+
+
+
     ///Booked
     suspend fun getAllBookings(): List<Booking> {
         return bookingDao.getAllBookings()
@@ -77,13 +87,26 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         }
     }
 
-    suspend fun updateHotelDetails(hotelId: Int,hotelName:String,hotelAddress:String){
-        roomDao.updateHotelDetails(hotelId, hotelName, hotelAddress)
+    suspend fun updateHotelDetails(hotelId: Int,hotelName:String,hotelAddress:String,hotelDescription:String){
+        roomDao.updateHotelDetails(hotelId, hotelName, hotelAddress,hotelDescription)
     }
 
     suspend fun updateRoomType(hotelId: Int, roomType: String){
         roomDao.updateRoomType(hotelId, roomType)
     }
+
+    suspend fun getRoomPrice(hotelId: Int, roomType: String): Double {
+        return withContext(Dispatchers.IO) {
+            roomDao.getRoomPrice(hotelId, roomType)
+        }
+    }
+
+    suspend fun updateRoomPrice(hotelId: Int, roomType: String, newPrice: Double) {
+        withContext(Dispatchers.IO) {
+            roomDao.updateRoomPrice(hotelId, roomType, newPrice)
+        }
+    }
+
 }
 
 data class RoomAvailability(

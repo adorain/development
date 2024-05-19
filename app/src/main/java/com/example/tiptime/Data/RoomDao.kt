@@ -71,9 +71,21 @@ interface RoomDao {
     @Update
     suspend fun updateRoom(room: room)
 
-    @Query("UPDATE hotel SET HotelName = :hotelName, HotelAddress = :hotelAddress WHERE HotelId = :hotelId")
-    suspend fun updateHotelDetails(hotelId: Int, hotelName: String, hotelAddress: String)
+    @Query("UPDATE hotel SET HotelName = :hotelName, HotelAddress = :hotelAddress,HotelDescription =:hotelDescription WHERE HotelId = :hotelId")
+    suspend fun updateHotelDetails(hotelId: Int, hotelName: String, hotelAddress: String,hotelDescription:String)
 
     @Query("UPDATE room SET roomType = :roomType WHERE hotel_Id = :hotelId AND roomType = :roomType")
     suspend fun updateRoomType(hotelId: Int, roomType: String)
+
+    @Query("SELECT price FROM room WHERE hotel_id = :hotelId AND roomType = :roomType LIMIT 1")
+    suspend fun getRoomPrice(hotelId: Int, roomType: String): Double
+
+    @Query("UPDATE room SET price = :newPrice WHERE hotel_id = :hotelId AND roomType = :roomType")
+    suspend fun updateRoomPrice(hotelId: Int, roomType: String, newPrice: Double)
+
+    @Query("SELECT roomType FROM room WHERE hotel_id = :hotelId")
+    suspend fun getRoomTypes(hotelId: Int): List<String>
+
+
+
 }

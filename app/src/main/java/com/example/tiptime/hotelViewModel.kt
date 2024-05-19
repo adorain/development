@@ -54,7 +54,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         _uiState.update {
                 currentState->
             currentState.copy(
-                HotelDesciption = hotelDes
+                HotelDescription = hotelDes
             )
         }
     }

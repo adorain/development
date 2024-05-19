@@ -18,8 +18,8 @@ class RoomOfflineRes (private val roomDao: RoomDao):RoomRes{
         roomDao.getBookingsForDateRange(hotelId, roomType, startDate, endDate)
 
 
-    override suspend fun updateHotelDetails(hotelId: Int, hotelName: String, hotelAddress: String)=
-        roomDao.updateHotelDetails(hotelId,hotelName,hotelAddress)
+    override suspend fun updateHotelDetails(hotelId: Int, hotelName: String, hotelAddress: String,hotelDescription:String)=
+        roomDao.updateHotelDetails(hotelId,hotelName,hotelAddress,hotelDescription)
     override suspend fun updateRoomType(hotelId: Int, roomType: String)=
         roomDao.updateRoomType(hotelId,roomType)
 

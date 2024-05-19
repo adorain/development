@@ -67,7 +67,7 @@ class HotelDb
         value.put(ADDRESS_COL,hotel.HotelAddress)
         value.put(TYPE_COL,hotel.Type)
         value.put(STATUS_COL,hotel.Status)
-        value.put(DESCRIPTION_COL,hotel.HotelDesciption)
+        value.put(DESCRIPTION_COL,hotel.HotelDescription)
         db.close()
     }
 

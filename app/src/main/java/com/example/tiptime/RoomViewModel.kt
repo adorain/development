@@ -29,10 +29,10 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
         return roomRes.checkRoomPrice(hotelId,roomType)
     }
 
-    fun updateHotelDetails(hotelId: Int, hotelName: String, hotelAddress: String, roomTypes: List<String>) {
+    fun updateHotelDetails(hotelId: Int, hotelName: String, hotelAddress: String,hotelDescription:String, roomTypes: List<String>) {
         viewModelScope.launch {
             // Update hotel details
-            roomRes.updateHotelDetails(hotelId, hotelName, hotelAddress)
+            roomRes.updateHotelDetails(hotelId, hotelName, hotelAddress, hotelDescription)
 
             // Update room types
             roomTypes.forEach { roomType ->

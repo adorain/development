@@ -12,7 +12,7 @@ class BookingRepository(private val bookingDao: BookingDao) {
 
     suspend fun insertSampleData() {
         val sampleHotels = listOf(
-            Hotel(HotelId = 1, HotelName = "Hotel One", HotelAddress = "Address One", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDesciption = "Description One", Pax = 2)
+            Hotel(HotelId = 1, HotelName = "Hotel One", HotelAddress = "Address One", Type = "Luxury", Status = "Available", StaffId = "Staff1", UserId = "User1", HotelDescription = "Description One", Pax = 2)
         )
 
         val sampleRooms = listOf(

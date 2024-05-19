@@ -16,15 +16,15 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         )
 
         val sampleRooms = listOf(
-            room(roomId = 1, roomType = "Single", hotel_id = 1, Status = "Available", price = 100.0),
-            room(roomId = 2, roomType = "Single", hotel_id = 1, Status = "Occupied", price = 100.0),
-            room(roomId = 9, roomType = "Single", hotel_id = 1, Status = "Under Maintenance", price = 100.0),
-            room(roomId = 3, roomType = "Double", hotel_id = 1, Status = "Under Maintenance", price = 150.0),
-            room(roomId = 4, roomType = "Double", hotel_id = 1, Status = "Available", price = 150.0),
-            room(roomId = 6, roomType = "Double", hotel_id = 1, Status = "Occupied", price = 150.0),
-            room(roomId = 5, roomType = "King", hotel_id = 1, Status = "Available", price = 200.0),
-            room(roomId = 7, roomType = "King", hotel_id = 1, Status = "Occupied", price = 200.0),
-            room(roomId = 8, roomType = "King", hotel_id = 1, Status = "Under Maintenance", price = 200.0)
+            room(roomId = 101, roomType = "Single", hotel_id = 1, Status = "Available", price = 100.0),
+            room(roomId = 102, roomType = "Single", hotel_id = 1, Status = "Occupied", price = 100.0),
+            room(roomId = 109, roomType = "Single", hotel_id = 1, Status = "Under Maintenance", price = 100.0),
+            room(roomId = 103, roomType = "Double", hotel_id = 1, Status = "Under Maintenance", price = 150.0),
+            room(roomId = 104, roomType = "Double", hotel_id = 1, Status = "Available", price = 150.0),
+            room(roomId = 106, roomType = "Double", hotel_id = 1, Status = "Occupied", price = 150.0),
+            room(roomId = 105, roomType = "King", hotel_id = 1, Status = "Available", price = 200.0),
+            room(roomId = 107, roomType = "King", hotel_id = 1, Status = "Occupied", price = 200.0),
+            room(roomId = 108, roomType = "King", hotel_id = 1, Status = "Under Maintenance", price = 200.0)
         )
 
         val sampleBookings = listOf(
@@ -54,9 +54,10 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         val bookings = roomDao.getBookingsForDateRange(hotelId, roomType, startDate, endDate)
         val underMaintenanceRooms = allRooms.count { it.Status == "Under Maintenance" }
         val occupiedRooms = bookings.count()
-        val availableRooms = allRooms.size - occupiedRooms - underMaintenanceRooms
+        val availableRooms = maxOf(0, allRooms.size - occupiedRooms - underMaintenanceRooms)
         return RoomAvailability(availableRooms, occupiedRooms, underMaintenanceRooms)
     }
+
 
     suspend fun getHotelName(hotelId: Int): String {
         return hotelDao.getHotelById(hotelId).HotelName

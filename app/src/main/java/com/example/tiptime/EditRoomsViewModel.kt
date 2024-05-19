@@ -28,6 +28,9 @@ class EditRoomsViewModel(val repository: RoomRepository) : ViewModel() {
     private val _selectedRoom = MutableStateFlow<room?>(null)
     val selectedRoom: StateFlow<room?> get() = _selectedRoom
 
+    private val _hotelName = MutableStateFlow("")
+    val hotelName: StateFlow<String> get() = _hotelName
+
     var availableRooms by mutableStateOf(0)
     var occupiedRooms by mutableStateOf(0)
     var underMaintenanceRooms by mutableStateOf(0)
@@ -62,29 +65,35 @@ class EditRoomsViewModel(val repository: RoomRepository) : ViewModel() {
         }
     }
 
-    fun selectRoom(roomId: Int) {
-        _selectedRoom.value = _rooms.value.find { it.roomId == roomId }
-    }
 
-    fun updateRoomAvailability(Status: RoomStatus) {
-        when (Status) {
-            RoomStatus.AVAILABLE -> {
-                checkAv = true
-                checkOc = false
-                checkUnMa = false
-            }
-            RoomStatus.OCCUPIED -> {
-                checkAv = false
-                checkOc = true
-                checkUnMa = false
-            }
-            RoomStatus.UNDER_MAINTENANCE -> {
-                checkAv = false
-                checkOc = false
-                checkUnMa = true
-            }
+
+    fun selectRoom(roomId: Int, clearCheckboxes: Boolean = false) {
+        _selectedRoom.value = _rooms.value.find { it.roomId == roomId }
+        if (clearCheckboxes) {
+            clearAllCheckboxes()
         }
     }
+
+    private fun clearAllCheckboxes() {
+        checkAv = false
+        checkOc = false
+        checkUnMa = false
+    }
+
+    fun updateRoomAvailability(Status: RoomStatus, isChecked: Boolean) {
+        when (Status) {
+            RoomStatus.AVAILABLE -> checkAv = isChecked
+            RoomStatus.OCCUPIED -> checkOc = isChecked
+            RoomStatus.UNDER_MAINTENANCE -> checkUnMa = isChecked
+        }
+    }
+
+    fun validateRoomStatus(): Boolean {
+        val statuses = listOf(checkAv, checkOc, checkUnMa)
+        return statuses.count { it } == 1
+    }
+
+
 
     fun updateRoomStatus(room: room) {
         viewModelScope.launch {
@@ -102,5 +111,13 @@ class EditRoomsViewModel(val repository: RoomRepository) : ViewModel() {
     fun updateEndDate(date: Date) {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         selectedEndDate = sdf.format(date)
+    }
+
+    fun fetchHotelName(hotelId: Int) {
+        viewModelScope.launch {
+            _hotelName.value = withContext(Dispatchers.IO) {
+                repository.getHotelName(hotelId)
+            }
+        }
     }
 }

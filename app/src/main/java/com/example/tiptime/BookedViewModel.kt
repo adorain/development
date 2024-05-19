@@ -16,7 +16,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class BookedViewModel(
-    private val roomRepository: RoomRepository
+     val roomRepository: RoomRepository
 ) : ViewModel() {
 
     private val _bookings = MutableStateFlow<List<Pair<Booking, Hotel>>>(emptyList())

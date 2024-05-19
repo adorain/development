@@ -112,6 +112,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
 
+    implementation ("com.google.android.gms:play-services-ads:21.2.0") // Use the latest version
+
 
     val room_version = "2.6.1"
 

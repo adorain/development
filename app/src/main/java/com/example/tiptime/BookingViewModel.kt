@@ -201,6 +201,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         return roomtype
     }
 
+    /*
     fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
         viewModelScope.launch (Dispatchers.IO){
             /*if(bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) == 0){
@@ -224,6 +225,8 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
 
     }
+
+     */
 
     fun updateStatus():Boolean{
         return status

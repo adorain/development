@@ -20,7 +20,7 @@ import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Date
 
 enum class screen{
-    home , booking , detail, summary,payment,test
+    home , booking , detail, summary,payment,test,fav
 }
 
 enum class UserType{
@@ -118,9 +118,19 @@ fun TravelApp(
             composable(screen.test.name){
                 buuttoon (
                     onNextButton = {
-                        viewModelhotel.getAllHotel()
-                        navController.navigate(screen.home.name)
+                        viewModelhotel.getFavHotel()
+                        navController.navigate(screen.fav.name)
                     }
+                )
+            }
+
+            composable(screen.fav.name){
+                favoritelayout(
+                    onSelectedHotel = {},
+                    onSelectedHotelName = {},
+                    onSelectedHotelAddress ={} ,
+                    onSelectedHotelDes = {},
+                    PriceRange =it.toString()
                 )
             }
         }

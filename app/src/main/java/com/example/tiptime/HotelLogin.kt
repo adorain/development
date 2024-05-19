@@ -1,5 +1,5 @@
 package com.example.tiptime
-
+/*
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -348,6 +348,8 @@ fun HotelLoginPreview() {
     }
 }
 
+
+ */
 
 
 

@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
@@ -32,13 +34,24 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     var HotelAddress by mutableStateOf("")
     var HotelDescription by mutableStateOf("")
     var roomType by mutableStateOf("")
-    private var _hotelList = MutableStateFlow<List<Hotel>>(emptyList())
-    val bookings: StateFlow<List<Hotel>> get() = _hotelList
+    var _hotelList = MutableStateFlow<List<Hotel>>(emptyList())
+    val bookings: StateFlow<List<Hotel>> get() = _hotelList.asStateFlow()
     private var _favHotel = MutableStateFlow<List<Hotel>>(emptyList())
-    val favHotel: StateFlow<List<Hotel>> get() = favHotel
+    val favHotel: StateFlow<List<Hotel>> get() = _favHotel
+    var hotelList:List<Hotel> = listOf()
 
 
 
+
+    private val _filteredHotels = MutableLiveData<List<Hotel>>()
+    val filteredHotels: LiveData<List<Hotel>> get() = _filteredHotels
+
+    fun filterHotels(startDate: String?, endDate: String?, pax: Int?, searchText: String?) {
+        viewModelScope.launch {
+            val hotels = hotelRes.filterHotels(startDate, endDate, pax, searchText)
+            _filteredHotels.value = hotels
+        }
+    }
     fun setHomeName(hotelName : String){
         _uiState.update {
                 currentState->
@@ -102,18 +115,21 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
 
     fun getAllHotel(){
         viewModelScope.launch (){
-            hotelRes.getAllHotel().collect { hotels ->
+            hotelRes.getAllHotel().collect() { hotels ->
                 _hotelList.value= hotels
                 Log.d("",_hotelList.value.size.toString())
             }
+
         }
+        hotelList = _hotelList.value
     }
 
     fun getFavorite(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             hotelRes.getFavoriteHotels().collect{hotels->
                 _hotelList.value= hotels
             }
+
         }
     }
 
@@ -121,7 +137,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         viewModelScope.launch {
             hotelRes.insertNewHotel(
                 Hotel(
-                    0,
+                    1,
                     "SD",
                     "UB",
                     "Lillli",
@@ -129,7 +145,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
                     "Description",
                     "",
                     5,
-                    0
+                    0,"","Favourite"
 
                 )
             )
@@ -140,13 +156,14 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
 
 
     fun markHotelAsFavourite(hotelId: Int,Status:String) {
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             hotelRes.updateHotelStatusToFavourite(hotelId, Status)
         }
+
     }
 
     fun getFavHotel(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             hotelRes.getFavoriteHotels()
         }
     }

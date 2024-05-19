@@ -46,7 +46,7 @@ fun favoritelayout(
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
     PriceRange: String,
-    viewModel: hotelViewModel = viewModel()
+    viewModel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
 ){
 
     val hotels = remember { mutableStateListOf<Hotel>() }

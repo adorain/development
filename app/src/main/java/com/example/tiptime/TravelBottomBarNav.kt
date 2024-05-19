@@ -1,8 +1,10 @@
 package com.example.tiptime
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -17,8 +19,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun TravelBottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, TravelBottomBar.Home.route),
-        BottomNavItem("Reservation", Icons.Default.DateRange, TravelBottomBar.Favourite.route),
-        BottomNavItem("Room", Icons.Default.Edit, TravelBottomBar.Booked.route),
+        BottomNavItem("Favourite", Icons.Default.Favorite, TravelBottomBar.Favourite.route),
+        BottomNavItem("Booked", Icons.Default.Check, TravelBottomBar.Booked.route),
         BottomNavItem("Settings", Icons.Default.Settings, TravelBottomBar.Settings.route)
     )
 

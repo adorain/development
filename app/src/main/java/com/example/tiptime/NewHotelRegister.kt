@@ -29,18 +29,18 @@ class NewHotelRegister(private val hotelDao: HotelDao) : ViewModel(){
     private val _uiRegisterState = MutableStateFlow(Hotel())
     val uiRegisterState: StateFlow<Hotel> = _uiRegisterState.asStateFlow()
 
-    fun insertNewU_User(STAFFPassword: String, STAFFEmail: String, STAFFId: String, STAFFName: String,
-                        STAFFPhoneNumber: String, STAFFGender: Char) {
-        val userData = User(
-            STAFFPassword,
-            STAFFPhoneNumber,
-            STAFFEmail,
-            STAFFId,
-            STAFFGender,
-            STAFFName
-        )
-
-    }
+//    fun insertNewU_User(STAFFPassword: String, STAFFEmail: String, STAFFId: String, STAFFName: String,
+//                        STAFFPhoneNumber: String, STAFFGender: Char) {
+//        val userData = User(
+//            STAFFPassword,
+//            STAFFPhoneNumber,
+//            STAFFEmail,
+//            STAFFId,
+//            STAFFGender,
+//            STAFFName
+//        )
+//
+//    }
 
     fun setNewStaffPassword() : String{
         _uiRegisterState.update {

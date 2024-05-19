@@ -9,7 +9,7 @@ class UserOfflineRes(private val userDao: NormalUserDao) : UserRes {
         newUserPassword: String,
         userId: String
     ) {
-        userDao.updateUserDetails(userId, newUserName, newUserPhoneNumber, newUserEmail, newUserPassword)
+        //userDao.updateUserDetails(userId, newUserName, newUserPhoneNumber, newUserEmail, newUserPassword)
     }
 
 }

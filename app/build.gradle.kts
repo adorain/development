@@ -86,6 +86,7 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
+    implementation("com.google.android.ads:mediation-test-suite:3.0.0")
 
 
     testImplementation("junit:junit:4.13.2")
@@ -103,7 +104,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
 
 
-
     implementation("com.google.firebase:firebase-analytics-ktx:20.0.0")
     implementation("com.google.firebase:firebase-database-ktx:20.0.0")
     implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
@@ -119,6 +119,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
 
     // To use Kotlin annotation processing tool (kapt)
 }

@@ -72,7 +72,7 @@ fun LogoutContent(onLogout:()->Unit, onCancel:()->Unit){
                     .width(180.dp)
                     .padding(10.dp)
             ){
-                Text(text="Logout")
+                Text(text="Confirm")
             }
         },
         dismissButton = {

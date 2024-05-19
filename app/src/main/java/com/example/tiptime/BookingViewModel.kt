@@ -200,8 +200,22 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
         return roomtype
     }
-   fun setStatus() {
-        for (booking in allBooking) {
+
+    fun setStatus(hotelId: Int,roomType : String,BookingStartDate:Date,BookingEndDate: Date){
+        viewModelScope.launch (Dispatchers.IO){
+            /*if(bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) == 0){
+                status = true
+            }else if (bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate)) > 0){
+                status = false
+            }
+
+             */
+           /* bookingRes.checkRoomStatus(hotelId, roomType, parseDate(BookingStartDate), parseDate(BookingEndDate))
+                .collect { statusCount ->
+                    count = statusCount
+                }*/
+
+
 
             if(hotel_Id ==booking.HotelId && roomtype==booking.ROOMTYPE)
                 if((BookedStartDate >= convertDate(tempStart)&& BookedEndDate<= convertDate(tempEnd))|| (BookedEndDate >= convertDate(tempStart) && BookedEndDate <= convertDate(tempEnd))){

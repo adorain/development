@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
 
 @Dao
 interface HotelDao {
@@ -32,5 +31,17 @@ interface HotelDao {
 
     @Query("SELECT * FROM hotel")
     fun getAllHotels(): Flow<List<Hotel>>
+
+
+    @Query("SELECT * FROM hotel")
+    fun insertHotel() : Flow<List<Hotel>>
+
+    @Query("UPDATE Hotel SET HotelDescription = :newDescription, Rating = :newRating WHERE HotelId = :hotelId")
+    fun updateDescription(hotelId: Int, newDescription: String, newRating: Int)
+
+    @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber,StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
+    fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String,
+                    newStaffPassword: String)
+
 
 }

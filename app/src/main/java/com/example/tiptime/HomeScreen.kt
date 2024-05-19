@@ -286,6 +286,20 @@ fun HomeScreen(
                     onSelectedHotelAddress(hotels.HotelAddress)
                 }
             )
+                    */
+
+                        // Display list of hotels
+        allHotelList.forEach { hotel ->
+
+                HotelItem(
+                    hotel = hotel,
+                    onItemClick = {
+                        onSelectedHotel(hotel.HotelId.toString())
+                        onSelectedHotelName(hotel.HotelName)
+                        onSelectedHotelDes(hotel.HotelDescription)
+                        onSelectedHotelAddress(hotel.HotelAddress)
+                    }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
@@ -381,7 +395,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = hotel.HotelDesciption)
+                Text(text = hotel.HotelDescription)
             }
 
             Spacer(modifier = Modifier.height(30.dp))

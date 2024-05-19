@@ -30,6 +30,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     var searchtext by mutableStateOf("")
     var HotelName by mutableStateOf("")
     var HotelAddress by mutableStateOf("")
+    var HotelDescription by mutableStateOf("")
     var roomType by mutableStateOf("")
     private var _hotelList = MutableStateFlow<List<Hotel>>(emptyList())
     val bookings: StateFlow<List<Hotel>> get() = _hotelList
@@ -59,7 +60,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         _uiState.update {
                 currentState->
             currentState.copy(
-                HotelDesciption = hotelDes
+                HotelDescription = hotelDes
             )
         }
     }

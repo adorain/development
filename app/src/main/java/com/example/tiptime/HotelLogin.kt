@@ -1,5 +1,5 @@
 package com.example.tiptime
-/*
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tiptime.ui.theme.TipTimeTheme
 import com.google.firebase.auth.FirebaseAuth
+
 
 
 class HotelLogin : ComponentActivity() {
@@ -223,7 +224,7 @@ fun HotelLoginScreen(context: Context, auth: FirebaseAuth) {
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 120.dp, horizontal = 70.dp),
+                    modifier = Modifier.padding(vertical = 35.dp, horizontal = 63.dp),
                     textAlign = TextAlign.Center
                 )
                 HotelLoginTextField(
@@ -347,6 +348,6 @@ fun HotelLoginPreview() {
     }
 }
 
- */
+
 
 

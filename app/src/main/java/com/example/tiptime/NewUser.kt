@@ -31,15 +31,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.tiptime.ui.theme.TipTimeTheme
+import com.example.tiptime.ui.theme.shadow
+import com.example.tiptime.ui.theme.white
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+
 //import org.jdom.Text
+
+
+
 
 /*
 class NewUser : ComponentActivity() {
@@ -250,8 +258,8 @@ class NewUser : ComponentActivity() {
                         }
                     }
 
-                    NewUserContent(onClickedButton = { name, phoneNumber, email, password ->
-                        createUser(name, phoneNumber, email, password, onError = { message ->
+                    NewUserContent(onClickedButton = { uname, uphoneNumber, uemail, upassword ->
+                        createUser(uname, uphoneNumber, uemail, upassword, onError = { message ->
                             errorMessage = message
                             showErrorDialog = true
                         })
@@ -261,16 +269,17 @@ class NewUser : ComponentActivity() {
         }
     }
 
-    private fun createUser(name: String, phoneNumber: String, email: String, password: String, onError: (String) -> Unit) {
-        if (validateInput(name, phoneNumber, email, password, onError)) {
-            auth.createUserWithEmailAndPassword(email, password)
+    private fun createUser(uname: String, uphoneNumber: String, uemail: String, upassword: String, onError: (String) -> Unit) {
+        if (validateInput(uname, uphoneNumber, uemail, upassword, onError)) {
+            auth.createUserWithEmailAndPassword(uemail, upassword)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Save user to Firestore
                         val user = hashMapOf(
-                            "name" to name,
-                            "phoneNumber" to phoneNumber,
-                            "email" to email
+                            "password" to upassword,
+                            "name" to uname,
+                            "phoneNumber" to uphoneNumber,
+                            "email" to uemail
                         )
                         db.collection("users").add(user)
                             .addOnSuccessListener {
@@ -289,21 +298,21 @@ class NewUser : ComponentActivity() {
         }
     }
 
-    private fun validateInput(name: String, phoneNumber: String, email: String, password: String, onError: (String) -> Unit): Boolean {
+    private fun validateInput(uname: String, uphoneNumber: String, uemail: String, upassword: String, onError: (String) -> Unit): Boolean {
         return when {
-            name.isBlank() || name.length > 45 -> {
+            uname.isBlank() || uname.length > 45 -> {
                 onError("Invalid name. Please enter a valid name.")
                 false
             }
-            phoneNumber.isBlank() || phoneNumber.length != 12 -> {
+            uphoneNumber.isBlank() || uphoneNumber.length != 12 -> {
                 onError("Invalid phone number. Please enter a valid phone number.")
                 false
             }
-            email.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+            uemail.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(uemail).matches() -> {
                 onError("Invalid email address. Please enter a valid email.")
                 false
             }
-            password.isBlank() || password.length < 6 -> {
+            upassword.isBlank() || upassword.length < 6 -> {
                 onError("Password must be at least 6 characters.")
                 false
             }
@@ -327,16 +336,15 @@ fun ErrorDialog(message: String, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun NewUserContent(onClickedButton: (name: String, phoneNumber: String, email: String, password: String) -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
+fun NewUserContent(onClickedButton: (uname: String, uphoneNumber: String, uemail: String, upassword: String) -> Unit) {
+    var uemail by remember { mutableStateOf("") }
+    var upassword by remember { mutableStateOf("") }
+    var uname by remember { mutableStateOf("") }
+    var uphoneNumber by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
     ) {
         Image(
             painter = painterResource(id = R.drawable.normal_user_background),
@@ -344,54 +352,81 @@ fun NewUserContent(onClickedButton: (name: String, phoneNumber: String, email: S
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxWidth()
         )
-        TextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("User Name") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
-            value = phoneNumber,
-            onValueChange = { phoneNumber = it },
-            label = { Text("Phone Number") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                "Sign up",
+                color = white,
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
+                modifier = Modifier
+                    .padding(
+                        horizontal = 35.dp,
+                        vertical = 63.dp
+                    )
+            )
 
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+            TextField(
+                value = uname,
+                onValueChange = { uname = it },
+                label = { Text("User Name",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.White),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+            TextField(
+                value = uphoneNumber,
+                onValueChange = { uphoneNumber = it },
+                label = { Text("Phone Number",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.White),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = {
-            onClickedButton(name, phoneNumber, email, password)
-        }) {
-            Text(text = "Submit")
+            TextField(
+                value = uemail,
+                onValueChange = { uemail = it },
+                label = { Text("Email",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextField(
+                value = upassword,
+                onValueChange = { upassword = it },
+                label = { Text("Password",
+                    color = shadow,
+                    fontWeight = FontWeight.Bold,) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(onClick = {
+                onClickedButton(uname, uphoneNumber, uemail, upassword)
+            }) {
+                Text(text = "Submit")
+            }
         }
     }
 }

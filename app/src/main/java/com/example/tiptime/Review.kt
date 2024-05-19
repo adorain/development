@@ -1,8 +1,9 @@
 package com.example.tiptime
-/*
+
 import android.content.Context
 import android.widget.RatingBar
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -22,7 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -229,58 +233,69 @@ fun ReviewScreen(context: Context) {
     if (showFailureDialog) {
         ShowFailureReviewDialog { showFailureDialog = false }
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
     ) {
-        TextField(
-            value = comment,
-            onValueChange = { comment = it },
-            label = { Text("Review (100 words)") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.Black),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        Image(
+            painter = painterResource(id = R.drawable.normal_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxWidth()
         )
-        if (invalidComment) {
-            Text(text = "Please write the comment within 100 words", color = Color.Red)
-        }
-        Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "Rating")
-        val ratingBar = remember { RatingBar(context).apply { numStars = 5; stepSize = 1.0f } }
-
-        AndroidView({ ratingBar }) { view ->
-            view.setOnRatingBarChangeListener { _, ratingValue, _ ->
-                rating = ratingValue
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TextField(
+                value = comment,
+                onValueChange = { comment = it },
+                label = { Text("Review ") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            if (invalidComment) {
+                Text(text = "Please write the comment within 100 words", color = Color.Red)
             }
-        }
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "Rating")
+            val ratingBar = remember { RatingBar(context).apply { numStars = 5; stepSize = 1.0f } }
 
-        Button(onClick = {
-            if (comment.isBlank() || comment.length > 100) {
-                invalidComment = true
-            } else if (rating <= 0) {
-                invalidRating = true
-            } else {
-                saveReviewData(context, comment, rating) { success ->
-                    if (success) {
-                        showSuccessDialog = true
-                    } else {
-                        showFailureDialog = true
-                    }
+            AndroidView({ ratingBar }) { view ->
+                view.setOnRatingBarChangeListener { _, ratingValue, _ ->
+                    rating = ratingValue
                 }
             }
-        }) {
-            Text(text = "Submit")
-        }
 
-        if (showError) {
-            Text(text = "Invalid comment", color = Color.Red)
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(onClick = {
+                if (comment.isBlank() || comment.length > 100) {
+                    invalidComment = true
+                } else if (rating <= 0) {
+                    invalidRating = true
+                } else {
+                    saveReviewData(context, comment, rating) { success ->
+                        if (success) {
+                            showSuccessDialog = true
+                        } else {
+                            showFailureDialog = true
+                        }
+                    }
+                }
+            }) {
+                Text(text = "Submit")
+            }
+
+            if (showError) {
+                Text(text = "Invalid comment", color = Color.Red)
+            }
         }
     }
 }
@@ -345,5 +360,5 @@ fun ReviewPreview() {
     ReviewScreen(context = LocalContext.current)
 }
 
- */
+
 

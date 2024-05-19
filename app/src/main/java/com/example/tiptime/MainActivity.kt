@@ -47,9 +47,9 @@ class MainActivity : ComponentActivity() {
                         ///HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
                         //booking(HotelAddress = "", HotelName = "", HotelId = "")
                         //HotelMainScreen()
-
-                        val viewModel : hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
-                        viewModel.insertNewHotel()
+                        TravelApp()
+                        //val viewModel : hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
+                        //viewModel.insertNewHotel()
 
                     }
                 }

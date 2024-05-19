@@ -17,9 +17,14 @@ sealed class HotelBottomBar(
         title = "Reservation",
         iconRes = R.drawable.reservation
     )
-    object Room : HotelBottomBar(
-        route = "room",
-        title = "Room",
+    object editRoom : HotelBottomBar(
+        route = "editRoom",
+        title = "editRoom",
+        iconRes = R.drawable.room
+    )
+    object editBook : HotelBottomBar(
+        route = "editBook",
+        title = "editBook",
         iconRes = R.drawable.room
     )
     object Settings : HotelBottomBar(

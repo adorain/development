@@ -41,6 +41,9 @@ import com.example.tiptime.Data.Hotel
 
 @Composable
 fun favoritelayout(
+
+    onNextButton:() -> Unit,
+
     onSelectedHotel:(Int)->Unit,
     onSelectedHotelName: (String) -> Unit,
     onSelectedHotelAddress: (String) -> Unit,
@@ -78,7 +81,7 @@ fun favoritelayout(
         Column(
             modifier = Modifier.padding(20.dp)
         ) {
-            Button(onClick = { /*TODO*/ },modifier = Modifier
+            Button(onClick = { onNextButton() },modifier = Modifier
                 .width(100.dp)
                 .height(100.dp)
                 .border(2.dp, Color.Black),

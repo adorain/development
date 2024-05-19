@@ -45,6 +45,7 @@ interface HotelDao {
     @Query("UPDATE Hotel SET Status = :Status WHERE HotelId = :hotelId")
     fun updateHotelStatusToFavourite(hotelId: Int,Status:String)
 
+
     @Query("""
         SELECT * FROM Hotel h
         WHERE (:startDate IS NULL OR h.HotelId IN (
@@ -59,5 +60,18 @@ interface HotelDao {
         pax: Int?,
         searchText: String?
     ): List<Hotel>
+
+    @Query("SELECT * FROM hotel WHERE HotelId = :hotelId")
+    suspend fun getHotelById(hotelId: Int): Hotel
+
+    @Query("SELECT * FROM Hotel WHERE HotelId = :hotelId")
+    suspend fun getHotelDetails(hotelId: Int): Hotel
+
+    @Query("SELECT * FROM hotel")
+    fun getAllHotelsBooked(): List<Hotel>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHotels(hotels: List<Hotel>)
+
 
 }

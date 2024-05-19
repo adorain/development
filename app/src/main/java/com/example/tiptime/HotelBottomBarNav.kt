@@ -18,7 +18,8 @@ fun HotelBottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, HotelBottomBar.Home.route),
         BottomNavItem("Reservation", Icons.Default.DateRange, HotelBottomBar.Reservation.route),
-        BottomNavItem("Room", Icons.Default.Edit, HotelBottomBar.Room.route),
+        BottomNavItem("Room", Icons.Default.Edit, HotelBottomBar.editRoom.route),
+        BottomNavItem("Book", Icons.Default.Edit, HotelBottomBar.editBook.route),
         BottomNavItem("Settings", Icons.Default.Settings, HotelBottomBar.Settings.route)
     )
 

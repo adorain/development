@@ -77,7 +77,7 @@ fun HomeScreen(
  */
     viewModel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
 
-){
+) {
 
 
     var chooseStartDate by remember {
@@ -129,7 +129,7 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
 
-    ){
+    ) {
 
         Column(
             modifier = Modifier
@@ -141,19 +141,19 @@ fun HomeScreen(
             Row(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = {searchQuery=it},
+                    onValueChange = { searchQuery = it },
                     singleLine = true,
                     modifier = Modifier
                         .weight(1f),
 
-                    label = { Text(text = "Search")}
+                    label = { Text(text = "Search") }
                 )
                 Icon(
                     painter = painterResource(R.drawable.search_icon),
-                    contentDescription =null,
+                    contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .height(30.dp)
@@ -165,24 +165,27 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
             Row(
                 modifier = Modifier.fillMaxWidth()
-            ){
+            ) {
 
                 Column(
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Button(onClick = { showDialog =true } , modifier = Modifier
-                        .width(200.dp)
-                        .height(60.dp),
+                    Button(
+                        onClick = { showDialog = true }, modifier = Modifier
+                            .width(200.dp)
+                            .height(60.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
                         Text(text = selectedDate, color = Color.Black)
                     }
                 }
-                Row(modifier = Modifier
-                    .height(53.dp)
-                    .align(Alignment.CenterVertically)) {
+                Row(
+                    modifier = Modifier
+                        .height(53.dp)
+                        .align(Alignment.CenterVertically)
+                ) {
                     Spacer(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -195,18 +198,21 @@ fun HomeScreen(
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Button(onClick = { showDialog2 = true } , modifier = Modifier
-                        .width(200.dp)
-                        .height(60.dp),
+                    Button(
+                        onClick = { showDialog2 = true }, modifier = Modifier
+                            .width(200.dp)
+                            .height(60.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
-                        Text(text = selectedEndDate,color = Color.Black)
+                        Text(text = selectedEndDate, color = Color.Black)
                     }
                 }
-                Row(modifier = Modifier
-                    .height(53.dp)
-                    .align(Alignment.CenterVertically)) {
+                Row(
+                    modifier = Modifier
+                        .height(53.dp)
+                        .align(Alignment.CenterVertically)
+                ) {
                     Spacer(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -219,9 +225,10 @@ fun HomeScreen(
                     modifier = Modifier.weight(0.5f),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Button(onClick = { showNumberPicker = true }, modifier = Modifier
-                        .width(200.dp)
-                        .height(50.dp),
+                    Button(
+                        onClick = { showNumberPicker = true }, modifier = Modifier
+                            .width(200.dp)
+                            .height(50.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                         shape = RoundedCornerShape(0)
                     ) {
@@ -232,20 +239,20 @@ fun HomeScreen(
             }
 
         }
-        Column (
+        Column(
             Modifier
                 .padding(start = 310.dp)
                 .clickable {
                     allHotelList.clear()
                     allHotelList.addAll(hotelList)
                 }
-        ){
+        ) {
             Text(text = "Clear",)
         }
         Spacer(modifier = Modifier.height(10.dp))
 
 
-            /*hotelList.clear()
+        /*hotelList.clear()
             hotelList.addAll(viewModel.hotelList)
             Log.d("HomeScreen", "Fetched hotels: ${viewModel.hotelList.size}")
             allHotelList.clear()
@@ -276,34 +283,33 @@ fun HomeScreen(
          */
         LazyColumn(modifier = Modifier) {
 
-            items(viewModel.bookings.value){
-                    hotels -> HotelItem(
-                hotel = hotels,
-                onItemClick = {
-                    onSelectedHotel(hotels.HotelId.toString())
-                    onSelectedHotelName(hotels.HotelName)
-                    onSelectedHotelDes(hotels.HotelDesciption)
-                    onSelectedHotelAddress(hotels.HotelAddress)
-                }
-            )
-                    */
-
-                        // Display list of hotels
-        allHotelList.forEach { hotel ->
-
+            items(viewModel.bookings.value) { hotels ->
                 HotelItem(
-                    hotel = hotel,
+                    hotel = hotels,
                     onItemClick = {
-                        onSelectedHotel(hotel.HotelId.toString())
-                        onSelectedHotelName(hotel.HotelName)
-                        onSelectedHotelDes(hotel.HotelDescription)
-                        onSelectedHotelAddress(hotel.HotelAddress)
+                        onSelectedHotel(hotels.HotelId.toString())
+                        onSelectedHotelName(hotels.HotelName)
+                        onSelectedHotelDes(hotels.HotelDescription)
+                        onSelectedHotelAddress(hotels.HotelAddress)
                     }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
             }
+        }
 
 
+        // Display list of hotels
+        allHotelList.forEach { hotel ->
+
+            HotelItem(
+                hotel = hotel,
+                onItemClick = {
+                    onSelectedHotel(hotel.HotelId.toString())
+                    onSelectedHotelName(hotel.HotelName)
+                    onSelectedHotelDes(hotel.HotelDescription)
+                    onSelectedHotelAddress(hotel.HotelAddress)
+                }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
         }
 
 
@@ -313,7 +319,10 @@ fun HomeScreen(
 
 
 
-    if(showDialog){
+
+
+
+    if (showDialog) {
         showdatePicker(context = LocalContext.current, onStartDateSelected = {
             chooseStartDate = it
             selectedDate = chooseStartDate.toString()
@@ -323,7 +332,7 @@ fun HomeScreen(
 
 
 
-    if(showDialog2){
+    if (showDialog2) {
         showdatePicker(context = LocalContext.current, onStartDateSelected = {
             chooseEndDate = it
             selectedEndDate = chooseEndDate.toString()
@@ -333,18 +342,19 @@ fun HomeScreen(
 
 
 
-    if(showNumberPicker){
+    if (showNumberPicker) {
         NumberPickerShow(
             minValue = 0,
             maxValue = 20,
             initialValue = 0,
-            onValueChange = {pax = it},
-            OnClose = { showNumberPicker = false},
+            onValueChange = { pax = it },
+            OnClose = { showNumberPicker = false },
         )
 
 
     }
 }
+
 
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
@@ -492,5 +502,6 @@ fun HomePreview(){
         HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
     }
 }
+
 
 

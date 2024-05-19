@@ -125,9 +125,9 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
                     "Lillli",
                     "KL",
                     "Description",
+                    "",
                     5,
-                    "Yap",
-                    " "
+                    0
 
                 )
             )

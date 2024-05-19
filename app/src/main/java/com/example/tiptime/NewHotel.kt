@@ -259,7 +259,6 @@ fun NewHotelPreview() {
     }
 }
 
- */
-=======
+
 
 

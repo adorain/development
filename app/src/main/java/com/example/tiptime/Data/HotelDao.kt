@@ -23,7 +23,7 @@ interface HotelDao {
             "AND booking.BookedEndDate > :startDate)")
     fun getAvailableHotels(hotelAddress: String, startDate: String, endDate: String, pax: Int): List<Hotel>
 
-    @Query("SELECT * FROM hotel WHERE status = 'Favorite'")
+    @Query("SELECT * FROM hotel WHERE status = 'Favourite'")
     fun getFavoriteHotels(): Flow<List<Hotel>>
 
     @Query("UPDATE hotel SET status = :newStatus WHERE HotelId = :hotelId")
@@ -46,6 +46,21 @@ interface HotelDao {
     fun updateHotelStatusToFavourite(hotelId: Int,Status:String)
 
 
+    @Query("""
+        SELECT * FROM Hotel h
+        WHERE (:startDate IS NULL OR h.HotelId IN (
+            SELECT HotelId FROM Booking
+            WHERE (BookedStartDate >= :startDate AND BookedEndDate <= :endDate)))
+        AND (:pax IS NULL OR h.Pax >= :pax)
+        AND (:searchText IS NULL OR h.HotelName LIKE '%' || :searchText || '%')
+    """)
+    fun filterHotels(
+        startDate: String?,
+        endDate: String?,
+        pax: Int?,
+        searchText: String?
+    ): List<Hotel>
+
     @Query("SELECT * FROM hotel WHERE HotelId = :hotelId")
     suspend fun getHotelById(hotelId: Int): Hotel
 
@@ -57,5 +72,6 @@ interface HotelDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHotels(hotels: List<Hotel>)
+
 
 }

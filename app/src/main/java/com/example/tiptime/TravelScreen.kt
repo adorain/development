@@ -152,11 +152,12 @@ fun TravelApp(
             composable(screen.test.name){
                 buuttoon (
                     onNextButton = {
-                        viewModelhotel.getAllHotel()
-                        navController.navigate(screen.home.name)
+                        viewModelhotel.getFavHotel()
+                        navController.navigate(screen.fav.name)
                     }
                 )
             }
+
 
         }
     }

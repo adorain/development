@@ -38,4 +38,11 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
     ) =hotelDao.updateStaff(newStaffName, newStaffPhoneNumber, newStaffEmail, newStaffPassword)
 
     override fun updateHotelStatusToFavourite(hotelId: Int,Status:String) = updateHotelStatus(hotelId,Status)
+
+    override fun filterHotels(
+        startDate: String?,
+        endDate: String?,
+        pax: Int?,
+        searchText: String?
+    ): List<Hotel> = hotelDao.filterHotels(startDate, endDate, pax, searchText)
 }

@@ -93,14 +93,7 @@ fun HomeScreen(
     var showDialog by remember { mutableStateOf(false) }
     var showDialog2 by remember { mutableStateOf(false) }
     var showNumberPicker by remember { mutableStateOf(false) }
-    var filtered by remember {
-        mutableStateOf(false)
-    }
 
-
-    val filteredHotelList = remember {
-        mutableStateListOf<Hotel>()
-    }
     var allHotelList = remember {
         mutableStateListOf<Hotel>()
     }
@@ -111,6 +104,7 @@ fun HomeScreen(
         mutableStateOf("Check out Date")
     }
     val hotelList by viewModel.bookings.collectAsState()
+
 
     /*if(userType == UserType.user){
 
@@ -155,7 +149,11 @@ fun HomeScreen(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .height(30.dp)
-                        .clickable(onClick = { filtered = true })
+                        .clickable(onClick = {
+                            viewModel.filterHotels(selectedDate,selectedEndDate,pax,searchQuery)
+                            allHotelList.clear()
+                            allHotelList.addAll(viewModel.filteredHotels.value ?: emptyList())
+                        })
 
                 )
 
@@ -259,33 +257,17 @@ fun HomeScreen(
              */
 
 
-        /*LaunchedEffect(searchQuery, chooseStartDate, chooseEndDate, pax) {
-            filteredHotelList.clear()
-            //filteredHotelList.addAll(availableHotel)
-            filteredHotelList.addAll(
-                hotelList.filter {
-                    viewModel.searchHotel(
-                        searchQuery,
-                        chooseStartDate,
-                        chooseEndDate,
-                        pax
-                    )
-                }
 
-            )
-            allHotelList.clear()
-            allHotelList = filteredHotelList
 
-        }
 
-         */
         LaunchedEffect(Unit) {
             allHotelList.clear()
             allHotelList.addAll(hotelList)
+            Log.d("",allHotelList.size.toString())
         }
         LazyColumn(modifier = Modifier) {
 
-            items(hotelList) { hotels ->
+            items(allHotelList) { hotels ->
                 HotelItem(
                     hotel = hotels,
                     onItemClick = {
@@ -421,11 +403,9 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
 
         if(isChangeColor){
             color = Color.Red
-            status = "Favorite"
             viewModelhotel.markHotelAsFavourite(hotel.HotelId,"Favourite")
         }else{
             color = Color.White
-            status = ""
             viewModelhotel.markHotelAsFavourite(hotel.HotelId,"")
         }
 

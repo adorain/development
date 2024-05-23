@@ -45,4 +45,6 @@ class HotelOfflineRes(private val hotelDao: HotelDao) : HotelRes {
         pax: Int?,
         searchText: String?
     ): List<Hotel> = hotelDao.filterHotels(startDate, endDate, pax, searchText)
+
+    override fun checkStatus(Status: String, hotelId: Int) = hotelDao.checkStatus(Status, hotelId)
 }

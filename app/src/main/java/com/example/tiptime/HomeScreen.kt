@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,10 +45,12 @@ import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.Data.Hotel
@@ -72,9 +75,11 @@ fun HomeScreen(
     onSelectedEndDate :(String)->Unit,
     onSelectedPax:(String)->Unit,
     hotel : List<Hotel>,
-    availableHotel : List<Hotel>,
 
  */
+    availableHotel : List<Hotel>,
+
+
     viewModel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
 
 ) {
@@ -150,7 +155,7 @@ fun HomeScreen(
                         .align(Alignment.CenterVertically)
                         .height(30.dp)
                         .clickable(onClick = {
-                            viewModel.filterHotels(selectedDate,selectedEndDate,pax,searchQuery)
+                            viewModel.filterHotels(selectedDate, selectedEndDate, pax, searchQuery)
                             allHotelList.clear()
                             allHotelList.addAll(viewModel.filteredHotels.value ?: emptyList())
                         })
@@ -259,15 +264,14 @@ fun HomeScreen(
 
 
 
-
         LaunchedEffect(Unit) {
             allHotelList.clear()
-            allHotelList.addAll(hotelList)
-            Log.d("",allHotelList.size.toString())
+            allHotelList.addAll(availableHotel)
         }
+
         LazyColumn(modifier = Modifier) {
 
-            items(allHotelList) { hotels ->
+            items(availableHotel) { hotels ->
                 HotelItem(
                     hotel = hotels,
                     onItemClick = {
@@ -276,6 +280,7 @@ fun HomeScreen(
                         onSelectedHotelDes(hotels.HotelDescription)
                         onSelectedHotelAddress(hotels.HotelAddress)
                     }
+
                 )
             }
         }
@@ -344,23 +349,14 @@ fun HomeScreen(
 
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
-    var isChangeColor by remember{ mutableStateOf(false) }
-    var color by remember {
-        mutableStateOf(Color.White)
-    }
-    val viewModelhotel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
-    val viewModelRoom : RoomViewModel = viewModel(factory = AppViewModelProvider.factory)
-    var status by remember{ mutableStateOf("") }
-    Row {
-        Image(painter = painterResource(R.drawable.down_icon), contentDescription = null,
-            modifier = Modifier.clickable {
-                isChangeColor = true
+    var isChangeColor by remember { mutableStateOf(0) }
+    val viewModelHotel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
+    val viewModelRoom: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)
+    var status by remember { mutableStateOf("") }
+    var isFavorite by remember { mutableStateOf(hotel.Status == "Favourite") }
+    val color by remember { mutableStateOf(if (isFavorite) Color.Red else Color.White) }
 
-            }
-            )
-    }
     Row(
-
         modifier = Modifier
             .border(3.dp, Color.Black)
             .width(350.dp)
@@ -369,22 +365,21 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .width(160.dp)
-                .height(100.dp)
+                .height(100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painterResource(R.drawable.nitro_wallpaper_02_3840x2400) ,
+                painter = painterResource(R.drawable.muda),
                 contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.size(180.dp)
             )
-
         }
 
-        Column{
-
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+        Column(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = hotel.HotelName)
             }
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -394,24 +389,35 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = hotel.HotelDescription)
             }
-
             Spacer(modifier = Modifier.height(30.dp))
 
-
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = {
+                        isFavorite = !isFavorite
+                        viewModelHotel.markHotelAsFavourite(hotel.HotelId, if (isFavorite) "Favourite" else "")
+                    },
+                    shape = RoundedCornerShape(0),
+                    modifier = Modifier
+                        .size(20.dp)
+                        .border(2.dp, Color.Black, RectangleShape),
+                    colors = ButtonDefaults.buttonColors(containerColor = if (isFavorite) Color.Red else Color.White),
+                ) {
+                    // You can add text or an icon here if needed
+                }
+            }
         }
 
 
-        if(isChangeColor){
-            color = Color.Red
-            viewModelhotel.markHotelAsFavourite(hotel.HotelId,"Favourite")
-        }else{
-            color = Color.White
-            viewModelhotel.markHotelAsFavourite(hotel.HotelId,"")
-        }
+
 
 
     }
 }
+
+
+
+
 
 
 @Composable
@@ -477,7 +483,7 @@ fun NumberPickerShow(
 fun HomePreview(){
     val hotel :List<Hotel> = listOf()
     TipTimeTheme{
-        HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
+        //HomeScreen(onSelectedHotel = {}, onSelectedHotelName = {}, onSelectedHotelAddress ={}, onSelectedHotelDes = {})
     }
 }
 

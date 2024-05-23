@@ -73,5 +73,6 @@ interface HotelDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHotels(hotels: List<Hotel>)
 
-
+    @Query("SELECT COUNT(*) FROM hotel Where Status = :Status AND HotelId = :hotelId")
+    fun checkStatus(Status:String , hotelId :Int):Flow<Int>
 }

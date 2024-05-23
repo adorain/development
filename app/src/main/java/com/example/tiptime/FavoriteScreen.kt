@@ -49,7 +49,8 @@ fun favoritelayout(
     onSelectedHotelAddress: (String) -> Unit,
     onSelectedHotelDes: (String) -> Unit,
     PriceRange: String,
-    viewModel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
+    viewModel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory),
+    favouriteHotel:List<Hotel>
 ){
 
     val hotels = remember { mutableStateListOf<Hotel>() }
@@ -63,7 +64,7 @@ fun favoritelayout(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn{
-            items(hotels){
+            items(favouriteHotel){
                 hotel ->
                 Hotels(
                     hotel = hotel,
@@ -87,7 +88,7 @@ fun favoritelayout(
                 .border(2.dp, Color.Black),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 shape = RoundedCornerShape(0)) {
-                Text(text = "Add", fontSize = 21.sp)
+                Text(text = "Add", fontSize = 21.sp,color = Color.Black)
 
             }
         }
@@ -151,7 +152,7 @@ fun Hotels(hotel: Hotel, onItemClick: () -> Unit,PriceRange:String) {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            if(isChangeColor){
+            if(color == Color.Red){
                 color = Color.Red
                 status = "Favorite"
                 viewModelhotel.markHotelAsFavourite(hotel.HotelId,"Favourite")

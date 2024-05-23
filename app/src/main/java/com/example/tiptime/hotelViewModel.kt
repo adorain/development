@@ -39,8 +39,8 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     private var _favHotel = MutableStateFlow<List<Hotel>>(emptyList())
     val favHotel: StateFlow<List<Hotel>> get() = _favHotel
     var hotelList:List<Hotel> = listOf()
-
-
+    var count by mutableStateOf(0)
+    var status by mutableStateOf(false)
 
 
     private val _filteredHotels = MutableLiveData<List<Hotel>>()
@@ -127,7 +127,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     fun getFavorite(){
         viewModelScope.launch(Dispatchers.IO) {
             hotelRes.getFavoriteHotels().collect{hotels->
-                _hotelList.value= hotels
+                _favHotel.value= hotels
             }
 
         }
@@ -162,9 +162,16 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
 
     }
 
-    fun getFavHotel(){
+
+
+    fun checkFavourite(Status: String,hotelId: Int){
         viewModelScope.launch(Dispatchers.IO) {
-            hotelRes.getFavoriteHotels()
+            hotelRes.checkStatus(Status,hotelId).collect(){
+                count = it
+            }
+            if( count > 0){
+                status = false
+            }
         }
     }
 

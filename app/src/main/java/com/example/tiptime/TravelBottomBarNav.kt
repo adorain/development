@@ -1,5 +1,6 @@
 package com.example.tiptime
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
@@ -30,6 +32,8 @@ fun TravelBottomNavigationBar(navController: NavController) {
     ) {
         val navBackStackEntry = navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry.value?.destination?.route
+        val viewModel : hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
+
         items.forEach { item ->
             NavigationBarItem(
                 icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
@@ -39,6 +43,14 @@ fun TravelBottomNavigationBar(navController: NavController) {
                     navController.navigate(item.route) {
                         popUpTo(navController.graph.startDestinationId)
                         launchSingleTop = true
+
+                        if(item.route == TravelBottomBar.Favourite.route){
+                            viewModel.getFavorite()
+
+                        }
+                        if(item.route == TravelBottomBar.Home.route){
+                            viewModel.getAllHotel()
+                        }
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(

@@ -38,4 +38,5 @@ interface HotelRes {
         searchText: String?
     ): List<Hotel>
 
+    fun checkStatus(Status:String , hotelId :Int):Flow<Int>
 }

@@ -3,6 +3,7 @@ package com.example.tiptime
 
 import Booked
 import TopAppBar
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ enum class UserType{
     user , staff
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
@@ -81,6 +83,7 @@ fun TravelApp(
                     onSelectedHotelAddress = { viewModelhotel.setHomeAddress(it) },
                     onSelectedHotelDes = { viewModelhotel.setHomeDes(it) },
                     onSelectedHotelName = { viewModelhotel.setHomeName(it) },
+                    availableHotel = viewModelhotel.bookings.value
                     /*onSearch = {viewModelhotel.updateSearchText(it)},
                     onSelectedEndDate = {viewModelhotel.updateEndDate(it)},
                     onSelectedPax = {viewModelhotel.updatePax(it)},
@@ -153,7 +156,8 @@ fun TravelApp(
                     onSelectedHotelAddress = { viewModelhotel.setHomeAddress(it) },
                     onSelectedHotelDes = { viewModelhotel.setHomeDes(it) },
                     onSelectedHotelName = { viewModelhotel.setHomeName(it) },
-                    PriceRange = "", onNextButton = { navController.navigate(screen.home.name) }
+                    PriceRange = "", onNextButton = { navController.navigate(screen.home.name) },
+                    favouriteHotel = viewModelhotel.favHotel.value
                 )
             }
             composable(route = TravelBottomBar.Booked.route) {
@@ -165,12 +169,7 @@ fun TravelApp(
                 //UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
                 //}
             }
-            composable(route  = screen.test.name){
-                buuttoon {
-                    viewModelhotel.getAllHotel()
-                    navController.navigate(screen.home.name)
-                }
-            }
+
 
         }
     }

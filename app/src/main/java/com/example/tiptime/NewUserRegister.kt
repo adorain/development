@@ -16,3 +16,4 @@ class NewUserRegister(private val normalUserDao: NormalUserDao) : ViewModel() {
     }
 }
 
+

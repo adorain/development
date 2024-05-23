@@ -16,11 +16,13 @@
 package com.example.tiptime
 
 import HotelReservation
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -36,6 +38,7 @@ import java.text.NumberFormat
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -53,8 +56,11 @@ class MainActivity : ComponentActivity() {
                         //booking(HotelAddress = "", HotelName = "", HotelId = "")
                         //HotelMainScreen()
                         TravelApp()
+                        //NewUserPreview()
                         //val viewModel : hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
                         //viewModel.insertNewHotel()
+                        //val viewModel : RoomViewModel = viewModel(factory = AppViewModelProvider.factory)
+                        //viewModel.addNewRoom()
 
 
                     }

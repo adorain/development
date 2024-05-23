@@ -1,5 +1,5 @@
 package com.example.tiptime
-
+/*
 import android.content.Context
 import android.widget.RatingBar
 import androidx.activity.ComponentActivity
@@ -37,7 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 
-/*
+
 class Review : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -216,7 +216,7 @@ fun NumberField(
 fun ReviewPreview() {
     ReviewScreen(context = LocalContext.current)
 }
-*/
+
 @Composable
 fun ReviewScreen(context: Context) {
     var comment by remember { mutableStateOf("") }
@@ -360,5 +360,7 @@ fun ReviewPreview() {
     ReviewScreen(context = LocalContext.current)
 }
 
+
+ */
 
 

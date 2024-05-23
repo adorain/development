@@ -1,5 +1,5 @@
 package com.example.tiptime
-/*
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -50,11 +50,11 @@ class HotelLogin : ComponentActivity() {
 
         setContent {
 
-            HotelLoginScreen(context = this, auth = firebaseAuth)
+            HotelLoginScreen(context = this, /*auth = firebaseAuth*/)
         }
     }
 }
-/*
+
 @Composable
 fun HotelLoginScreen(context: Context) {
     var email by remember { mutableStateOf("") }
@@ -67,17 +67,19 @@ fun HotelLoginScreen(context: Context) {
         modifier = Modifier.fillMaxSize(),
         color = Color.White
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.hotel_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.hotel_user_background),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxWidth()
-            )
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 30.dp),
@@ -89,7 +91,7 @@ fun HotelLoginScreen(context: Context) {
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 120.dp,horizontal = 70.dp)
+                    modifier = Modifier.padding(vertical = 120.dp, horizontal =70.dp)
                 )
                 HotelLoginTextField(
                     hint = "E-mail Address",
@@ -129,8 +131,12 @@ fun HotelLoginScreen(context: Context) {
                         } else {
                             // Placeholder logic for demonstration purposes
                             val validCredentials = email == "JT@gmail.com" && password == "JT123"
+                            val validCredentials2 = email == "LHY@gmail.com" && password == "HY123"
+                            val validCredentials3 = email == "WKC@gmail.com" && password == "KC123"
+                            val validCredentials4 = email == "LXL@gmail.com" && password == "XL123"
+                            val validCredentials5 = email == "LLW@gmail.com" && password == "LW123"
 
-                            if (validCredentials) {
+                            if (validCredentials||validCredentials2||validCredentials3||validCredentials4||validCredentials5) {
                                 // Navigate to home page (replace MainActivity::class.java with your actual home activity)
                                 val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
@@ -187,8 +193,10 @@ fun HotelLoginTextField(
 fun HotelLoginPreview() {
     HotelLoginScreen(context = LocalContext.current)
 }
-*/
 
+
+
+/*
 @Composable
 fun HotelLoginScreen(context: Context, auth: FirebaseAuth) {
     var email by remember { mutableStateOf("") }
@@ -202,17 +210,19 @@ fun HotelLoginScreen(context: Context, auth: FirebaseAuth) {
         modifier = Modifier.fillMaxSize(),
         color = Color.White
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.hotel_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.hotel_user_background),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxWidth()
-            )
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 30.dp),
@@ -224,8 +234,7 @@ fun HotelLoginScreen(context: Context, auth: FirebaseAuth) {
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 35.dp, horizontal = 63.dp),
-                    textAlign = TextAlign.Center
+                    modifier = Modifier.padding(vertical = 120.dp, horizontal =70.dp)
                 )
                 HotelLoginTextField(
                     hint = "E-mail Address",
@@ -347,9 +356,4 @@ fun HotelLoginPreview() {
         HotelLoginScreen(context = LocalContext.current, auth = FirebaseAuth.getInstance())
     }
 }
-
-
- */
-
-
-
+*/

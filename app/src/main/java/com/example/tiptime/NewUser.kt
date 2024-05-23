@@ -55,7 +55,7 @@ class NewUser : ComponentActivity() {
                         }
                     }
 
-                    NewUserContent(
+                    /*NewUserContent(
                         viewModel = viewModel,
                         onClickedButton = { name, phoneNumber, email, password ->
                             createUser(name, phoneNumber, email, password, onError = { message ->
@@ -63,7 +63,7 @@ class NewUser : ComponentActivity() {
                                 showErrorDialog = true
                             })
                         }
-                    )
+                    )*/
                 }
             }
         }
@@ -143,7 +143,14 @@ fun ErrorDialog(message: String, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, uphoneNumber: String, uemail: String, upassword: String) -> Unit) {
+fun NewUserContent(
+    viewModel: NewUserRegister,
+    onClickedButton: () -> Unit,
+    onSetName:(String) -> Unit,
+    onSetNumber:(String)-> Unit,
+    onSetEmail:(String)-> Unit,
+    onSetPassword:(String) -> Unit
+) {
     var uemail by remember { mutableStateOf("") }
     var upassword by remember { mutableStateOf("") }
     var uname by remember { mutableStateOf("") }
@@ -167,7 +174,7 @@ fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, 
         ) {
             Text(
                 "Sign up",
-                color = Color.Black,
+                color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 40.sp,
                 modifier = Modifier
@@ -179,7 +186,7 @@ fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, 
 
             TextField(
                 value = uname,
-                onValueChange = { uname = it },
+                onValueChange = { onSetName(uname) },
                 label = { Text("User Name",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -192,7 +199,7 @@ fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, 
 
             TextField(
                 value = uphoneNumber,
-                onValueChange = { uphoneNumber = it },
+                onValueChange = { onSetNumber(uphoneNumber) },
                 label = { Text("Phone Number",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -205,7 +212,7 @@ fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, 
 
             TextField(
                 value = uemail,
-                onValueChange = { uemail = it },
+                onValueChange = { onSetEmail(uemail) },
                 label = { Text("Email",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -218,7 +225,7 @@ fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, 
 
             TextField(
                 value = upassword,
-                onValueChange = { upassword = it },
+                onValueChange = { onSetPassword(upassword) },
                 label = { Text("Password",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -231,7 +238,7 @@ fun NewUserContent(viewModel: NewUserRegister, onClickedButton: (uname: String, 
 
             Button(
                 onClick = {
-                    onClickedButton(uname, uphoneNumber, uemail, upassword)
+                    onClickedButton()
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -247,8 +254,6 @@ fun NewUserPreview() {
     TipTimeTheme {
         val context = LocalContext.current
         val normalUserDao = ApplicationInventory.getDatabase(context).normalUserDao()
-        NewUserContent(viewModel = NewUserRegister(normalUserDao), onClickedButton = { _, _, _, _ -> })
+        //NewUserContent(viewModel = NewUserRegister(normalUserDao), onClickedButton = { _, _, _, _ -> })
     }
 }
-
-

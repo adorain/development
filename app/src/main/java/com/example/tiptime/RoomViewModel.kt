@@ -68,18 +68,19 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
     }
 
 
-//    fun addNewRoom(){
-//        viewModelScope.launch (Dispatchers.IO){
-//            roomRes.insertRoom(
-//                room(
-//                    "King Room",
-//                    0,
-//                    20.00,
-//                    "Available"
-//                )
-//            )
-//        }
-//    }
+ fun addNewRoom(){
+        viewModelScope.launch (Dispatchers.IO){
+            roomRes.insertRoom(
+                room(
+                    "Double Room",
+                    0,
+                    0,
+                    20.00,
+                    "Available"
+                )
+            )
+        }
+  }
 
 
 }

@@ -48,12 +48,12 @@ class UserLogin : ComponentActivity() {
 
         setContent {
 
-            UserLoginScreen(context = this, auth = firebaseAuth)
+            UserLoginScreen(context = this, /*auth = firebaseAuth*/)
         }
     }
 }
 
-/*
+
 @Composable
 fun UserLoginScreen(context: Context) {
     var email by remember { mutableStateOf("") }
@@ -66,17 +66,19 @@ fun UserLoginScreen(context: Context) {
         modifier = Modifier.fillMaxSize(),
         color = Color.White
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.normal_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.hotel_user_background),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxWidth()
-            )
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 30.dp),
@@ -84,7 +86,7 @@ fun UserLoginScreen(context: Context) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Hotel Sign-in",
+                    text = "User Sign-in",
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -128,8 +130,12 @@ fun UserLoginScreen(context: Context) {
                         } else {
                             // Placeholder logic for demonstration purposes
                             val validCredentials = email == "JT@gmail.com" && password == "JT123"
+                            val validCredentials2 = email == "LHY@gmail.com" && password == "HY123"
+                            val validCredentials3 = email == "WKC@gmail.com" && password == "KC123"
+                            val validCredentials4 = email == "LXL@gmail.com" && password == "XL123"
+                            val validCredentials5 = email == "LLW@gmail.com" && password == "LW123"
 
-                            if (validCredentials) {
+                            if (validCredentials||validCredentials2||validCredentials3||validCredentials4||validCredentials5) {
                                 // Navigate to home page (replace MainActivity::class.java with your actual home activity)
                                 val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
@@ -186,7 +192,9 @@ fun UserLoginTextField(
 fun UserLoginPreview() {
     UserLoginScreen(context = LocalContext.current)
 }
-*/
+
+
+/*
 @Composable
 fun UserLoginScreen(context: Context, auth: FirebaseAuth) {
     var email by remember { mutableStateOf("") }
@@ -344,4 +352,4 @@ fun UserLoginPreview() {
     UserLoginScreen(context = LocalContext.current, auth = FirebaseAuth.getInstance())
 }
 }
-
+*/

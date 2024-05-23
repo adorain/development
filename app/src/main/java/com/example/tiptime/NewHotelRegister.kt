@@ -137,3 +137,5 @@ class NewHotelRegister(private val hotelDao: HotelDao) : ViewModel(){
     }
 
 }
+
+

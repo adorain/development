@@ -35,7 +35,7 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     var HotelDescription by mutableStateOf("")
     var roomType by mutableStateOf("")
     var _hotelList = MutableStateFlow<List<Hotel>>(emptyList())
-    val bookings: StateFlow<List<Hotel>> get() = _hotelList.asStateFlow()
+    val bookings: StateFlow<List<Hotel>> get() = _hotelList
     private var _favHotel = MutableStateFlow<List<Hotel>>(emptyList())
     val favHotel: StateFlow<List<Hotel>> get() = _favHotel
     var hotelList:List<Hotel> = listOf()

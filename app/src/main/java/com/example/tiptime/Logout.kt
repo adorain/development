@@ -1,5 +1,5 @@
 package com.example.tiptime
-
+/*
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -173,3 +173,5 @@ fun LogoutPreview() {
         LogoutContent(onLogout={},onCancel={})
     }
 }
+
+ */

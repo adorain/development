@@ -19,11 +19,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.tiptime.Data.ApplicationInventory
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Date
 
 enum class screen{
-    home , booking , detail, summary,payment,test
+    signUp,home , booking , detail, summary,payment,test
 }
 
 enum class UserType{
@@ -53,13 +54,28 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.test.name,
+            startDestination = screen.signUp.name,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(route = screen.signUp.name){
+                val normalUserDao = ApplicationInventory.getDatabase(LocalContext.current).normalUserDao()
+                NewUserContent(viewModel = NewUserRegister(normalUserDao = normalUserDao),
+                    onSetEmail = {it},
+                    onSetName = {it},
+                    onSetNumber = {it},
+                    onSetPassword = {it},
+                    onClickedButton = {
+                        navController.navigate(screen.home.name)
+                        viewModelhotel.getAllHotel()
+
+                    }
+
+                )
+            }
             composable(route = screen.home.name) {
                 HomeScreen(
                     onSelectedHotel = {
-                        viewModel.setHotelId(it.toInt())
+                        viewModel.setHotelId(it)
                         navController.navigate(screen.booking.name)
                     },
                     onSelectedHotelAddress = { viewModelhotel.setHomeAddress(it) },
@@ -146,10 +162,15 @@ fun TravelApp(
                 )
             }
             composable(route = TravelBottomBar.Settings.route) {
-                UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
+                //UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
+                //}
+            }
+            composable(route  = screen.test.name){
+                buuttoon {
+                    viewModelhotel.getAllHotel()
+                    navController.navigate(screen.home.name)
                 }
             }
-
 
         }
     }

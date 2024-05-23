@@ -2,6 +2,7 @@ package com.example.tiptime.Data
 
 class UserOfflineRes(private val userDao: NormalUserDao) : UserRes {
 
+
     override suspend fun updateUser(
         newUserName: String,
         newUserPhoneNumber: String,
@@ -12,6 +13,9 @@ class UserOfflineRes(private val userDao: NormalUserDao) : UserRes {
         //userDao.updateUserDetails(userId, newUserName, newUserPhoneNumber, newUserEmail, newUserPassword)
     }
 
+
 }
+
+
 
 

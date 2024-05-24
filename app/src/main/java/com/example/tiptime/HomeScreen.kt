@@ -158,12 +158,15 @@ fun HomeScreen(
                             viewModel.filterHotels(selectedDate, selectedEndDate, pax, searchQuery)
                             allHotelList.clear()
                             allHotelList.addAll(viewModel.filteredHotels.value ?: emptyList())
+
                         })
 
                 )
 
             }
+
             Spacer(modifier = Modifier.height(10.dp))
+            /*
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -239,13 +242,17 @@ fun HomeScreen(
 
             }
 
+             */
+
         }
         Column(
             Modifier
                 .padding(start = 310.dp)
                 .clickable {
                     allHotelList.clear()
-                    allHotelList.addAll(hotelList)
+                    allHotelList.addAll(availableHotel)
+                    searchQuery = ""
+
                 }
         ) {
             Text(text = "Clear",)
@@ -264,14 +271,14 @@ fun HomeScreen(
 
 
 
+
         LaunchedEffect(Unit) {
             allHotelList.clear()
             allHotelList.addAll(availableHotel)
         }
-
         LazyColumn(modifier = Modifier) {
 
-            items(availableHotel) { hotels ->
+            items(allHotelList) { hotels ->
                 HotelItem(
                     hotel = hotels,
                     onItemClick = {
@@ -349,12 +356,9 @@ fun HomeScreen(
 
 @Composable
 fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
-    var isChangeColor by remember { mutableStateOf(0) }
     val viewModelHotel: hotelViewModel = viewModel(factory = AppViewModelProvider.factory)
-    val viewModelRoom: RoomViewModel = viewModel(factory = AppViewModelProvider.factory)
-    var status by remember { mutableStateOf("") }
     var isFavorite by remember { mutableStateOf(hotel.Status == "Favourite") }
-    val color by remember { mutableStateOf(if (isFavorite) Color.Red else Color.White) }
+
 
     Row(
         modifier = Modifier
@@ -396,6 +400,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
                     onClick = {
                         isFavorite = !isFavorite
                         viewModelHotel.markHotelAsFavourite(hotel.HotelId, if (isFavorite) "Favourite" else "")
+                        viewModelHotel.updateStatus(hotel.HotelId, if (isFavorite) "Favourite" else "")
                     },
                     shape = RoundedCornerShape(0),
                     modifier = Modifier
@@ -403,15 +408,10 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
                         .border(2.dp, Color.Black, RectangleShape),
                     colors = ButtonDefaults.buttonColors(containerColor = if (isFavorite) Color.Red else Color.White),
                 ) {
-                    // You can add text or an icon here if needed
+
                 }
             }
         }
-
-
-
-
-
     }
 }
 

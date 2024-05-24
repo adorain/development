@@ -72,10 +72,10 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
         viewModelScope.launch (Dispatchers.IO){
             roomRes.insertRoom(
                 room(
+                    1,
                     "Double Room",
                     0,
-                    0,
-                    20.00,
+                    10.00,
                     "Available"
                 )
             )

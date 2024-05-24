@@ -46,10 +46,15 @@ fun TravelApp(
 
     Scaffold(
         topBar = {
-            TopAppBar()
+            if (navController.currentBackStackEntry?.destination?.route !in listOf(screen.booking.name, screen.detail.name,screen.summary.name,screen.payment.name)) {
+                TopAppBar()
+            }
         },
         bottomBar = {
-            TravelBottomNavigationBar(navController = navController)
+            if (navController.currentBackStackEntry?.destination?.route !in listOf(screen.booking.name, screen.detail.name,screen.summary.name,screen.payment.name)) {
+                TravelBottomNavigationBar(navController = navController)
+            }
+
         }
     ) { innerPadding ->
         val uiState by viewModel.uiBookingState.collectAsState()
@@ -157,7 +162,7 @@ fun TravelApp(
                     onSelectedHotelDes = { viewModelhotel.setHomeDes(it) },
                     onSelectedHotelName = { viewModelhotel.setHomeName(it) },
                     PriceRange = "", onNextButton = { navController.navigate(screen.home.name) },
-                    favouriteHotel = viewModelhotel.favHotel.value
+                    favouriteHotel = viewModelhotel.Fav
                 )
             }
             composable(route = TravelBottomBar.Booked.route) {

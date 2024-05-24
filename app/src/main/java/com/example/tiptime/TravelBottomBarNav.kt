@@ -46,7 +46,6 @@ fun TravelBottomNavigationBar(navController: NavController) {
 
                         if(item.route == TravelBottomBar.Favourite.route){
                             viewModel.getFavorite()
-
                         }
                         if(item.route == TravelBottomBar.Home.route){
                             viewModel.getAllHotel()

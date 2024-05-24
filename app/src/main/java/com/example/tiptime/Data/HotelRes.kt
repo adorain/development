@@ -32,9 +32,6 @@ interface HotelRes {
         newStaffPassword: String
     )
     fun filterHotels(
-        startDate: String?,
-        endDate: String?,
-        pax: Int?,
         searchText: String?
     ): List<Hotel>
 

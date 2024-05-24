@@ -46,18 +46,8 @@ interface HotelDao {
     fun updateHotelStatusToFavourite(hotelId: Int,Status:String)
 
 
-    @Query("""
-        SELECT * FROM Hotel h
-        WHERE (:startDate IS NULL OR h.HotelId IN (
-            SELECT HotelId FROM Booking
-            WHERE (BookedStartDate >= :startDate AND BookedEndDate <= :endDate)))
-        AND (:pax IS NULL OR h.Pax >= :pax)
-        AND (:searchText IS NULL OR h.HotelName LIKE '%' || :searchText || '%')
-    """)
+    @Query("SELECT * FROM Hotel WHERE HotelName Like '%' || :searchText || '%'")
     fun filterHotels(
-        startDate: String?,
-        endDate: String?,
-        pax: Int?,
         searchText: String?
     ): List<Hotel>
 

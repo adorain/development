@@ -33,4 +33,7 @@ interface BookingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookings(rooms: List<Booking>)
+
+    @Query("SELECT ROOMTYPE, SUM(Price) AS earnings, COUNT(*) AS numOfRooms FROM Booking WHERE BookedStartDate BETWEEN :startDate AND :endDate GROUP BY ROOMTYPE")
+    fun getBookingStatistics(startDate: String, endDate: String): Flow<List<BookingStatistics>>
 }

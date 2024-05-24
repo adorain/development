@@ -97,13 +97,13 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
     }
 
     fun updateStartDate(Startdate:String){
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
         val date = dateFormat.parse(Startdate)
         StartDate = date
     }
 
     fun updateEndDate(endDate: String){
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
         val date = dateFormat.parse(endDate)
         EndDate = date
     }

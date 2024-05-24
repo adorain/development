@@ -1,5 +1,7 @@
 package com.example.tiptime.Data
 
+import kotlinx.coroutines.flow.Flow
+
 
 class BookingOfflineRes(private val bookingDao: BookingDao):BookingRes {
     override suspend fun addNewBooking(booking: Booking) = bookingDao.addNewBooking(booking)
@@ -10,5 +12,7 @@ class BookingOfflineRes(private val bookingDao: BookingDao):BookingRes {
 
     override fun deleteBooking(booking: Booking) = bookingDao.deleteBooking(booking)
     override fun allBookingWithChecking() = bookingDao.allBookingWithChecking()
+
+    override fun getBookingStatistics(startDate: String, endDate: String): Flow<List<BookingStatistics>> =bookingDao.getBookingStatistics(startDate, endDate)
 
 }

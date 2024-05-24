@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tiptime.Data.Booking
 import com.example.tiptime.Data.BookingRes
+import com.example.tiptime.Data.BookingStatistics
 import com.example.tiptime.Data.Hotel
 import com.example.tiptime.Data.room
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,10 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     private var _bookingList = MutableStateFlow<List<Booking>>(emptyList())
     val bookingList :StateFlow<List<Booking>> get() = _bookingList.asStateFlow()
     var totalPrice by mutableStateOf(0.00)
+    var StartDate by mutableStateOf(Date())
+    var EndDate by mutableStateOf(Date())
+    private val _statistics = MutableStateFlow<List<BookingStatistics>>(emptyList())
+    val statistics: StateFlow<List<BookingStatistics>> = _statistics.asStateFlow()
 
 
     fun insertNewBooking(){
@@ -298,5 +303,29 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     fun convertDate(dateString: String): Date {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy",Locale.getDefault())
         return dateFormat.parse(dateString)
+    }
+
+    fun updateStartDate(Startdate:String){
+        val dateFormat = SimpleDateFormat("dd/mm/yyyy")
+        val date = dateFormat.parse(Startdate)
+        StartDate = date
+    }
+
+    fun updateEndDate(endDate: String){
+        val dateFormat = SimpleDateFormat("dd/mm/yyyy")
+        val date = dateFormat.parse(endDate)
+        EndDate = date
+    }
+
+    fun fetchBookingStatistics() {
+        viewModelScope.launch {
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val startDateString = dateFormat.format(StartDate)
+            val endDateString = dateFormat.format(EndDate)
+            bookingRes.getBookingStatistics(startDateString, endDateString)
+                .collect { stats ->
+                    _statistics.value = stats
+                }
+        }
     }
 }

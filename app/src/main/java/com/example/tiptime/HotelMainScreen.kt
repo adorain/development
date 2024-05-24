@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -51,7 +50,7 @@ fun HotelMainScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = HotelBottomBar.Home.route) {
-                HotelReport(viewModelHotel)
+                HotelReport(viewModel)
             }
             composable(route = HotelBottomBar.Reservation.route) {
                 HotelReservation(navController, viewModelHotel, viewModel, onNextButton = {navController.navigate(screen.booking.name)})

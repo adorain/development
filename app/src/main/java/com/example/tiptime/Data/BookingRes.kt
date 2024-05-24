@@ -14,5 +14,6 @@ interface BookingRes{
 
     fun allBookingWithChecking():Flow<List<Booking>>
 
+    fun getBookingStatistics(startDate: String, endDate: String): Flow<List<BookingStatistics>>
 
 }

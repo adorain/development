@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-@Database(entities = [Hotel::class , room::class , Booking::class], version = 11, exportSchema = false)
+@Database(entities = [Hotel::class , room::class , Booking::class,User::class], version = 12, exportSchema = false)
 abstract class ApplicationInventory: RoomDatabase() {
 
 
@@ -12,6 +12,7 @@ abstract class ApplicationInventory: RoomDatabase() {
         abstract fun bookingDao():BookingDao
         abstract fun roomDao():RoomDao
     abstract fun normalUserDao(): NormalUserDao
+    abstract fun hotelUserDao():HotelUserDao
 
     companion object {
             @Volatile

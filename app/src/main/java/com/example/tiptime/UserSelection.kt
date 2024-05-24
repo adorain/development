@@ -38,19 +38,22 @@ class UserSelection : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    UserSelectionContent(context=this)
+                    UserSelectionContent(onUserTypeSelected = { userType ->
+                        when (userType) {
+                            UserType.user -> startActivity(Intent(this, NewUser::class.java))
+                            UserType.staff -> startActivity(Intent(this, NewHotel::class.java))
+                        }
+                    })
                 }
-
             }
-
         }
-
     }
 }
 
 
+
 @Composable
-fun UserSelectionContent(context: Context) {
+fun UserSelectionContent(onUserTypeSelected: (UserType) -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.user_selection_background),
@@ -64,7 +67,6 @@ fun UserSelectionContent(context: Context) {
                 .padding(horizontal = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Spacer(modifier = Modifier.height(80.dp))
             Image(
                 painter = painterResource(R.drawable.jt_logo), contentDescription = null,
@@ -78,21 +80,16 @@ fun UserSelectionContent(context: Context) {
             )
             Spacer(modifier = Modifier.height(120.dp))
             UserSelectionButton("Normal User") {
-                val intent = Intent(context, UserLogin::class.java)
-                context.startActivity(intent)
-
+                onUserTypeSelected(UserType.user)
             }
             Spacer(modifier = Modifier.height(60.dp))
             UserSelectionButton("Hotel User") {
-                 val intent = Intent(context, HotelLogin::class.java)
-                context.startActivity(intent)
-
+                onUserTypeSelected(UserType.staff)
             }
-
-
         }
     }
 }
+
 
 
 
@@ -115,7 +112,6 @@ fun UserSelectionButton(text: String, onClick:  () -> Unit) {
 @Composable
 fun UserSelectionPreview() {
     TipTimeTheme {
-        UserSelectionContent(context = LocalContext.current)
+        UserSelectionContent(onUserTypeSelected = { })
     }
 }
-

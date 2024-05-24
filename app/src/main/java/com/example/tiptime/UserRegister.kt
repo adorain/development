@@ -42,7 +42,7 @@ class UserRegister : ViewModel(){
     }
 
     fun updateUserPassword(Password : String){
-         userPassword = Password
+        userPassword = Password
     }
 
     fun setUserEmail() : String{

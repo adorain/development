@@ -2,6 +2,7 @@ package com.example.tiptime
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -55,15 +56,19 @@ class NewUser : ComponentActivity() {
                         }
                     }
 
-                    /*NewUserContent(
+                    NewUserContent(
                         viewModel = viewModel,
                         onClickedButton = { name, phoneNumber, email, password ->
                             createUser(name, phoneNumber, email, password, onError = { message ->
                                 errorMessage = message
                                 showErrorDialog = true
                             })
-                        }
-                    )*/
+                        },
+                        onSetName = { /* Update the state or ViewModel */ },
+                        onSetNumber = { /* Update the state or ViewModel */ },
+                        onSetEmail = { /* Update the state or ViewModel */ },
+                        onSetPassword = { /* Update the state or ViewModel */ }
+                    )
                 }
             }
         }
@@ -90,7 +95,8 @@ class NewUser : ComponentActivity() {
                         )
                         db.collection("users").add(user)
                             .addOnSuccessListener {
-                                viewModel.updateUser(uname, uphoneNumber, uemail, upassword, userId)
+                                viewModel.insertUser(uname, uphoneNumber, uemail, upassword, userId)
+                                Log.d("NewUser", "User created and inserted: $uname")
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
                                 finish()
@@ -145,11 +151,11 @@ fun ErrorDialog(message: String, onDismiss: () -> Unit) {
 @Composable
 fun NewUserContent(
     viewModel: NewUserRegister,
-    onClickedButton: () -> Unit,
-    onSetName:(String) -> Unit,
-    onSetNumber:(String)-> Unit,
-    onSetEmail:(String)-> Unit,
-    onSetPassword:(String) -> Unit
+    onClickedButton: (String, String, String, String) -> Unit,
+    onSetName: (String) -> Unit,
+    onSetNumber: (String) -> Unit,
+    onSetEmail: (String) -> Unit,
+    onSetPassword: (String) -> Unit
 ) {
     var uemail by remember { mutableStateOf("") }
     var upassword by remember { mutableStateOf("") }
@@ -186,7 +192,10 @@ fun NewUserContent(
 
             TextField(
                 value = uname,
-                onValueChange = { onSetName(uname) },
+                onValueChange = {
+                    uname = it
+                    onSetName(it)
+                },
                 label = { Text("User Name",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -199,7 +208,10 @@ fun NewUserContent(
 
             TextField(
                 value = uphoneNumber,
-                onValueChange = { onSetNumber(uphoneNumber) },
+                onValueChange = {
+                    uphoneNumber = it
+                    onSetNumber(it)
+                },
                 label = { Text("Phone Number",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -212,7 +224,10 @@ fun NewUserContent(
 
             TextField(
                 value = uemail,
-                onValueChange = { onSetEmail(uemail) },
+                onValueChange = {
+                    uemail = it
+                    onSetEmail(it)
+                },
                 label = { Text("Email",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -225,7 +240,10 @@ fun NewUserContent(
 
             TextField(
                 value = upassword,
-                onValueChange = { onSetPassword(upassword) },
+                onValueChange = {
+                    upassword = it
+                    onSetPassword(it)
+                },
                 label = { Text("Password",
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,) },
@@ -238,7 +256,7 @@ fun NewUserContent(
 
             Button(
                 onClick = {
-                    onClickedButton()
+                    onClickedButton(uname, uphoneNumber, uemail, upassword)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -247,6 +265,7 @@ fun NewUserContent(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

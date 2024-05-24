@@ -12,18 +12,17 @@ interface HotelUserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun hotelUser(hotel: Hotel)
 
-    @Query("SELECT * FROM user WHERE UserName = :userName AND UserId = :userId LIMIT 1")
-    fun getUser(userName: String, userId: String):String
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertStaff(hotel: Hotel)
 
     @Update
     suspend fun update(hotel: Hotel)
 
-    /*@Query("SELECT * FROM hotel WHERE staffId = :staffId AND staffName = :staffName")
-    fun getStaff(staffId: String, staffName: String): List<Hotel>*/
+    @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber, StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
+    fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String, newStaffPassword: String)
 
-    @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber,StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
-    fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String,
-                    newStaffPassword: String)
-
+    @Query("SELECT * FROM Hotel WHERE StaffEmail = :email AND StaffPassword = :password LIMIT 1")
+    suspend fun getUserByEmailAndPassword(email: String, password: String): Hotel?
 
 }

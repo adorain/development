@@ -5,12 +5,16 @@ import Booked
 import TopAppBar
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,9 +27,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tiptime.Data.ApplicationInventory
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.util.Date
+import java.util.UUID
 
 enum class screen{
-    signUp,home , booking , detail, summary,payment,test
+    userSelection,userLogin,signUp,hotelLogin,newHotel,home , booking , detail, summary,payment,test
 }
 
 enum class UserType{
@@ -61,23 +66,86 @@ fun TravelApp(
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = screen.signUp.name,
+            startDestination = screen.userSelection.name,
             modifier = Modifier.padding(innerPadding)
         ) {
+
+            composable(route = screen.userSelection.name) {
+                UserSelectionContent { userType ->
+                    when (userType) {
+                        UserType.user -> navController.navigate(screen.userLogin.name)
+                        UserType.staff -> navController.navigate(screen.hotelLogin.name)
+                    }
+                }
+            }
+
+            composable(route = screen.userLogin.name) {
+                UserLoginScreen(context = LocalContext.current,navController=navController)
+            }
+
+            composable(route = HotelBottomBar.Home.route) {
+                HotelMainScreen(navController = navController)
+            }
+
             composable(route = screen.signUp.name){
                 val normalUserDao = ApplicationInventory.getDatabase(LocalContext.current).normalUserDao()
-                NewUserContent(viewModel = NewUserRegister(normalUserDao = normalUserDao),
-                    onSetEmail = {it},
-                    onSetName = {it},
-                    onSetNumber = {it},
-                    onSetPassword = {it},
-                    onClickedButton = {
+                val newUserRegister = NewUserRegister(normalUserDao = normalUserDao)
+                NewUserContent(
+                    viewModel = NewUserRegister(normalUserDao = normalUserDao),
+                    onSetEmail = { newUserRegister.email = it },
+                    onSetName = { newUserRegister.name = it },
+                    onSetNumber = { newUserRegister.phoneNumber = it },
+                    onSetPassword = { newUserRegister.password = it },
+                    onClickedButton = { name, phoneNumber, email, password ->
+                        newUserRegister.insertUser(name, phoneNumber, email, password, UUID.randomUUID().toString())
+                        Log.d("TravelScreen", "User data passed: $name, $phoneNumber, $email, $password")
                         navController.navigate(screen.home.name)
                         viewModelhotel.getAllHotel()
-
                     }
-
                 )
+            }
+
+            composable(route = screen.hotelLogin.name) {
+                HotelLoginScreen(navController = navController)
+            }
+
+            composable(route = screen.newHotel.name) {
+                val hotelUserDao = ApplicationInventory.getDatabase(LocalContext.current).hotelUserDao()
+                val newHotelRegister = NewHotelRegister(hotelUserDao = hotelUserDao)
+                var currentStep by remember { mutableStateOf(1) }
+                var staffName by remember { mutableStateOf("") }
+                var staffPhoneNumber by remember { mutableStateOf("") }
+                var staffEmail by remember { mutableStateOf("") }
+                var staffPassword by remember { mutableStateOf("") }
+
+                if (currentStep == 1) {
+                    StaffDetailsForm(
+                        viewModel = newHotelRegister,
+                        onNextClicked = {
+                            currentStep = 2
+                        },
+                        onSetName = { staffName = it },
+                        onSetNumber = { staffPhoneNumber = it },
+                        onSetEmail = { staffEmail = it },
+                        onSetPassword = { staffPassword = it }
+                    )
+                } else {
+                    HotelDetailsForm(
+                        viewModel = newHotelRegister,
+                        onSubmitClicked = { hotelName, hotelAddress, hotelDescription, type ->
+                            newHotelRegister.insertStaff(
+                                staffName, staffPhoneNumber, staffEmail, staffPassword,
+                                hotelName, hotelAddress, hotelDescription, type
+                            )
+                            Log.d("TravelScreen", "Hotel data passed:$staffName, $staffPhoneNumber, $staffEmail, $staffPassword,$hotelName, $hotelAddress, $hotelDescription, $type")
+                            navController.navigate(HotelBottomBar.Home.route)
+                        },
+                        onSetHotelName = { newHotelRegister.hotelName = it },
+                        onSetHotelAddress = { newHotelRegister.hotelAddress = it },
+                        onSetHotelDescription = { newHotelRegister.hotelDescription = it },
+                        onSetHotelType = { newHotelRegister.hotelType = it }
+                    )
+                }
             }
             composable(route = screen.home.name) {
                 HomeScreen(

@@ -141,6 +141,7 @@ fun UserLoginScreen(context: Context,navController: NavController,viewModel: hot
                                 if (user != null) {
                                     navController.navigate(screen.home.name)
                                     viewModel.getAllHotel()
+                                    val userId = userDao.getUserId(email)
                                 } else {
                                     // Show error message
                                     showError = true

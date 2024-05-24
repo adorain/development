@@ -7,8 +7,8 @@ sealed class TravelBottomBar(
     val title: String,
     @DrawableRes val iconRes: Int
 ) {
-    object Home : TravelBottomBar(
-        route = "home",
+    object UserHome : TravelBottomBar(
+        route = "userhome",
         title = "Home",
         iconRes = R.drawable.home
     )
@@ -22,7 +22,40 @@ sealed class TravelBottomBar(
         title = "Booked",
         iconRes = R.drawable.booked
     )
-    object Settings : TravelBottomBar(
+    object UserSettings : TravelBottomBar(
+        route = "usersettings",
+        title = "Settings",
+        iconRes = R.drawable.settings
+    )
+}
+
+
+sealed class HotelBottomBar(
+    val route: String,
+    val title: String,
+    @DrawableRes val iconRes: Int
+) {
+    object Home : HotelBottomBar(
+        route = "home",
+        title = "Home",
+        iconRes = R.drawable.home
+    )
+    object Reservation : HotelBottomBar(
+        route = "reservation",
+        title = "Reservation",
+        iconRes = R.drawable.reservation
+    )
+    object editRoom : HotelBottomBar(
+        route = "editRoom",
+        title = "editRoom",
+        iconRes = R.drawable.room
+    )
+    object editBook : HotelBottomBar(
+        route = "editBook",
+        title = "editBook",
+        iconRes = R.drawable.room
+    )
+    object Settings : HotelBottomBar(
         route = "settings",
         title = "Settings",
         iconRes = R.drawable.settings

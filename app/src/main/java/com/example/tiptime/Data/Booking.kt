@@ -18,6 +18,7 @@ data class Booking(
     val BookedEndDate: String = "",
     val Pax: Int = 0,
     val Status: String = "",
-    val Price: Double= 0.00
+    val Price: Double= 0.00,
+    val userId :String = ""
 
 )

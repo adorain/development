@@ -25,5 +25,8 @@ interface NormalUserDao {
     @Query("SELECT * FROM users WHERE userEmail = :email AND userPassword = :password")
     suspend fun getUserByEmailAndPassword(email: String, password: String): User?
 
+    @Query("SELECT * FROM users WHERE userEmail = :email Limit 1")
+    suspend fun getUserId(email: String): User?
+
 
 }

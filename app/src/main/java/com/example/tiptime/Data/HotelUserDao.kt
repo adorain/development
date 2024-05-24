@@ -22,5 +22,7 @@ interface HotelUserDao {
     @Query("UPDATE Hotel SET StaffName = :newStaffName, StaffPhoneNumber = :newStaffPhoneNumber, StaffEmail = :newStaffEmail, StaffPassword = :newStaffPassword")
     fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String, newStaffPassword: String)
 
+    @Query("SELECT * FROM Hotel WHERE StaffEmail = :email AND StaffPassword = :password LIMIT 1")
+    suspend fun getUserByEmailAndPassword(email: String, password: String): Hotel?
 
 }

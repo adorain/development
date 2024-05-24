@@ -31,7 +31,7 @@ import java.util.Date
 import java.util.UUID
 
 enum class screen{
-    userSelection,signUp,newHotel,home , booking , detail, summary,payment,test
+    userSelection,userLogin,signUp,hotelLogin,newHotel,home , booking , detail, summary,payment,test
 }
 
 enum class UserType{
@@ -68,10 +68,18 @@ fun TravelApp(
             composable(route = screen.userSelection.name) {
                 UserSelectionContent { userType ->
                     when (userType) {
-                        UserType.user -> navController.navigate(screen.signUp.name)
-                        UserType.staff -> navController.navigate(screen.newHotel.name)
+                        UserType.user -> navController.navigate(screen.userLogin.name)
+                        UserType.staff -> navController.navigate(screen.hotelLogin.name)
                     }
                 }
+            }
+
+            composable(route = screen.userLogin.name) {
+                UserLoginScreen(context = LocalContext.current,navController=navController)
+            }
+
+            composable(route = HotelBottomBar.Home.route) {
+                HotelMainScreen(navController = navController)
             }
 
             composable(route = screen.signUp.name){
@@ -91,6 +99,11 @@ fun TravelApp(
                     }
                 )
             }
+
+            composable(route = screen.hotelLogin.name) {
+                HotelLoginScreen(navController = navController)
+            }
+
             composable(route = screen.newHotel.name) {
                 val hotelUserDao = ApplicationInventory.getDatabase(LocalContext.current).hotelUserDao()
                 val newHotelRegister = NewHotelRegister(hotelUserDao = hotelUserDao)

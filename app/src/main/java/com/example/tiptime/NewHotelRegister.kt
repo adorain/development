@@ -16,18 +16,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class NewHotelRegister(private val hotelUserDao: HotelUserDao) : ViewModel(){
     private val _uiState = MutableStateFlow(Hotel())
     val uiState: StateFlow<Hotel> = _uiState.asStateFlow()
-    var staffPassword by mutableStateOf("")
-    var staffEmail by mutableStateOf("")
-    var staffId by mutableStateOf("")
-    var staffName by mutableStateOf("")
-    var staffPhoneNumber by mutableStateOf("")
-    var staffGender by mutableStateOf(' ')
     private val _uiRegisterState = MutableStateFlow(Hotel())
     val uiRegisterState: StateFlow<Hotel> = _uiRegisterState.asStateFlow()
+
+    var staffPassword by mutableStateOf("")
+    var staffEmail by mutableStateOf("")
+    var staffId by mutableStateOf(UUID.randomUUID().toString())
+    var staffName by mutableStateOf("")
+    var staffPhoneNumber by mutableStateOf("")
+    var hotelName by mutableStateOf("")
+    var hotelAddress by mutableStateOf("")
+    var hotelDescription by mutableStateOf("")
+    var hotelType by mutableStateOf("")
 
 //    fun insertNewU_User(STAFFPassword: String, STAFFEmail: String, STAFFId: String, STAFFName: String,
 //                        STAFFPhoneNumber: String, STAFFGender: Char) {
@@ -42,15 +47,26 @@ class NewHotelRegister(private val hotelUserDao: HotelUserDao) : ViewModel(){
 //
 //    }
 
-    fun insertStaff(name: String, phoneNumber: String, email: String, password: String) {
+    fun insertStaff(
+        name: String, phoneNumber: String, email: String, password: String,
+        hotelName: String, hotelAddress: String, hotelDescription: String, type: String
+    ) {
         viewModelScope.launch {
             val staff = Hotel(
+                StaffId = UUID.randomUUID().toString(),
+                UserId = UUID.randomUUID().toString(),
                 StaffName = name,
                 StaffPhoneNumber = phoneNumber,
                 StaffEmail = email,
-                StaffPassword = password
+                StaffPassword = password,
+                HotelName = hotelName,
+                HotelAddress = hotelAddress,
+                HotelDescription = hotelDescription,
+                Type = type,
+                Rating = 5,
+                Status = "Available"
             )
-            hotelUserDao.insertStaff(staff)
+            hotelUserDao.hotelUser(staff)
         }
     }
 
@@ -138,9 +154,7 @@ class NewHotelRegister(private val hotelUserDao: HotelUserDao) : ViewModel(){
 
 
      */
-    fun updateUserGender(StaffGender : Char){
-        staffGender = StaffGender
-    }
+
 
     fun updateStaff(newStaffName: String, newStaffPhoneNumber: String, newStaffEmail: String, newStaffPassword: String) {
         viewModelScope.launch {

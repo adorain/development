@@ -12,6 +12,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,18 +94,40 @@ fun TravelApp(
             composable(route = screen.newHotel.name) {
                 val hotelUserDao = ApplicationInventory.getDatabase(LocalContext.current).hotelUserDao()
                 val newHotelRegister = NewHotelRegister(hotelUserDao = hotelUserDao)
-                NewHotelContent(
-                    viewModel = newHotelRegister,
-                    onSetEmail = { newHotelRegister.staffEmail = it },
-                    onSetName = { newHotelRegister.staffName = it },
-                    onSetNumber = { newHotelRegister.staffPhoneNumber = it },
-                    onSetPassword = { newHotelRegister.staffPassword = it },
-                    onClickedButton = { name, phoneNumber, email, password ->
-                        newHotelRegister.updateStaff(name, phoneNumber, email, password)
-                        Log.d("TravelScreen", "Hotel staff data passed: $name, $phoneNumber, $email, $password")
-                        navController.navigate(HotelBottomBar.Home.route)
-                    }
-                )
+                var currentStep by remember { mutableStateOf(1) }
+                var staffName by remember { mutableStateOf("") }
+                var staffPhoneNumber by remember { mutableStateOf("") }
+                var staffEmail by remember { mutableStateOf("") }
+                var staffPassword by remember { mutableStateOf("") }
+
+                if (currentStep == 1) {
+                    StaffDetailsForm(
+                        viewModel = newHotelRegister,
+                        onNextClicked = {
+                            currentStep = 2
+                        },
+                        onSetName = { staffName = it },
+                        onSetNumber = { staffPhoneNumber = it },
+                        onSetEmail = { staffEmail = it },
+                        onSetPassword = { staffPassword = it }
+                    )
+                } else {
+                    HotelDetailsForm(
+                        viewModel = newHotelRegister,
+                        onSubmitClicked = { hotelName, hotelAddress, hotelDescription, type ->
+                            newHotelRegister.insertStaff(
+                                staffName, staffPhoneNumber, staffEmail, staffPassword,
+                                hotelName, hotelAddress, hotelDescription, type
+                            )
+                            Log.d("TravelScreen", "Hotel data passed:$staffName, $staffPhoneNumber, $staffEmail, $staffPassword,$hotelName, $hotelAddress, $hotelDescription, $type")
+                            navController.navigate(HotelBottomBar.Home.route)
+                        },
+                        onSetHotelName = { newHotelRegister.hotelName = it },
+                        onSetHotelAddress = { newHotelRegister.hotelAddress = it },
+                        onSetHotelDescription = { newHotelRegister.hotelDescription = it },
+                        onSetHotelType = { newHotelRegister.hotelType = it }
+                    )
+                }
             }
             composable(route = screen.home.name) {
                 HomeScreen(

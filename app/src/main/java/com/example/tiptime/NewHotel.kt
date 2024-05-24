@@ -82,19 +82,40 @@ class NewHotel : ComponentActivity() {
                         }
                     }
 
-                    NewHotelContent(
-                        viewModel = viewModel,
-                        onClickedButton = { name, phoneNumber, email, password ->
-                            createHotel(name, phoneNumber, email, password, onError = { message ->
-                                errorMessage = message
-                                showErrorDialog = true
-                            }, viewModel)
-                        },
-                        onSetName = { /* Update the state or ViewModel */ },
-                        onSetNumber = { /* Update the state or ViewModel */ },
-                        onSetEmail = { /* Update the state or ViewModel */ },
-                        onSetPassword = { /* Update the state or ViewModel */ }
-                    )
+                    var currentStep by remember { mutableStateOf(1) }
+
+                    var staffName by remember { mutableStateOf("") }
+                    var staffPhoneNumber by remember { mutableStateOf("") }
+                    var staffEmail by remember { mutableStateOf("") }
+                    var staffPassword by remember { mutableStateOf("") }
+
+                    if (currentStep == 1) {
+                        StaffDetailsForm(
+                            viewModel = viewModel,
+                            onNextClicked = {
+                                currentStep = 2
+                            },
+                            onSetName = { staffName = it },
+                            onSetNumber = { staffPhoneNumber = it },
+                            onSetEmail = { staffEmail = it },
+                            onSetPassword = { staffPassword = it }
+                        )
+                    } else {
+                        HotelDetailsForm(
+                            viewModel = viewModel,
+                            onSubmitClicked = {hotelName, hotelAddress, hotelDescription, type ->
+                                createHotel(staffName, staffPhoneNumber, staffEmail, staffPassword,
+                                    hotelName, hotelAddress, hotelDescription, type, onError = { message ->
+                                    errorMessage = message
+                                    showErrorDialog = true
+                                }, viewModel)
+                            },
+                            onSetHotelName = { viewModel.hotelName = it },
+                            onSetHotelAddress = { viewModel.hotelAddress = it },
+                            onSetHotelDescription = { viewModel.hotelDescription = it },
+                            onSetHotelType = { viewModel.hotelType = it }
+                        )
+                    }
                 }
             }
         }
@@ -102,6 +123,7 @@ class NewHotel : ComponentActivity() {
 
     private fun createHotel(
         hname: String, hphoneNumber: String, hemail: String, hpassword: String,
+        hotelName: String, hotelAddress: String, hotelDescription: String, type: String,
         onError: (String) -> Unit, viewModel: NewHotelRegister
     ) {
         if (validateInput(hname, hphoneNumber, hemail, hpassword, onError)) {
@@ -119,7 +141,10 @@ class NewHotel : ComponentActivity() {
                             .addOnSuccessListener {
                                 // Insert staff information into Room database
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    viewModel.insertStaff(hname, hphoneNumber, hemail, hpassword)
+                                    viewModel.insertStaff(
+                                        hname, hphoneNumber, hemail, hpassword,
+                                        hotelName, hotelAddress, hotelDescription, type
+                                    )
                                 }
                                 // Navigate to home page
                                 val intent = Intent(this, MainActivity::class.java)
@@ -174,98 +199,204 @@ fun ErrorDialog2(message: String, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun NewHotelContent(viewModel: NewHotelRegister, onClickedButton: (hname: String, hphoneNumber: String, hemail: String, hpassword: String) -> Unit,
-                    onSetName: (String) -> Unit,
-                    onSetNumber: (String) -> Unit,
-                    onSetEmail: (String) -> Unit,
-                    onSetPassword: (String) -> Unit) {
-    var hemail by remember { mutableStateOf("") }
-    var hpassword by remember { mutableStateOf("") }
-    var hname by remember { mutableStateOf("") }
-    var hphoneNumber by remember { mutableStateOf("") }
+fun StaffDetailsForm(
+    viewModel: NewHotelRegister,
+    onNextClicked: () -> Unit,
+    onSetName: (String) -> Unit,
+    onSetNumber: (String) -> Unit,
+    onSetEmail: (String) -> Unit,
+    onSetPassword: (String) -> Unit
+) {
+    var name by remember { mutableStateOf(viewModel.staffName) }
+    var phoneNumber by remember { mutableStateOf(viewModel.staffPhoneNumber) }
+    var email by remember { mutableStateOf(viewModel.staffEmail) }
+    var password by remember { mutableStateOf(viewModel.staffPassword) }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.White
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.hotel_user_background),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxWidth()
+        Text(
+            "Staff Details",
+            color = white,
+            fontWeight = FontWeight.Bold,
+            fontSize = 40.sp,
+            modifier = Modifier
+                .padding(
+                    horizontal = 35.dp,
+                    vertical = 63.dp
+                )
         )
 
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                "Sign up",
-                color = white,
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 35.dp,
-                        vertical = 63.dp
-                    )
-            )
+        TextField(
+            value = name,
+            onValueChange = {
+                name = it
+                onSetName(it)
+            },
+            label = { Text("Staff Name", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
 
-            TextField(
-                value = hname,
-                onValueChange = { hname = it
-                                onSetName(it)},
-                label = { Text("Staff Name", color = shadow, fontWeight = FontWeight.Bold) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                textStyle = TextStyle(color = Color.Black),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+        TextField(
+            value = phoneNumber,
+            onValueChange = {
+                phoneNumber = it
+                onSetNumber(it)
+            },
+            label = { Text("Phone Number", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
 
-            TextField(
-                value = hphoneNumber,
-                onValueChange = { hphoneNumber = it
-                                onSetNumber(it)},
-                label = { Text("Phone Number", color = shadow, fontWeight = FontWeight.Bold) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                textStyle = TextStyle(color = Color.Black),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+        TextField(
+            value = email,
+            onValueChange = {
+                email = it
+                onSetEmail(it)
+            },
+            label = { Text("Email", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
 
-            TextField(
-                value = hemail,
-                onValueChange = { hemail = it
-                                onSetEmail(it)},
-                label = { Text("Email", color = shadow, fontWeight = FontWeight.Bold) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                textStyle = TextStyle(color = Color.Black),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+        TextField(
+            value = password,
+            onValueChange = {
+                password = it
+                onSetPassword(it)
+            },
+            label = { Text("Password", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation()
+        )
+        Spacer(modifier = Modifier.height(20.dp))
 
-            TextField(
-                value = hpassword,
-                onValueChange = { hpassword = it
-                                onSetPassword(it)},
-                label = { Text("Password", color = shadow, fontWeight = FontWeight.Bold) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                textStyle = TextStyle(color = Color.Black),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = PasswordVisualTransformation()
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+        Button(onClick = {
+            viewModel.staffName = name
+            viewModel.staffPhoneNumber = phoneNumber
+            viewModel.staffEmail = email
+            viewModel.staffPassword = password
+            onNextClicked()
+        }) {
+            Text(text = "Next")
+        }
+    }
+}
 
-            Button(onClick = {
-                onClickedButton(hname, hphoneNumber, hemail, hpassword)
-            }) {
-                Text(text = "Submit")
-            }
+@Composable
+fun HotelDetailsForm(
+    viewModel: NewHotelRegister,
+    onSubmitClicked: (
+        hotelName: String, hotelAddress: String, hotelDescription: String, type: String
+    ) -> Unit,
+    onSetHotelName: (String) -> Unit,
+    onSetHotelAddress: (String) -> Unit,
+    onSetHotelDescription: (String) -> Unit,
+    onSetHotelType: (String) -> Unit
+) {
+    var hotelName by remember { mutableStateOf(viewModel.hotelName) }
+    var hotelAddress by remember { mutableStateOf(viewModel.hotelAddress) }
+    var hotelDescription by remember { mutableStateOf(viewModel.hotelDescription) }
+    var type by remember { mutableStateOf(viewModel.hotelType) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            "Hotel Details",
+            color = white,
+            fontWeight = FontWeight.Bold,
+            fontSize = 40.sp,
+            modifier = Modifier
+                .padding(
+                    horizontal = 35.dp,
+                    vertical = 63.dp
+                )
+        )
+
+        TextField(
+            value = hotelName,
+            onValueChange = {
+                hotelName = it
+                onSetHotelName(it)
+            },
+            label = { Text("Hotel Name", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextField(
+            value = hotelAddress,
+            onValueChange = {
+                hotelAddress = it
+                onSetHotelAddress(it)
+            },
+            label = { Text("Hotel Address", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextField(
+            value = hotelDescription,
+            onValueChange = {
+                hotelDescription = it
+                onSetHotelDescription(it)
+            },
+            label = { Text("Hotel Description", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextField(
+            value = type,
+            onValueChange = {
+                type = it
+                onSetHotelType(it)
+            },
+            label = { Text("Type", color = shadow, fontWeight = FontWeight.Bold) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(onClick = {
+            onSubmitClicked(
+                hotelName, hotelAddress, hotelDescription, type
+            )
+        }) {
+            Text(text = "Submit")
         }
     }
 }
@@ -274,6 +405,13 @@ fun NewHotelContent(viewModel: NewHotelRegister, onClickedButton: (hname: String
 @Composable
 fun NewHotelPreview() {
     TipTimeTheme {
-
+        StaffDetailsForm(
+            viewModel = NewHotelRegister(ApplicationInventory.getDatabase(LocalContext.current).hotelUserDao()),
+            onNextClicked = {},
+            onSetName = {},
+            onSetNumber = {},
+            onSetEmail = {},
+            onSetPassword = {}
+        )
     }
 }

@@ -63,6 +63,11 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
                 // Found the room type, you can access its properties here
                 Log.d("RoomViewModel", "Room Type: ${room.roomType}, Price: ${room.price}, Status: ${room.Status}")
             }
+            if (room.roomType != roomType && room.hotel_id == hotelId) {
+                price = 0.00
+                // Found the room type, you can access its properties here
+                Log.d("RoomViewModel", "Room Type: ${room.roomType}, Price: ${room.price}, Status: ${room.Status}")
+            }
         }
 
     }
@@ -72,10 +77,10 @@ class RoomViewModel (private val roomRes: RoomRes) : ViewModel(){
         viewModelScope.launch (Dispatchers.IO){
             roomRes.insertRoom(
                 room(
-                    1,
+                    2,
                     "Double Room",
-                    0,
-                    10.00,
+                    2,
+                    20.00,
                     "Available"
                 )
             )

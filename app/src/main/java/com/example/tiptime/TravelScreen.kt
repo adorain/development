@@ -1,6 +1,5 @@
 package com.example.tiptime
 
-
 import Booked
 import TopAppBar
 import android.annotation.SuppressLint
@@ -14,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,18 +23,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tiptime.Data.ApplicationInventory
 import com.example.tiptime.ui.theme.TipTimeTheme
-import java.util.Date
 import java.util.UUID
 
-enum class screen{
-    userSelection,userLogin,signUp,hotelLogin,newHotel,home , booking , detail, summary,payment,test
+enum class screen {
+    userSelection, userLogin, signUp, hotelLogin, newHotel, home, booking, detail, summary, payment, test
 }
 
-enum class UserType{
-    user , staff
+enum class UserType {
+    user, staff
 }
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -47,19 +47,35 @@ fun TravelApp(
     viewRoomViewModel: RoomViewModel = viewModel(factory = AppViewModelProvider.factory),
     navController: NavHostController = rememberNavController()
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
+    Log.d("TravelApp", "Current route: $currentRoute")
+
+    val showTopBar = currentRoute in listOf(
+        screen.home.name,
+        TravelBottomBar.Favourite.route,
+        TravelBottomBar.Booked.route,
+        TravelBottomBar.Settings.route
+    )
+
+    val showBottomBar = currentRoute in listOf(
+        screen.home.name,
+        TravelBottomBar.Favourite.route,
+        TravelBottomBar.Booked.route,
+        TravelBottomBar.Settings.route
+    )
 
     Scaffold(
         topBar = {
-            if (navController.currentBackStackEntry?.destination?.route !in listOf(screen.booking.name, screen.detail.name,screen.summary.name,screen.payment.name)) {
+            if (showTopBar) {
                 TopAppBar()
             }
         },
         bottomBar = {
-            if (navController.currentBackStackEntry?.destination?.route !in listOf(screen.booking.name, screen.detail.name,screen.summary.name,screen.payment.name)) {
+            if (showBottomBar) {
                 TravelBottomNavigationBar(navController = navController)
             }
-
         }
     ) { innerPadding ->
         val uiState by viewModel.uiBookingState.collectAsState()
@@ -69,7 +85,6 @@ fun TravelApp(
             startDestination = screen.userSelection.name,
             modifier = Modifier.padding(innerPadding)
         ) {
-
             composable(route = screen.userSelection.name) {
                 UserSelectionContent { userType ->
                     when (userType) {
@@ -80,14 +95,10 @@ fun TravelApp(
             }
 
             composable(route = screen.userLogin.name) {
-                UserLoginScreen(context = LocalContext.current,navController=navController)
+                UserLoginScreen(context = LocalContext.current, navController = navController)
             }
 
-            composable(route = HotelBottomBar.Home.route) {
-                HotelMainScreen(navController = navController)
-            }
-
-            composable(route = screen.signUp.name){
+            composable(route = screen.signUp.name) {
                 val normalUserDao = ApplicationInventory.getDatabase(LocalContext.current).normalUserDao()
                 val newUserRegister = NewUserRegister(normalUserDao = normalUserDao)
                 NewUserContent(
@@ -147,6 +158,7 @@ fun TravelApp(
                     )
                 }
             }
+
             composable(route = screen.home.name) {
                 HomeScreen(
                     onSelectedHotel = {
@@ -157,17 +169,9 @@ fun TravelApp(
                     onSelectedHotelDes = { viewModelhotel.setHomeDes(it) },
                     onSelectedHotelName = { viewModelhotel.setHomeName(it) },
                     availableHotel = viewModelhotel.bookings.value
-                    /*onSearch = {viewModelhotel.updateSearchText(it)},
-                    onSelectedEndDate = {viewModelhotel.updateEndDate(it)},
-                    onSelectedPax = {viewModelhotel.updatePax(it)},
-                    onSelectedStartDate = {viewModelhotel.updateStartDate(it)},
-                    hotel = viewModelhotel.getAllHotel(),
-                    availableHotel = viewModelhotel.searchHotel(viewModelhotel.searchtext,viewModel.BookedStartDate,viewModel.BookedEndDate,viewModel.Pax)
-
-                     */
-
                 )
             }
+
             composable(route = screen.booking.name) {
                 booking(
                     onNextButtonClicked = {
@@ -176,31 +180,29 @@ fun TravelApp(
                     },
                     onCancelButtonClicked = { cancelOrderAndNavigateToStart(navController) },
                     HotelName = uiHotelState.HotelName,
-                    HotelId = uiHotelState.HotelId,
+                    HotelId = viewModel.hotel_Id,
                     HotelAddress = uiHotelState.HotelAddress,
                     onPriceSet = { viewModel.updateRoomPrice(it) }
-                    //status = viewRoomViewModel.checkRoomStatus()
-
                 )
             }
+
             composable(route = screen.detail.name) {
                 bookingDetails(
-
                     onCancelButtonClicked = { cancelBacktoBookingScreen(navController) },
                     onNextButtonClicked = {
                         viewModel.AllBooking()
                         viewModel.calculatePrice()
                         navController.navigate(screen.summary.name)
-
                     },
                     OnBookingStartDateChange = { viewModel.updateBookingStartDate(it) },
                     OnBookingEndDateChange = { viewModel.updateBookingEndDate(it) },
                     OnPaxChange = { viewModel.updatePax(it) },
                     HotelId = viewModel.hotel_Id,
                     Price = viewModel.Price,
-                    roomType = viewModel.setRoomType(),
+                    roomType = viewModel.setRoomType()
                 )
             }
+
             composable(route = screen.summary.name) {
                 bookingSummary(
                     onNextButtonClicked = { navController.navigate(screen.payment.name) },
@@ -213,6 +215,7 @@ fun TravelApp(
                     HotelId = uiState.HotelId
                 )
             }
+
             composable(route = screen.payment.name) {
                 PaymentLayout(
                     onClickedButton = {
@@ -223,53 +226,38 @@ fun TravelApp(
             }
 
             composable(route = TravelBottomBar.Favourite.route) {
-
                 favoritelayout(
                     onSelectedHotel = { viewModel.setHotelId(it) },
                     onSelectedHotelAddress = { viewModelhotel.setHomeAddress(it) },
                     onSelectedHotelDes = { viewModelhotel.setHomeDes(it) },
                     onSelectedHotelName = { viewModelhotel.setHomeName(it) },
-                    PriceRange = "", onNextButton = { navController.navigate(screen.home.name) },
+                    PriceRange = "",
+                    onNextButton = { navController.navigate(screen.home.name) },
                     favouriteHotel = viewModelhotel.Fav
                 )
             }
+
             composable(route = TravelBottomBar.Booked.route) {
                 Booked(
                     viewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current))
                 )
             }
+
             composable(route = TravelBottomBar.Settings.route) {
-                //UserSettingContent(onLogout = { /*TODO*/ }, onCurrency = { /*TODO*/ }) {
-                //}
+                UserSettingContent(navController = navController)
             }
-
-
         }
     }
 }
 
-    private fun cancelOrderAndNavigateToStart(
-        navController: NavController
-    ) {
+private fun cancelOrderAndNavigateToStart(navController: NavController) {
+    navController.popBackStack(screen.home.name, inclusive = false)
+}
 
-        navController.popBackStack(screen.home.name, inclusive = false)
-    }
+private fun cancelBacktoBookingScreen(navController: NavController) {
+    navController.popBackStack(screen.booking.name, inclusive = false)
+}
 
-    private fun cancelBacktoBookingScreen(
-        navController: NavController
-    ) {
-        navController.popBackStack(screen.booking.name, inclusive = false)
-    }
-
-    private fun cancelBacktoDetailsScreen(
-        navController: NavController
-    ) {
-        navController.popBackStack(screen.detail.name, inclusive = false)
-    }
-
-
-
-
-
-
-
+private fun cancelBacktoDetailsScreen(navController: NavController) {
+    navController.popBackStack(screen.detail.name, inclusive = false)
+}

@@ -393,7 +393,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = hotel.HotelDescription)
             }
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Button(
@@ -413,6 +413,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             }
         }
     }
+    Spacer(modifier = Modifier.height(10.dp))
 }
 
 

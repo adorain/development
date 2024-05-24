@@ -1,5 +1,5 @@
 package com.example.tiptime
-/*
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -101,70 +101,6 @@ fun LogoutContent(onLogout:()->Unit, onCancel:()->Unit){
 }
 
 
-/*
-class Logout : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            TipTimeTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    /*LogoutContent()*/
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun LogoutContent(onDismiss:()->Unit){
-    var log_out by remember { mutableStateOf(false) }
-    var return_setting by remember { mutableStateOf(false) }
-    androidx.compose.material3.AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {},
-        modifier = Modifier.height(250.dp),
-
-        title = {
-            Row(verticalAlignment = Alignment.CenterVertically){
-                Icon(imageVector = Icons.Default.Info, contentDescription = "Confirmation")
-                Text(text="Are you sure to log out? ",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold)
-            }
-        },
-
-        text={
-            Column(
-                Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                /*verticalAlignment = Arrangement.Center*/
-            ){
-                Button(
-                    onClick = {log_out = true},
-                    modifier = Modifier
-                        .width(180.dp)
-                        .padding(10.dp)
-                ){
-                    Text(text="Yes ")
-                }
-
-                Button(
-                    onClick = { return_setting = true },
-                    modifier = Modifier
-                        .width(180.dp)
-                        .padding(10.dp)) {
-                   Text(text = "No ")
-                }
-            }
-        }
-    )
-}
-*/
-
-
 
 @Preview
 @Composable
@@ -174,4 +110,3 @@ fun LogoutPreview() {
     }
 }
 
- */

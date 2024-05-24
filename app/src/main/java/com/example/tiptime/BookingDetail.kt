@@ -89,7 +89,15 @@ fun bookingDetails(
         mutableStateOf(0)
     }
     var canNextButton by remember { mutableStateOf(false) }
-
+    var chosenStartDate by remember {
+        mutableStateOf(false)
+    }
+    var chosenEndDate by remember {
+        mutableStateOf(false)
+    }
+    var chosenPax by remember{
+        mutableStateOf(false)
+    }
 
 
         Column {
@@ -255,7 +263,7 @@ fun bookingDetails(
                     selectedStartDate = parseDate(showStartButtonText)
                     OnBookingStartDateChange(showStartButtonText)
                     canClick = true
-                    count++
+                    chosenStartDate = true
                 }
             )
             showDialog = false
@@ -276,7 +284,7 @@ fun bookingDetails(
                         showEndButtonText = convertDate(it)
                         selectedEndDate = parseDate(showEndButtonText)
                         OnBookingEndDateChange(showEndButtonText)
-                        count++
+                        chosenEndDate = true
                 },
                 startDate = selectedStartDate
             )
@@ -295,15 +303,14 @@ fun bookingDetails(
                     pax = it
                     OnPaxChange(pax.toString())},
                 OnClose = { showNoPicker = false
-                count++
+                chosenPax = true
                 })
         }
 
 
-        if(count == 3){
+        if(chosenStartDate&&chosenEndDate&&chosenPax){
             canNextButton = true
         }
-
 
 
 }

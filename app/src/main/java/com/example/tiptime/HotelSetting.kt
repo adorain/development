@@ -1,5 +1,4 @@
 package com.example.tiptime
-/*
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -29,53 +28,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.tiptime.ui.theme.TipTimeTheme
 import com.example.tiptime.ui.theme.white
 
-class HotelSetting : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            TipTimeTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    HotelSettingContent(
-                        onLogout = { navigateToLogout() },
-                        onCurrency = { navigateToCurrency() },
-                        onAbout = {navigateToAbout()}
-                    )
-                }
-            }
-        }
-    }
-    private fun navigateToLogout() {
-        val intent = Intent(this, Logout::class.java)
-        startActivity(intent)
-    }
-
-
-    private fun navigateToCurrency() {
-        val intent = intent
-        startActivity(intent)
-    }
-
-    private fun navigateToAbout() {
-        val intent = Intent(this, About::class.java)
-        startActivity(intent)
-    }
-}
-
 @Composable
-fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
+fun HotelSettingContent(navController: NavController){
     var showLogoutDialog by remember {mutableStateOf(false)}
     var showAboutDialog by remember { mutableStateOf(false)}
     if (showLogoutDialog) {
         LogoutContent(
             onLogout = {
                 showLogoutDialog = false
-                onLogout()
+                navController.navigate(screen.home.name)
             },
             onCancel = { showLogoutDialog = false }
         )
@@ -149,7 +114,7 @@ fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
                     )
             )*/
 
-                Button(onClick = onLogout) {
+                Button(onClick = { navController.navigate(screen.userSelection.name)}) {
                     Text(
                         "Log Out",
                         color = white,
@@ -198,19 +163,19 @@ fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
                     )
             )*/
 
-                Button(onClick = onCurrency) {
-                    Text(
-                        "Currency",
-                        color = white,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 35.dp,
-                                vertical = 30.dp
-                            )
-                    )
-                }
+//                Button(onClick = onCurrency) {
+//                    Text(
+//                        "Currency",
+//                        color = white,
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 30.sp,
+//                        modifier = Modifier
+//                            .padding(
+//                                horizontal = 35.dp,
+//                                vertical = 30.dp
+//                            )
+//                    )
+//                }
             }
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -233,37 +198,22 @@ fun HotelSettingContent(onLogout:()->Unit,onCurrency:()->Unit,onAbout:()->Unit){
                         )
                 )
 
-                Button(onClick = onAbout) {
-                    Text(
-                        "About",
-                        color = white,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 35.dp,
-                                vertical = 30.dp
-                            )
-                    )
-                }
+//                Button(onClick = onAbout) {
+//                    Text(
+//                        "About",
+//                        color = white,
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 30.sp,
+//                        modifier = Modifier
+//                            .padding(
+//                                horizontal = 35.dp,
+//                                vertical = 30.dp
+//                            )
+//                    )
+//                }
             }
         }
     }
 
 }
-
-
-@Preview
-@Composable
-fun HotelSettingPreview() {
-    TipTimeTheme {
-        HotelSettingContent(onLogout={}, onCurrency = {}, onAbout={})
-    }
-}
-
- */
-
-
-
-
 

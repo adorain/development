@@ -55,7 +55,7 @@ fun HotelReport(bookingViewModel: BookingViewModel) {
             // Update start date and button text
             showDate = false
             showStartButtonText = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate)
-            bookingViewModel.updateStartDate(SimpleDateFormat("ydd/MM/yyyy", Locale.getDefault()).format(selectedDate))
+            bookingViewModel.updateStartDate(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate))
         }
     }
 

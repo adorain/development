@@ -389,11 +389,11 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = hotel.HotelAddress)
             }
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = hotel.HotelDescription)
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Button(

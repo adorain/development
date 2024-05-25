@@ -36,4 +36,8 @@ interface BookingDao {
 
     @Query("SELECT ROOMTYPE, SUM(Price) AS earnings, COUNT(*) AS numOfRooms FROM Booking WHERE BookedStartDate BETWEEN :startDate AND :endDate GROUP BY ROOMTYPE")
     fun getBookingStatistics(startDate: String, endDate: String): Flow<List<BookingStatistics>>
+
+    @Query("SELECT * FROM Booking WHERE userId = :userId")
+    suspend fun getBookingsForUser(userId: String): List<Booking>
+
 }

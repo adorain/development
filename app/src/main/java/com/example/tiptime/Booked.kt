@@ -4,11 +4,16 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,12 +32,15 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Booked(
-    viewModel: BookedViewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current))
+    userId:String,
+    viewModel: BookedViewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current,userId))
 ) {
     val context = LocalContext.current
     val bookings by viewModel.bookings.collectAsState()
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
+    Column(Modifier.fillMaxSize().padding(16.dp)
+        .verticalScroll(rememberScrollState()) // Make the column scrollable
+    ) {
         Text("Your Bookings", fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
 
         bookings.forEach { (booking, hotel) ->
@@ -75,7 +83,10 @@ fun BookingItem(
     fees: String,
     onCancelClick: () -> Unit,
 
-) {
+    ) {
+    var isCancelled by remember { mutableStateOf(false) }
+
+
     Box(
         modifier = Modifier.border(2.dp, Color.Black, RoundedCornerShape(8.dp))
     ) {
@@ -93,18 +104,23 @@ fun BookingItem(
                 Text(roomType)
                 Text(fees)
 
-                    Button(
-                        onClick = onCancelClick,
-                        modifier = Modifier.size(100.dp, 40.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-                        shape = RoundedCornerShape(0)
-                    ) {
-                        Text("Cancel")
-                    }
+                Button(
+                    onClick = {
+                        if (!isCancelled) {
+                            onCancelClick()
+                            isCancelled = true
+                        }
+                    },
+                    modifier = Modifier.size(150.dp, 40.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = if (isCancelled) Color.Green else Color.Blue),
+                    shape = RoundedCornerShape(0)
+                ) {
+                    Text(if (isCancelled) "Cancelled" else "Cancel")
                 }
             }
         }
     }
+}
 
 
 @RequiresApi(Build.VERSION_CODES.O)

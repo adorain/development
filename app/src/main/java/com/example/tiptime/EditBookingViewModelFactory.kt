@@ -13,7 +13,8 @@ class EditBookingViewModelFactory(private val context: Context) : ViewModelProvi
             val roomDao = database.roomDao()
             val bookingDao = database.bookingDao()
             val hotelDao = database.hotelDao()
-            val repository = RoomRepository(roomDao, bookingDao, hotelDao)
+            val hotelUserDao=database.hotelUserDao()
+            val repository = RoomRepository(roomDao, bookingDao, hotelDao,hotelUserDao)
             @Suppress("UNCHECKED_CAST")
             return EditBookingViewModel(repository) as T
         }

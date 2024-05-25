@@ -259,8 +259,10 @@ fun TravelApp(
             }
 
             composable(route = TravelBottomBar.Booked.route) {
+                val userId = viewModel.uiBookingState.value.userId
                 Booked(
-                    viewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current))
+                    userId=userId,
+                    viewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current,userId))
                 )
             }
 

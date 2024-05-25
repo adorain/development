@@ -139,7 +139,7 @@ fun UserLoginScreen(context: Context,navController: NavController,viewModel: hot
                             coroutineScope.launch {
                                 val user = userDao.getUserByEmailAndPassword(email, password)
                                 if (user != null) {
-                                    navController.navigate(screen.home.name)
+                                    navController.navigate(TravelBottomBar.UserHome.route)
                                     viewModel.getAllHotel()
                                     val userId = userDao.getUserId(email)
                                 } else {
@@ -182,7 +182,7 @@ fun UserLoginTextField(
         placeholder = { Text(text = hint) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
-        textStyle = TextStyle(color = Color.White),
+        textStyle = TextStyle(color = Color.Black),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         isError = isError

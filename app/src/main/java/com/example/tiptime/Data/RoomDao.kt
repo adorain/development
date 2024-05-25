@@ -11,7 +11,7 @@ import java.util.Date
 
 @Dao
 interface RoomDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNewRoom(room: room)
 
     @Query("SELECT * FROM room WHERE hotel_id = :hotelId")

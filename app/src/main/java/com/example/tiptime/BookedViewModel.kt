@@ -14,7 +14,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class BookedViewModel(
-    private val roomRepository: RoomRepository
+    private val roomRepository: RoomRepository,
+    private val userId:String
 ) : ViewModel() {
 
     private val _bookings = MutableStateFlow<List<Pair<Booking, Hotel>>>(emptyList())
@@ -33,7 +34,7 @@ class BookedViewModel(
 
     private fun fetchBookings() {
         viewModelScope.launch {
-            val bookings = roomRepository.getAllBookings()
+            val bookings = roomRepository.getBookingsForUser(userId)
             val hotels = withContext(Dispatchers.IO) { roomRepository.getAllHotelsBooked() }
 
             val bookingDetails = bookings.mapNotNull { booking ->
@@ -53,6 +54,7 @@ class BookedViewModel(
         }
     }
 
+
     fun fetchHotelName(hotelId: Int) {
         viewModelScope.launch {
             _hotelName.value = withContext(Dispatchers.IO) {
@@ -60,6 +62,8 @@ class BookedViewModel(
             }
         }
     }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun calculateTotalPrice(booking: Booking): Double {

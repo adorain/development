@@ -1,11 +1,12 @@
 // Start of file
 package com.example.tiptime.Data
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class RoomRepository(private val roomDao: RoomDao, private val bookingDao: BookingDao,private val hotelDao: HotelDao) {
+class RoomRepository(private val roomDao: RoomDao, private val bookingDao: BookingDao,private val hotelDao: HotelDao,private val hotelUserDao: HotelUserDao) {
 
 
     fun getAllRooms(): Flow<List<room>> = roomDao.getAllRooms()
@@ -18,6 +19,10 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         roomDao.updateRoom(room)
     }
 
+    suspend fun getBookingsForUser(userId: String): List<Booking> {
+        return bookingDao.getBookingsForUser(userId)
+    }
+
     suspend fun getRoomAvailability(hotelId: Int, roomType: String, startDate: String, endDate: String): RoomAvailability {
         val allRooms = roomDao.getAllRoomsForType(hotelId, roomType)
         val bookings = roomDao.getBookingsForDateRange(hotelId, roomType, startDate, endDate)
@@ -27,9 +32,15 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         return RoomAvailability(availableRooms, occupiedRooms, underMaintenanceRooms)
     }
 
+
     suspend fun getHotelName(hotelId: Int): String {
-        return hotelDao.getHotelById(hotelId).HotelName
+        val hotel = hotelDao.getHotelById(hotelId)
+        Log.d("RoomRepository", "Retrieved hotel: $hotel")
+        return hotel.HotelName ?: throw NullPointerException("Hotel not found for id: $hotelId")
     }
+
+
+
 
 
 
@@ -76,6 +87,12 @@ class RoomRepository(private val roomDao: RoomDao, private val bookingDao: Booki
         }
     }
 
+
+    suspend fun addNewRoom(room: room) {
+        withContext(Dispatchers.IO) {
+            roomDao.addNewRoom(room)
+        }
+    }
 }
 
 data class RoomAvailability(

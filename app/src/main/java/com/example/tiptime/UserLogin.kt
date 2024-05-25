@@ -58,7 +58,8 @@ class UserLogin : ComponentActivity() {
 }
 
 @Composable
-fun UserLoginScreen(context: Context,navController: NavController,viewModel: hotelViewModel=viewModel(factory=AppViewModelProvider.factory)) {
+fun UserLoginScreen(context: Context,navController: NavController,viewModel: hotelViewModel=viewModel(factory=AppViewModelProvider.factory),
+                    viewModelBooking: BookingViewModel=viewModel(factory=AppViewModelProvider.factory)) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var invalidEmail by remember { mutableStateOf(false) }
@@ -139,9 +140,10 @@ fun UserLoginScreen(context: Context,navController: NavController,viewModel: hot
                             coroutineScope.launch {
                                 val user = userDao.getUserByEmailAndPassword(email, password)
                                 if (user != null) {
-                                    navController.navigate(screen.home.name)
+                                    navController.navigate(TravelBottomBar.UserHome.route)
                                     viewModel.getAllHotel()
                                     val userId = userDao.getUserId(email)
+                                    viewModelBooking.updateUserId(userId.toString())
                                 } else {
                                     // Show error message
                                     showError = true
@@ -182,7 +184,7 @@ fun UserLoginTextField(
         placeholder = { Text(text = hint) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
-        textStyle = TextStyle(color = Color.White),
+        textStyle = TextStyle(color = Color.Black),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         isError = isError

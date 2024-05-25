@@ -195,4 +195,14 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         }
     }
 
+
+
+    fun setHotelId(hotelId: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(HotelId = hotelId)
+        }
+    }
+
+
+
 }

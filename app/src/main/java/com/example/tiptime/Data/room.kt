@@ -11,6 +11,6 @@ data class room(
     val roomType: String = "",
     val hotel_id: Int = 0,
     val price: Double = 0.00,
-    val Status: String = ""
+    var Status: String = ""
 )
 

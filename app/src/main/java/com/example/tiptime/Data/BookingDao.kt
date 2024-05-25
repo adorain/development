@@ -28,6 +28,10 @@ interface BookingDao {
     @Query("SELECT * FROM Booking")
     suspend fun getAllBookings(): List<Booking>
 
+    @Query("SELECT * FROM Booking WHERE userId = :userId")
+    suspend fun getBookingsForUser(userId: String): List<Booking>
+
+
     @Query("UPDATE Booking SET Status = :status WHERE Booked_id = :bookingId")
     suspend fun updateBookingStatus(bookingId: Int, status: String): Int
 

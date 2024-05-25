@@ -101,6 +101,7 @@ fun TravelApp(
     ) { innerPadding ->
         val uiState by viewModel.uiBookingState.collectAsState()
         val uiHotelState by viewModelhotel.uiStateHotel.collectAsState()
+        val hotelId = uiHotelState.HotelId
         NavHost(
             navController = navController,
             startDestination = screen.userSelection.name,
@@ -259,8 +260,10 @@ fun TravelApp(
             }
 
             composable(route = TravelBottomBar.Booked.route) {
+                val userId = viewModel.uiBookingState.value.userId
                 Booked(
-                    viewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current))
+                    userId=userId,
+                    viewModel = viewModel(factory = BookedViewModelFactory(LocalContext.current,userId))
                 )
             }
 
@@ -281,7 +284,8 @@ fun TravelApp(
             }
             composable(route = HotelBottomBar.editBook.route) {
                 EditBooking(
-                    viewModel = viewModel(factory = EditBookingViewModelFactory(LocalContext.current))
+                    viewModel = viewModel(factory = EditBookingViewModelFactory(LocalContext.current)),
+                    hotelId = 1
                 )
             }
             composable(route = HotelBottomBar.Settings.route) {

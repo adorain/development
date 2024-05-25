@@ -212,6 +212,17 @@ fun StaffDetailsForm(
     var email by remember { mutableStateOf(viewModel.staffEmail) }
     var password by remember { mutableStateOf(viewModel.staffPassword) }
 
+    Surface(
+        modifier=Modifier.fillMaxSize(),
+        color=Color.White
+    ) {
+        Image(
+            painter=painterResource(id = R.drawable.hotel_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier=Modifier.fillMaxWidth()
+        )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -298,6 +309,7 @@ fun StaffDetailsForm(
             Text(text = "Next")
         }
     }
+    }
 }
 
 @Composable
@@ -316,87 +328,99 @@ fun HotelDetailsForm(
     var hotelDescription by remember { mutableStateOf(viewModel.hotelDescription) }
     var type by remember { mutableStateOf(viewModel.hotelType) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+
+    Surface(
+        modifier=Modifier.fillMaxSize(),
+        color=Color.White
     ) {
-        Text(
-            "Hotel Details",
-            color = white,
-            fontWeight = FontWeight.Bold,
-            fontSize = 40.sp,
+        Image(
+            painter = painterResource(id = R.drawable.hotel_user_background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Column(
             modifier = Modifier
-                .padding(
-                    horizontal = 35.dp,
-                    vertical = 63.dp
-                )
-        )
-
-        TextField(
-            value = hotelName,
-            onValueChange = {
-                hotelName = it
-                onSetHotelName(it)
-            },
-            label = { Text("Hotel Name", color = shadow, fontWeight = FontWeight.Bold) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.Black),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        TextField(
-            value = hotelAddress,
-            onValueChange = {
-                hotelAddress = it
-                onSetHotelAddress(it)
-            },
-            label = { Text("Hotel Address", color = shadow, fontWeight = FontWeight.Bold) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.Black),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        TextField(
-            value = hotelDescription,
-            onValueChange = {
-                hotelDescription = it
-                onSetHotelDescription(it)
-            },
-            label = { Text("Hotel Description", color = shadow, fontWeight = FontWeight.Bold) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.Black),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        TextField(
-            value = type,
-            onValueChange = {
-                type = it
-                onSetHotelType(it)
-            },
-            label = { Text("Type", color = shadow, fontWeight = FontWeight.Bold) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            textStyle = TextStyle(color = Color.Black),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Button(onClick = {
-            onSubmitClicked(
-                hotelName, hotelAddress, hotelDescription, type
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                "Hotel Details",
+                color = white,
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
+                modifier = Modifier
+                    .padding(
+                        horizontal = 35.dp,
+                        vertical = 63.dp
+                    )
             )
-        }) {
-            Text(text = "Submit")
+
+            TextField(
+                value = hotelName,
+                onValueChange = {
+                    hotelName = it
+                    onSetHotelName(it)
+                },
+                label = { Text("Hotel Name", color = shadow, fontWeight = FontWeight.Bold) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextField(
+                value = hotelAddress,
+                onValueChange = {
+                    hotelAddress = it
+                    onSetHotelAddress(it)
+                },
+                label = { Text("Hotel Address", color = shadow, fontWeight = FontWeight.Bold) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextField(
+                value = hotelDescription,
+                onValueChange = {
+                    hotelDescription = it
+                    onSetHotelDescription(it)
+                },
+                label = { Text("Hotel Description", color = shadow, fontWeight = FontWeight.Bold) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextField(
+                value = type,
+                onValueChange = {
+                    type = it
+                    onSetHotelType(it)
+                },
+                label = { Text("Type", color = shadow, fontWeight = FontWeight.Bold) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.Black),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(onClick = {
+                onSubmitClicked(
+                    hotelName, hotelAddress, hotelDescription, type
+                )
+            }) {
+                Text(text = "Submit")
+            }
         }
     }
 }

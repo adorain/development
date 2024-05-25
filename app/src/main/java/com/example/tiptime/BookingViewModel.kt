@@ -79,7 +79,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel() {
         totalPrice = Price * diffInDays
     }
 
-    fun setUserId(userID: String) {
+    fun updateUserId(userID: String) {
         _uiBookingState.update { currentState ->
             currentState.copy(
                 userId = userID

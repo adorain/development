@@ -25,4 +25,8 @@ interface HotelUserDao {
     @Query("SELECT * FROM Hotel WHERE StaffEmail = :email AND StaffPassword = :password LIMIT 1")
     suspend fun getUserByEmailAndPassword(email: String, password: String): Hotel?
 
+    @Query("SELECT * FROM hotel WHERE HotelId = :hotelId")
+    suspend fun getHotelById(hotelId: Int): Hotel
+
+
 }

@@ -6,8 +6,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
@@ -29,9 +31,11 @@ import com.example.tiptime.ui.theme.TipTimeTheme
 @Composable
 fun EditBooking(
     viewModel: EditBookingViewModel = viewModel(factory = EditBookingViewModelFactory(LocalContext.current)),
-    hotelId: Int = 1 // Default to hotelId 1
+    hotelId:Int =1
 ) {
     val context = LocalContext.current
+
+
     var hotelName by remember { mutableStateOf("") }
     var hotelAddress by remember { mutableStateOf("") }
     var hotelDescription by remember { mutableStateOf("") }
@@ -66,6 +70,7 @@ fun EditBooking(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Make the column scrollable
             .padding(16.dp)
     ) {
         Box(

@@ -46,7 +46,7 @@ interface HotelDao {
     fun updateHotelStatusToFavourite(hotelId: Int,Status:String)
 
 
-    @Query("SELECT * FROM Hotel WHERE HotelName Like '%' || :searchText || '%'")
+    @Query("SELECT * FROM Hotel WHERE HotelName Like '%' || :searchText || '%' OR HotelName = :searchText")
     fun filterHotels(
         searchText: String?
     ): List<Hotel>

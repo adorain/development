@@ -15,4 +15,5 @@ class BookingOfflineRes(private val bookingDao: BookingDao):BookingRes {
 
     override fun getBookingStatistics(startDate: String, endDate: String): Flow<List<BookingStatistics>> =bookingDao.getBookingStatistics(startDate, endDate)
 
+    override suspend fun getBookingsForUser(userId: String): List<Booking> = bookingDao.getBookingsForUser(userId)
 }

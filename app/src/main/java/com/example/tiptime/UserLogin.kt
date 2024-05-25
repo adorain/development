@@ -58,7 +58,8 @@ class UserLogin : ComponentActivity() {
 }
 
 @Composable
-fun UserLoginScreen(context: Context,navController: NavController,viewModel: hotelViewModel=viewModel(factory=AppViewModelProvider.factory)) {
+fun UserLoginScreen(context: Context,navController: NavController,viewModel: hotelViewModel=viewModel(factory=AppViewModelProvider.factory),
+                    viewModelBooking: BookingViewModel=viewModel(factory=AppViewModelProvider.factory)) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var invalidEmail by remember { mutableStateOf(false) }
@@ -142,6 +143,7 @@ fun UserLoginScreen(context: Context,navController: NavController,viewModel: hot
                                     navController.navigate(TravelBottomBar.UserHome.route)
                                     viewModel.getAllHotel()
                                     val userId = userDao.getUserId(email)
+                                    viewModelBooking.updateUserId(userId.toString())
                                 } else {
                                     // Show error message
                                     showError = true

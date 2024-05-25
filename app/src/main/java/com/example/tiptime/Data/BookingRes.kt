@@ -16,4 +16,5 @@ interface BookingRes{
 
     fun getBookingStatistics(startDate: String, endDate: String): Flow<List<BookingStatistics>>
 
+    suspend fun getBookingsForUser(userId: String): List<Booking>
 }

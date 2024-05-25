@@ -138,15 +138,15 @@ class hotelViewModel (private val hotelRes: HotelRes) : ViewModel(){
         viewModelScope.launch {
             hotelRes.insertNewHotel(
                 Hotel(
-                    3,
-                    "SD",
-                    "UB",
-                    "Ben",
+                    2,
                     "",
-                    "Kuala Lumpur",
-                    "Single and Double",
+                    "",
+                    "100 Hotel",
+                    "Cena",
+                    "Penang",
+                    "Free Parking",
                     5,
-                    0,"",""
+                    0,"Travel",""
 
                 )
             )

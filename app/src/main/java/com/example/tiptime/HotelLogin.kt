@@ -149,7 +149,7 @@ fun HotelLoginScreen(navController: NavController) {
                         }
                     }
                 ) {
-                    Text(text = "Submit")
+                    Text(text = "Login")
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))

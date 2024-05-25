@@ -84,7 +84,7 @@ fun BookingItem(
     onCancelClick: () -> Unit,
 
     ) {
-    var isCancelled by remember { mutableStateOf(false) }
+    var isCancelled by remember { mutableStateOf(true) }
 
 
     Box(
@@ -106,16 +106,21 @@ fun BookingItem(
 
                 Button(
                     onClick = {
-                        if (!isCancelled) {
+
                             onCancelClick()
-                            isCancelled = true
-                        }
+                            isCancelled = false
+
+
+
+
+
                     },
                     modifier = Modifier.size(150.dp, 40.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = if (isCancelled) Color.Green else Color.Blue),
+                    enabled=isCancelled,
                     shape = RoundedCornerShape(0)
                 ) {
-                    Text(if (isCancelled) "Cancelled" else "Cancel")
+                    Text(if (isCancelled) "Cancel" else "Cancelled")
                 }
             }
         }

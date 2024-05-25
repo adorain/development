@@ -99,7 +99,7 @@ fun bookingDetails(
     var chosenPax by remember{
         mutableStateOf(false)
     }
-    val decimalFormat = DecimalFormat("#.00")
+
 
 
         Column {
@@ -222,7 +222,7 @@ fun bookingDetails(
                     Text(text = "Price : ", fontSize = 21.sp)
                 }
                 Column {
-                    Text(text = decimalFormat.format(Price).toString(), fontSize = 21.sp)
+                    Text(text = Price.toString(), fontSize = 21.sp)
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))

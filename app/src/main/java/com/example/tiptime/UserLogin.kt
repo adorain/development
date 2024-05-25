@@ -152,7 +152,7 @@ fun UserLoginScreen(context: Context,navController: NavController,viewModel: hot
                         }
                     }
                 ) {
-                    Text(text = "Submit")
+                    Text(text = "Login")
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))

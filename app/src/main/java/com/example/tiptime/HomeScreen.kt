@@ -289,6 +289,7 @@ fun HomeScreen(
                     }
 
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
 
@@ -413,7 +414,7 @@ fun HotelItem(hotel: Hotel, onItemClick: () -> Unit) {
             }
         }
     }
-    Spacer(modifier = Modifier.height(10.dp))
+
 }
 
 

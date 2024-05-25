@@ -208,7 +208,7 @@ fun paymentSuccessful(
     var countdown by remember{mutableStateOf(5)}
     LaunchedEffect(Unit) {
         while (countdown > 0) {
-            delay(5000)
+            delay(2000)
             countdown--
         }
         onNavigation()

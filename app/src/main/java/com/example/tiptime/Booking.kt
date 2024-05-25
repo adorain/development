@@ -84,7 +84,7 @@ fun booking (
     var price3 by remember {
         mutableStateOf(0.00)
     }
-    val decimalFormat = DecimalFormat("#.00")
+
     /*if(userType == UserType.user){
 
     }else if(
@@ -146,7 +146,7 @@ fun booking (
 
                      */
                     price = checkRoomPrice(hotelId = HotelId, roomType = "Single Room")
-                    Text(text = decimalFormat.format(price).toString(), color = textColor , fontSize = 20.sp,modifier = Modifier
+                    Text(text = price.toString(), color = textColor , fontSize = 20.sp,modifier = Modifier
                         .padding(top = 120.dp, start = 175.dp)
                         .clickable {
                             count++
@@ -193,7 +193,7 @@ fun booking (
 
                      */
                     price1 = checkRoomPrice(hotelId = HotelId, roomType = "Double Room")
-                    Text(text = decimalFormat.format(price1).toString()//checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString()
+                    Text(text = price1.toString()//checkRoomPrice(hotelId = HotelId, roomType = "Single Room").toString()
                         , color = textColor1 , fontSize = 20.sp,modifier = Modifier
                             .padding(top = 210.dp, start = 165.dp)
                             .clickable {
@@ -238,7 +238,7 @@ fun booking (
 
                      */
                     price2 = checkRoomPrice(hotelId = HotelId, roomType = "King Room")
-                    Text(text = decimalFormat.format(price2).toString()// Update RoomType
+                    Text(text = price2.toString()// Update RoomType
                         , color = textColor2 , fontSize = 20.sp,modifier = Modifier
                             .padding(top = 30.dp, start = 155.dp)
                             .clickable {

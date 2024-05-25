@@ -45,7 +45,7 @@ fun HotelReservation(
             coroutineScope.launch {
                 val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.US).format(selectedDate)
                 withContext(Dispatchers.IO) {
-                    reservations = bookingViewModel.getReservationsForDate(selectedDate)
+                    reservations = bookingViewModel.getReservationsForDate(selectedDate).value
                 }
             }
         }

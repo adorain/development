@@ -129,7 +129,7 @@ fun AddReservation(
                 viewModel.BookedEndDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(endDate)!!
                 viewModel.Pax = pax.text.toInt()
                 viewModel.Price = price.text.toDouble()
-                viewModel.setUserId(userId)
+                viewModel.updateUserId(userId)
                 viewModel.addNewBooking()
                 navController.popBackStack()
             },

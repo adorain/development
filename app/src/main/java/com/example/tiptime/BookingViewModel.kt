@@ -196,7 +196,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel() {
 
     fun getReservationsForDate(selectedDate: Date): StateFlow<List<Booking>> {
         val reservations = MutableStateFlow<List<Booking>>(emptyList())
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.US).format(selectedDate)
             val result = bookingRes.getReservationsForDate(dateString)
             reservations.value = result

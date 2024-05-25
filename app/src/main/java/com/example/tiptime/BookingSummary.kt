@@ -53,7 +53,6 @@ fun bookingSummary(
 
     var text by remember { mutableStateOf("Check") }
     var canClick by remember { mutableStateOf(!status) }
-    val decimalFormat = DecimalFormat("#.00")
     Log.d("",viewModel.count.toString())
             if (viewModel.count > 0) {
                 text = "Unavailable"
@@ -143,7 +142,7 @@ fun bookingSummary(
                 Text(text = "Total Price : ", fontSize = 21.sp)
             }
             Column {
-                Text(text =decimalFormat.format(Price).toString(), fontSize = 21.sp)
+                Text(text =Price.toString(), fontSize = 21.sp)
             }
         }
         Spacer(modifier = Modifier.height(20.dp))

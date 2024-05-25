@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tiptime.ui.theme.TipTimeTheme
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -98,6 +99,7 @@ fun bookingDetails(
     var chosenPax by remember{
         mutableStateOf(false)
     }
+    val decimalFormat = DecimalFormat("#.00")
 
 
         Column {
@@ -220,7 +222,7 @@ fun bookingDetails(
                     Text(text = "Price : ", fontSize = 21.sp)
                 }
                 Column {
-                    Text(text = Price.toString(), fontSize = 21.sp)
+                    Text(text = decimalFormat.format(Price).toString(), fontSize = 21.sp)
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))

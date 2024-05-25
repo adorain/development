@@ -44,7 +44,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel() {
     var EndDate by mutableStateOf(Date())
     private val _statistics = MutableStateFlow<List<BookingStatistics>>(emptyList())
     val statistics: StateFlow<List<BookingStatistics>> = _statistics.asStateFlow()
-    var UserId by mutableStateOf("")
+    var User_Id by mutableStateOf("")
 
     fun insertNewBooking() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -58,7 +58,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel() {
                     Pax = Pax,
                     Status = "Confirmed",
                     Price = Price,
-                    userId = UserId
+                    userId = User_Id
                 )
             )
         }
@@ -85,7 +85,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel() {
                 userId = userID
             )
         }
-        UserId = userID
+        User_Id = userID
     }
 
     fun setBookingStartDate(): Date {
@@ -177,7 +177,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel() {
         return formatter.format(date)
     }
 
-    fun addNewBooking(booking: Booking) {
+    fun addNewBooking() {
         viewModelScope.launch(Dispatchers.IO) {
             bookingRes.addNewBooking(
                 booking = Booking(
@@ -205,7 +205,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel() {
     }
 
     fun deleteBooking(booking: Booking) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             bookingRes.deleteBooking(booking)
         }
     }

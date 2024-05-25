@@ -3,7 +3,6 @@ package com.example.tiptime
 import Booked
 import EditRoomsViewModelFactory
 import HotelReport
-import HotelReservation
 import TopAppBar
 import android.annotation.SuppressLint
 import android.os.Build
@@ -31,11 +30,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tiptime.Data.ApplicationInventory
 import com.example.tiptime.ui.theme.TipTimeTheme
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
 enum class screen {
-    userSelection, userLogin, signUp, hotelLogin, newHotel, home, booking, detail, summary, payment, test
+    userSelection, userLogin, signUp, hotelLogin, newHotel, home, booking, detail, summary, payment, reservations,addreservation
 }
 
 enum class UserType {
@@ -274,7 +274,7 @@ fun TravelApp(
                 HotelReport(viewModel)
             }
             composable(route = HotelBottomBar.Reservation.route) {
-                HotelReservation(navController, viewModelhotel, viewModel, onNextButton = {navController.navigate(screen.booking.name)})
+                HotelReservation(navController, viewModelhotel, viewModel)
             }
             composable(route = HotelBottomBar.editRoom.route) {
                 EditRooms(
@@ -289,10 +289,8 @@ fun TravelApp(
             composable(route = HotelBottomBar.Settings.route) {
                 HotelSettingContent(navController = navController)
             }
-            composable(route = "reservationCheck/{date}") { backStackEntry ->
-                val date = backStackEntry.arguments?.getString("date")
-                val selectedDate = SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(date)!!
-                ReservationCheckScreen(navController, selectedDate, viewModel)
+            composable(route = screen.addreservation.name) {
+                AddReservation(navController = navController)
             }
         }
     }

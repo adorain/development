@@ -15,7 +15,6 @@
  */
 package com.example.tiptime
 
-import HotelReservation
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity

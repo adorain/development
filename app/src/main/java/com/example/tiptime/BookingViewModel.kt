@@ -40,8 +40,6 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
     var status by mutableStateOf(false)
     var count by mutableStateOf(0)
     private var allBooking : List<Booking> = listOf()
-    var tempStart by mutableStateOf("")
-    var tempEnd by mutableStateOf("")
     private var _bookingList = MutableStateFlow<List<Booking>>(emptyList())
     val bookingList :StateFlow<List<Booking>> get() = _bookingList.asStateFlow()
     var totalPrice by mutableStateOf(0.00)
@@ -233,9 +231,7 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
 
      */
 
-    fun updateStatus():Boolean{
-        return status
-    }
+
 
     fun parseDate(date : Date):String{
         val formatter = SimpleDateFormat("dd/MM/yyyy")
@@ -293,8 +289,6 @@ class BookingViewModel(private val bookingRes: BookingRes) : ViewModel(){
         }
 
     }
-
-
 
 
 
